@@ -1,0 +1,47 @@
+/* nav.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .home-u1 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+  }
+  
+  .home-11 {
+    float: left;
+  }
+  
+  .home-11 a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .home-11 a:hover {
+    /* background-color: #111; */
+    color: rgb(158, 157, 157);
+    transform: scale(1.1); /* Makes the letters pop up */
+  }
+  
+  .home-11 h1 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 20px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .home-11:hover h1 {
+    transform: scale(1.1); /* Makes the h1 tag pop up */
+  }
+  
