@@ -10,6 +10,7 @@ import Skills from "./Components/Skills/skill";
 import Project from "./Components/Project/project";
 import Services from "./Components/Services/services";
 import Countact from "./Components/Countact/countact";
+import Footer from "./Components/Footer/footer";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/project"element={<Project/>}/>
           <Route path="/services"element={<Services/>}/>
           <Route path="/countact"element={<Countact/>}/>
+          <Route path="/footer"element={<Footer/>}/>
         </Routes>
       </React.Fragment>
     </div>

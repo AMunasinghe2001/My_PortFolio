@@ -1,0 +1,79 @@
+/* countact.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.countact {
+  max-width: 600px;
+  padding: 60px 20px 20px;
+  margin: 50px auto;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.formName {
+  text-align: center;
+  font-size: 30px;
+  /* color: #333; */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  align-self: flex-start;
+  color: #555;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="Subject"],
+textarea {
+  width: 95.5%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="Subject"]:hover,
+textarea:hover {
+  border: 2px solid black;
+}
+
+input[type="submit"] {
+  width: 80%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049;
+  transform: scale(1.1);
+  color: white;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical;
+  font-size: 17px;
+}
