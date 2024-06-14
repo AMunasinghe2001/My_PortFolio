@@ -1,0 +1,66 @@
+.header{
+margin: 60px 40px 20px;
+}
+.pic img{
+    max-width:auto ;
+    height: 90vh;
+    text-align: right;
+    margin-right: 20px;
+}
+.cover{
+    display: flex;
+    max-height: 90%;
+    background-color: #cdfff485;
+    background-image: linear-gradient(to left, rgba(255,0,0,0), rgba(43, 105, 97, 0.679));
+}
+.job{
+    color: #0296a0;
+    font-weight:bold;
+    font-size: 27px;
+    text-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768) ;
+}
+.name{
+    color: #ffffff;
+    font-weight:bold;
+    font-size:20px;
+}
+p{
+    font-size: 20px;
+    color: #1f1f1f;
+    font-weight:bold;
+}
+h2{
+    color: #ffffff;
+    border: 10px;
+    border-color: #0296a0;
+}
+.btnCV{
+    background-color: #0296a0;
+    color: #ffffff;
+    font-weight:bold;
+    font-size: 15px;
+    text-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768) ;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    border: none;
+}
+input[type="submit"] {
+    width: 80%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .btnCV:hover {
+    background-color: #133359;
+    color: white;
+    border: 3px;
+  }

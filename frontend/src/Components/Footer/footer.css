@@ -1,61 +1,81 @@
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-}
-footer{
+  }
+  
+  footer {
     background-color: #111;
-}
-.footerHead{
+  }
+  
+  .footerHead {
     color: white;
     text-align: center;
     padding: 30px 20px 20px;
-}
-.footerContainer{
+  }
+  
+  .footerContainer {
     width: 100%;
-    padding: 30px 30px 20px ;
-}
-.socialIcons{
+    padding: 30px 30px 20px;
+  }
+  
+  .socialIcons {
     display: flex;
     justify-content: center;
-}
-.socialIcons a{
-    padding:  10px;
-    background-color: white;
+  }
+  
+  .socialIcons a {
+    position: relative;
     margin: 10px;
-    border-radius: 50%;
-}
-.socialIcons a i{
-    color: black;
-    opacity: 0,9;
-}
-/* Hover affect on social media icon */
-.socialIcons a:hover{
-    background-color: #111;
-    transition: 0.5s;
-}
-.socialIcons a:hover i{
+  }
+  
+  .socialIcons img {
+    max-width: 50px;
+    height: auto;
+    border: 2px solid white;
+    border-radius: 20%;
+    transition: transform 0.3s ease;
+  }
+  
+  .socialIcons img:hover {
+    transform: scale(1.1);
+  }
+  
+  .socialIcons a::after {
+    content: attr(data-popup);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
     color: white;
-    transition: 0.5s;
-}
-.footerBottom{
+    padding: 5px 10px;
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+  }
+  
+  .socialIcons a:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .footerBottom {
     background-color: #000;
     padding: 20px;
     text-align: center;
-}
-.footerBottom p{
+  }
+  
+  .footerBottom p {
     color: white;
-}
-.designer{
+  }
+  
+  .designer {
     opacity: 0.7;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 400;
     margin: 0px 5px;
-}
-@media (max-width: 700px){
-    .socialIcons a{
-        padding: 8px;
-        margin: 4px;
-    }
-}
+  }
+  

@@ -1,43 +1,45 @@
 import React from "react";
 import "./footer.css";
-function footer() {
+import facebook from "./img/facebook.png";
+import watsapp from "./img/watsapp.png";
+import github from "./img/github.png";
+import linkin from "./img/linkin.png";
+
+function Footer() {
   return (
     <div>
       <footer>
-        <div class="footerHead">
+        <div className="footerHead">
           <h2>Anushanga Munasinghe</h2>
         </div>
 
-        <div class="footerHead">
+        <div className="footerHead">
           <p>
-            A focused Web Developer building the of Websites and Web
-            Applications that leads to the success of the overall product
+            A focused Web Developer building the Websites and Web Applications
+            that lead to the success of the overall product
           </p>
         </div>
 
-        <div class="footerContainer">
-          <div class="socialIcons">
-            <a href="">
-              <i class="fa-brands fa-facebook"></i>
+        <div className="footerContainer">
+          <div className="socialIcons">
+            <a href="#" data-popup="Facebook">
+              <img src={facebook} alt="facebook" />
             </a>
-            <a href="">
-              <i class="fa-brands fa-instagram"></i>
+            <a href="#" data-popup="WhatsApp">
+              <img src={watsapp} alt="watsapp" />
             </a>
-            <a href="">
-              <i class="fa-brands fa-twitter"></i>
+            <a href="#" data-popup="GitHub">
+              <img src={github} alt="github" />
             </a>
-            <a href="">
-              <i class="fa-brands fa-google-plus"></i>
-            </a>
-            <a href="">
-              <i class="fa-brands fa-youtube"></i>
+            <a href="#" data-popup="LinkedIn">
+              <img src={linkin} alt="linkin" />
             </a>
           </div>
         </div>
-        <div class="footerBottom">
+        <div className="footerBottom">
           <p>
             Copyright &copy;2023; Designed by{" "}
-            <span class="designer">Anushanga Munasinghe</span>
+            <span className="designer">Anushanga Munasinghe</span>
           </p>
         </div>
       </footer>
@@ -45,4 +47,4 @@ function footer() {
   );
 }
 
-export default footer;
+export default Footer;
