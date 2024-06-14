@@ -18,7 +18,7 @@ function home() {
           <div className="job">
           <h1>Backend Developer</h1><br/>
           </div>
-          
+          <div className="homeAbout">
           <p>
             Welcome to my portfolio! I'm a full-stack developer and UI/UX
             designer passionate about crafting exceptional digital experiences.
@@ -26,10 +26,12 @@ function home() {
             development and design. Let's create something extraordinary
             together!"
           </p>
+          </div>
+          
           <button className="btnCV">Downlord Resume</button>
         </div>
         <div className="pic">
-          <img src={pic} alt="linkin" />
+          <img src={pic} alt="home pic" />
         </div>
       </div>
     </div>

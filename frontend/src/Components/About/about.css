@@ -1,0 +1,44 @@
+.hAbout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 40px 20px 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.me {
+    color: #0296a0;
+}
+
+.cunten {
+    color: #ffffff;
+    margin: 10px 10px;
+}
+
+.about {
+    text-align: center;
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.aboutbg {
+    background-color: #032c2f;
+}
+
+.fullConten {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.abPic img {
+    max-width: 30vw;
+    max-height: auto;
+    text-align: left;
+    margin: 40px;
+    margin-left: 60px;
+}
