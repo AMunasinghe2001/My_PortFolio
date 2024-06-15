@@ -1,12 +1,10 @@
 import React from "react";
-import Nav from "../Nav/nav";
 import "./about.css";
 import aboutpic from "./img/aboutPic.png";
 
 function About() {
   return (
     <div className="aboutbg">
-      <Nav />
       <div className="fullConten">
         <div className="abPic">
           <img src={aboutpic} alt="home pic" />

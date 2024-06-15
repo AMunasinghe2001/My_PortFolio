@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   text-align: center;
 }
 .services-title1 {
@@ -38,7 +38,6 @@
 
 .service-card:hover {
   transform: scale(1.1);
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
   background-image: linear-gradient(to bottom right, #032c2f, rgb(5, 170, 170));
   box-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
   color: white;
@@ -46,12 +45,13 @@
 
 .service-icon {
   font-size: 3rem;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 
 .service-title {
   font-size: 1.5rem;
-  margin-bottom: 10px;
+  margin:20px;
   transition: color 0.5s;
 }
 

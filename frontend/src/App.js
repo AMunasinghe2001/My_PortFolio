@@ -15,11 +15,17 @@ import Footer from "./Components/Footer/footer";
 function App() {
   return (
     <div>
-      
-      
+      <Home/>
+      <About/>
+      <Journey/>
+      <Skills/>
+      <Project/>
+      <Services/>
+      <Countact/>
+
       <React.Fragment>
         <Routes>
-          <Route path="/"element={<Home/>}/>
+          
           <Route path="/mainhome"element={<Home/>}/>
           <Route path="/about"element={<About/>}/>
           <Route path="/journey"element={<Journey/>}/>

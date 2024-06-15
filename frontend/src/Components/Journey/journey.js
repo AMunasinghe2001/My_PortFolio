@@ -1,7 +1,9 @@
 import React from "react";
-import Nav from "../Nav/nav";
 import "./journey.css";
 import { FaCircle } from "react-icons/fa";
+import rvc from "./img/rvc.png";
+import tnbs from "./img/tnbs.png";
+import sliit from "./img/sliit.png";
 
 const Timeline = () => {
   const timelineData = [
@@ -10,27 +12,26 @@ const Timeline = () => {
       title: "Bachelor of Information Technology",
       duration: "2022 - Present",
       institution: "Sri Lanka Institute of Information Technology",
-      logo: "sliit.png", // Corrected path
+      logo: sliit, 
     },
     {
       id: 2,
       title: "Information Communications Technology",
       duration: "2017 - 2021",
       institution: "H/Ruhunu Vijayaba National College",
-      logo: "img/rvc.png", // Updated path
+      logo: rvc, 
     },
     {
       id: 3,
       title: "Information Communications Technology",
       duration: "2017 - 2012",
       institution: "H/Tangalle National Boys School",
-      logo: "./img/tnbs.png", // Updated path
+      logo: tnbs,
     },
   ];
 
   return (
     <div>
-      <Nav />
       <div className="timeline-container">
         <div className="timeline-title">
           <h1 className="timeline-title1">Journ</h1>

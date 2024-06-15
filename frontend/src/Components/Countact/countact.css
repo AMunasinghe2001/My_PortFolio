@@ -12,14 +12,25 @@ body {
   padding: 60px 20px 20px;
   margin: 50px auto;
   background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 9px 33px rgba(0, 0, 0, 0.768);
   border-radius: 10px;
+  margin-bottom: 120px;
 }
 
-.formName {
+.contact-title {
+  font-size: 23px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 50px;
   text-align: center;
-  font-size: 30px;
-  /* color: #333; */
+}
+.contact-title1 {
+  color: rgb(5, 170, 170);
+}
+
+.contact-title2 {
+  color: #032c2f;
 }
 
 form {
@@ -42,7 +53,7 @@ textarea {
   width: 95.5%;
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #878585;
   border-radius: 4px;
   font-size: 16px;
 }
@@ -57,7 +68,7 @@ textarea:hover {
 input[type="submit"] {
   width: 80%;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: rgb(1, 150, 150);
   color: white;
   border: none;
   border-radius: 10px;
@@ -67,7 +78,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: rgb(1, 83, 83);
   transform: scale(1.1);
   color: white;
 }
