@@ -11,7 +11,7 @@ margin: 60px 40px 20px;
     display: flex;
     max-height: 90%;
     background-color: #cdfff485;
-    background-image: linear-gradient(to left, rgba(255,0,0,0), rgba(43, 105, 97, 0.679));
+    background-image: linear-gradient(to left, rgba(43, 105, 97, 0), rgba(43, 105, 97, 0.679));
 }
 .job{
     color: #0296a0;
@@ -29,7 +29,7 @@ margin: 60px 40px 20px;
     color: #1f1f1f;
     font-weight:bold;
 }
-h2{
+.header{
     color: #ffffff;
     border: 10px;
     border-color: #0296a0;
