@@ -1,56 +1,45 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./addproject.css";
-import { Link } from "react-router-dom";
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded'; // Import the correct icon
+import { useNavigate } from "react-router-dom";
 
-const AddProject = () => {
-  const [title, setTitle] = useState("");
-  const [technology, setTechnology] = useState("");
-  const [url, setUrl] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
+function AddProject() {
+  const history = useNavigate();
+  const [inputs, setInputs] = useState({
+    title: "",
+    technology: "",
+    url: "",
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setInputs((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newProject = { title, technology, url};
+    
+    try {
+      const newProject = {
+        title: inputs.title,
+        technology: inputs.technology,
+        url: inputs.url,
+      };
 
-    axios
-      .post("http://localhost:5000/projects", newProject)
-      .then((response) => {
-        console.log("Project added:", response.data);
-        setTitle("");
-        setTechnology("");
-        setUrl("");
-        setShowPopup(true);
-      })
-      .catch((error) =>
-        console.error("There was an error adding the project!", error)
-      );
+      // Make the API request to save the new project
+      await axios.post("http://localhost:5000/projects", newProject);
+
+      // Redirect to dashboard after successful submission
+      history('/dashboard');
+    } catch (error) {
+      console.error("There was an error adding the project!", error);
+    }
   };
 
   return (
     <div>
-      {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50">
-          <div className="bg-gray-800 bg-opacity-75 fixed inset-0 flex justify-center items-center">
-            <div className="fixed inset-0 flex items-center justify-center">
-              <div className="bg-gray-100 shadow-lg rounded-lg p-8 max-w-md border-4 border-green-500 w-[500px]">
-                <div className="text-center mb-6">
-                  <CheckCircleOutlineRoundedIcon className="text-green-500 w-16 h-16 mx-auto" sx={{ fontSize: 64 }} />
-                  <h2 className="text-2xl font-bold text-gray-800 font-sfpro"> Thank You for Submitting!</h2>
-                  <p className="text-gray-600 font-sfpro">Your submission has been received successfully.</p>
-                </div>
-                <div className="text-center">
-                  <Link to="/onlineStockManager/FIteamTable">
-                    <button onClick={() => setShowPopup(false)} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-[100px] font-sfpro">Done</button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="contact-title">
         <h1 className="contact-title1">Add</h1>
         <h1 className="contact-title2">New Project</h1>
@@ -62,8 +51,9 @@ const AddProject = () => {
           <input
             type="text"
             placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={inputs.title}
+            name="title"
+            onChange={handleChange}
           />
           <br />
           <br />
@@ -73,8 +63,9 @@ const AddProject = () => {
           <input
             type="text"
             placeholder="Technology"
-            value={technology}
-            onChange={(e) => setTechnology(e.target.value)}
+            value={inputs.technology}
+            name="technology"
+            onChange={handleChange}
           />
           <br />
           <br />
@@ -84,8 +75,9 @@ const AddProject = () => {
           <input
             type="text"
             placeholder="URL"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            value={inputs.url}
+            name="url"
+            onChange={handleChange}
           />
           <br />
           <br />
@@ -99,6 +91,6 @@ const AddProject = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AddProject;
