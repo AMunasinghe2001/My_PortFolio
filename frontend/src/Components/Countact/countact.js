@@ -24,6 +24,7 @@ function Countact() {
         }
       );
   };
+
   return (
     <div>
       <div className="contact-title">
@@ -60,7 +61,9 @@ function Countact() {
           <br />
           <br />
 
-          <input type="submit" value="Send Message" />
+          <button type="submit" className="submit-btn">
+            Send Message <i className="fas fa-paper-plane"></i>
+          </button>
           <br />
           <br />
         </form>

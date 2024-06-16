@@ -10,13 +10,13 @@ function About() {
           <img src={aboutpic} alt="home pic" />
         </div>
         <div className="about">
-          <div className="hAbout">
+          <div className="hAbout animated-text">
             <h1>About</h1>
             <div className="me">
               <h1>Me</h1>
             </div>
           </div>
-          <div className="cunten">
+          <div className="cunten animated-text">
             <p>
               I am a skilled and versatile professional in full-stack
               development and UI/UX design. With a passion for creating
