@@ -1,0 +1,42 @@
+.dashboard-container {
+    background-color: #0a192f;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dashboard-container h1 {
+    text-align: center;
+}
+
+.projects-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.project-card {
+    background: #fff;
+    color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    text-align: left;
+    padding: 20px;
+}
+
+.project-card img {
+    width: 100%;
+    height: auto;
+}
+
+.project-card h3 {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.project-card p {
+    margin: 10px 0;
+}

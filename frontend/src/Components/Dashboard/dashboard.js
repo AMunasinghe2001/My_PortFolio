@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import './project.css';
+import './dashboard.css';
 
-const Projects = () => {
+const Dashboard = () => {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
@@ -13,12 +12,8 @@ const Projects = () => {
     }, []);
 
     return (
-        <div className="projects-container">
-            <h1>Latest <span>Project</span></h1>
-            <div className="navigation-links">
-                <Link to="/add-project">Add Project</Link>
-                <Link to="/dashboard">Dashboard</Link>
-            </div>
+        <div className="dashboard-container">
+            <h1>Project Dashboard</h1>
             <div className="projects-grid">
                 {projects.map(project => (
                     <div className="project-card" key={project._id}>
@@ -32,4 +27,4 @@ const Projects = () => {
     );
 };
 
-export default Projects;
+export default Dashboard;
