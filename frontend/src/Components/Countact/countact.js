@@ -26,7 +26,7 @@ function Countact() {
   };
 
   return (
-    <div>
+    <div className="hBody">
       <div className="contact-title">
         <h1 className="contact-title1">Hire</h1>
         <h1 className="contact-title2">Me</h1>

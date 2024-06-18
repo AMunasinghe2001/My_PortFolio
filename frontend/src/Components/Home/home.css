@@ -1,7 +1,7 @@
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
 
 .header {
-  margin: 60px 40px 20px;
+  margin: 8% 5% 20px;
 }
 .pic img {
   max-width: auto;
@@ -16,7 +16,7 @@
   padding: 0;
   display: flex;
   max-height: 90%;
-  background-color: #cdfff485;
+  background-color: #ffffff;
   background-image: linear-gradient(
     to left,
     rgba(43, 105, 97, 0),

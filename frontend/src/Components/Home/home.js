@@ -48,7 +48,7 @@ function Home() {
   }, [charIndex, isDeleting, isPaused, titleIndex]);
 
   return (
-    <div>
+    <div id="home">
       <Nav />
       <div className="cover">
         <div className="header">

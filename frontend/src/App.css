@@ -1,0 +1,18 @@
+.pages::before {
+    background-image: url('bgPic.jpg');
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.5;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .pages {
+    background-color: rgba(41, 63, 62, 0.265);
+  }
+  

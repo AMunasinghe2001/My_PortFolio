@@ -1,7 +1,6 @@
-import React from 'react';
-// import { BrowserRouter as Route, Routes, Switch } from 'react-router-dom';
-import {  Route, Routes } from 'react-router-dom';
-import './App.css';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
 
 import Home from "./Components/Home/home";
 import Nav from "./Components/Nav/nav";
@@ -15,35 +14,32 @@ import Footer from "./Components/Footer/footer";
 import AddProject from "./Components/AddProject/addproject";
 import Dashboard from "./Components/Dashboard/dashboard";
 
-
 function App() {
   return (
-    <div>
-      <Home/>
-      <About/>
-      <Journey/>
-      <Skills/>
-      <Project/>
-      <Services/>
-      <Countact/>
-      <AddProject/>
+    <div className="fullApp">
+      <div className="pages">
+        <Home />
+        <About />
+        <Journey />
+        <Skills />
+        <Project />
+        <Services />
+        <Countact />
+      </div>
 
       <React.Fragment>
         <Routes>
-          
-          <Route path="/mainhome"element={<Home/>}/>
-          <Route path="/about"element={<About/>}/>
-          <Route path="/journey"element={<Journey/>}/>
-          <Route path="/skills"element={<Skills/>}/>
-          
-          <Route path="/services"element={<Services/>}/>
-          <Route path="/countact"element={<Countact/>}/>
-          <Route path="/footer"element={<Footer/>}/>
-          {/* <Switch> */}
-          <Route path="/project"element={<Project/>}/>
-          <Route path="/addproject" component={<AddProject/>} />
-          <Route path="/dashboard" component={<Dashboard/>} />
-          {/* </Switch> */}
+          {/* <Route path="/mainhome" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/journey" element={<Journey />} />
+          <Route path="/skills" element={<Skills />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/countact" element={<Countact />} />
+          <Route path="/footer" element={<Footer />} />
+          <Route path="/project" element={<Project />} /> */}
+          <Route path="/addproject" element={<AddProject />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/nav" element={<Nav />} /> */}
         </Routes>
       </React.Fragment>
     </div>

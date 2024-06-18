@@ -25,11 +25,11 @@ body {
 }
 
 .contact-title1 {
-  color: rgb(5, 170, 170);
+  color: rgb(255, 255, 255);
 }
 
 .contact-title2 {
-  color: #032c2f;
+  color: rgb(5, 170, 170);
 }
 
 form {
@@ -94,4 +94,8 @@ textarea {
   height: 100px;
   resize: vertical;
   font-size: 17px;
+}
+.hBody{
+background-color: rgba(2, 17, 14, 0.686);
+padding-top: 100px;
 }

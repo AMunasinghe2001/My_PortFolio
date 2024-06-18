@@ -1,35 +1,62 @@
 .skills {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .technical-skills, .professional-skills {
-    width: 35%;
-    background-image: linear-gradient(to bottom right, #032c2f, rgb(5, 170, 170));
-    border-radius: 10px;
-    margin: 40px;
-    padding: 30px;
-    box-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
-  }
-  
-  .skill {
-    text-align: center;
-    color: white;
-    font-weight: bold;
-    font-size: 30px;
-    margin: 20px 20px 30px;
-  }
-  .skillsTitle{
-    font-size: 23px;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 100px;
+}
+
+.technical-skills, .professional-skills {
+  width: 35%;
+  background-image: linear-gradient(to bottom right, #032c2f, rgb(5, 170, 170));
+  border-radius: 10px;
+  margin: 40px;
+  padding: 30px;
+  box-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
+}
+
+.skill {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  margin: 20px 20px 30px;
+}
+
+.skillsTitle {
+  font-size: 23px;
   display: flex;
   justify-content: center;
   margin-bottom: 50px;
   margin-top: 80px;
   text-align: center;
+}
+
+.skills-title1 {
+  color: rgb(5, 170, 170);
+}
+
+.skills-title2 {
+  color: #032c2f;
+}
+
+@media (max-width: 768px) {
+  .skills {
+    display: block;
+    margin-bottom: 50px; /* Adjust bottom margin for better spacing */
   }
-  .skills-title1{
-    color: rgb(5, 170, 170);
+
+  .technical-skills, .professional-skills {
+    width: 80%; /* Make the sections take most of the screen width */
+    margin: 20px auto; /* Center the sections with auto margins */
+    padding: 20px; /* Adjust padding for smaller screens */
   }
-  .skills-title2{
-    color: #032c2f;
+
+  .skill {
+    font-size: 24px; /* Adjust font size for better readability on smaller screens */
   }
+
+  .skillsTitle {
+    font-size: 20px; /* Adjust title font size */
+    margin-bottom: 30px; /* Adjust bottom margin for better spacing */
+    margin-top: 50px; /* Adjust top margin for better spacing */
+  }
+}

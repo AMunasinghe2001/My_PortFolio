@@ -6,9 +6,6 @@ function About() {
   return (
     <div className="aboutbg">
       <div className="fullConten">
-        <div className="abPic">
-          <img src={aboutpic} alt="home pic" />
-        </div>
         <div className="about">
           <div className="hAbout animated-text">
             <h1>About</h1>
@@ -42,6 +39,9 @@ function About() {
               <br />
             </p>
           </div>
+        </div>
+        <div className="abPic">
+          <img src={aboutpic} alt="home pic" />
         </div>
       </div>
     </div>
