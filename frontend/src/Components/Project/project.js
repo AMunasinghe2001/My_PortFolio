@@ -1,35 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import './project.css';
+import { FaLink } from 'react-icons/fa';
 
-const Projects = () => {
+const URL = "http://localhost:5000/projects";
+
+const fetchHandler = async () => {
+    return await axios.get(URL).then((res) => res.data);
+}
+
+function Project() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/projects')
-            .then(response => setProjects(response.data))
-            .catch(error => console.error(error));
+        fetchHandler().then((data) => {
+            setProjects(data.projects);
+        }).catch((error) => {
+            console.error("There was an error fetching the projects!", error);
+        });
     }, []);
 
+    // Function to interleave the projects starting from the middle
+    const getInterleavedProjects = (projects) => {
+        const interleaved = [];
+        const middle = Math.floor(projects.length / 2);
+        let left = middle - 1;
+        let right = middle;
+
+        while (left >= 0 || right < projects.length) {
+            if (right < projects.length) {
+                interleaved.push(projects[right]);
+                right++;
+            }
+            if (left >= 0) {
+                interleaved.push(projects[left]);
+                left--;
+            }
+        }
+        return interleaved;
+    };
+
+    const interleavedProjects = getInterleavedProjects(projects);
+
     return (
-        <div className="projects-container">
-            <h1>Latest <span>Project</span></h1>
-            <div className="navigation-links">
-                <Link to="/add-project">Add Project</Link>
-                <Link to="/dashboard">Dashboard</Link>
+        <div className="dashboardContainer">
+            <div className='hedder'>
+                <h1 className='Project'>Latest</h1>
+                <h1 className='Dashboard'>Project</h1>
             </div>
-            <div className="projects-grid">
-                {projects.map(project => (
-                    <div className="project-card" key={project._id}>
-                        <img src={project.imageUrl} alt={project.title} />
-                        <h3>{project.title}</h3>
-                        <p>{project.description}</p>
+            <div className="projectsGrid">
+                {interleavedProjects && interleavedProjects.map((project, i) => (
+                    <div className="project-card" key={i}>
+                        <img 
+                            src={`http://localhost:5000/uploads/${project.image}`} 
+                            alt={project.title} 
+                            className="project-image" 
+                        />
+                        <div className="project-card-content">
+                            <h1 className='PCCtitle'>{project.title}</h1>
+                            <h2 className='PCCtitle'>Technology: {project.technology}</h2>
+                            <div className='url'>
+                                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                                    <FaLink size={26} />
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 ))}
             </div>
         </div>
     );
-};
+}
 
-export default Projects;
+export default Project;

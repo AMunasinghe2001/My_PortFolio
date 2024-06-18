@@ -1,63 +1,120 @@
-.projects-container {
-    text-align: center;
-    padding: 20px;
-    background-color: #0a192f;
-    color: #fff;
-}
-
-.projects-container h1 {
-    font-size: 36px;
-}
-
-.projects-container h1 span {
-    color: aqua;
-}
-
-.navigation-links {
-    margin: 20px 0;
-}
-
-.navigation-links a {
-    margin: 0 10px;
-    padding: 10px 20px;
-    background-color: aqua;
-    color: #0a192f;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-.navigation-links a:hover {
-    background-color: #067c82;
-}
-
-.projects-grid {
+.hedder {
+    font-size: 23px;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.Project {
+    color: rgb(5, 170, 170);
+}
+
+.Dashboard {
+    color: #032c2f;
+}
+
+.projectsGrid {
     gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+    
 }
 
 .project-card {
-    background: #fff;
-    color: #000;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
-    text-align: left;
+    background-image: linear-gradient(to bottom right, aqua, rgb(5, 170, 170));
+    border-radius: 10px;
+    font-weight: bold;
+    max-width: 350px;
+    height: 270px;
+    text-align: center;
+    margin: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.5s, box-shadow 0.5s, background-image 0.5s;
+    cursor: pointer;
+    position: relative; /* Ensures absolute positioning works */
+    overflow: hidden; /* Ensures content doesn't overflow */
 }
 
-.project-card img {
+.project-card img{
     width: 100%;
-    height: auto;
+    height: 100%;
+    transition: transform 0.5s;
+    position: absolute; /* Ensures it covers the entire card */
+    top: 0;
+    left: 0;
+    object-fit: cover; /* Ensures it covers the card proportionally */
+    z-index: 1; /* Places it below the content */
+}
+
+.project-card:hover img{
+    transform: scale(1.1); /* Scales the image on hover */
+}
+
+.project-card:hover {
+    transform: scale(1.1);
+    background-image: linear-gradient(to bottom right, #032c2f, rgb(5, 170, 170));
+    box-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
+}
+
+.project-card-content {
+    padding: 20px;
+    position: absolute; /* Allows positioning relative to .project-card */
+    bottom: 0; /* Start at the bottom */
+    width: 100%;
+    height: 70px; /* Initial height */
+    transition: bottom 0.5s, height 0.5s, background 0.5s, opacity 0.5s; /* Smooth transition for bottom and height */
+    background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+    z-index: 2; /* Places it above the image */
+}
+
+.project-card:hover .project-card-content  {
+    bottom: 0; /* Move to the bottom */
+    height: 100%; /* Expand to full height */
+    background-image: linear-gradient(to bottom, #0c7e861a, #0c7e86);
+    opacity: 0.8; /* Slightly transparent */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .PCCtitle {
+        color: #021f19;
+    }
+}
+
+.PCCtitle {
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.project-card h2 {
+    font-size: 1.5em;
+    color: #444;
+}
+
+.url {
+    background-color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto; /* Center the icon horizontally */
+    display: flex;
+    align-items: center; /* Center the icon vertically */
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .project-card h3 {
-    font-size: 20px;
-    padding: 10px;
+    font-size: 1.2em;
+    color: #555;
 }
 
-.project-card p {
-    padding: 0 10px 10px;
+.url a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #000;
 }

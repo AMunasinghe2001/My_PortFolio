@@ -25,7 +25,6 @@ function App() {
       <Project/>
       <Services/>
       <Countact/>
-      <Dashboard/>
       <AddProject/>
 
       <React.Fragment>

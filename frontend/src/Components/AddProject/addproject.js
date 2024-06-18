@@ -10,6 +10,7 @@ function AddProject() {
         technology: "",
         url: "",
     });
+    const [image, setImage] = useState(null);
 
     const handleChange = (e) => {
         setInputs((prevState) => ({
@@ -18,20 +19,24 @@ function AddProject() {
         }));
     };
 
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+        const formData = new FormData();
+        formData.append("title", inputs.title);
+        formData.append("technology", inputs.technology);
+        formData.append("url", inputs.url);
+        formData.append("image", image);
+
         try {
-            const newProject = {
-                title: inputs.title,
-                technology: inputs.technology,
-                url: inputs.url,
-            };
-
-            // Make the API request to save the new project
-            await axios.post("http://localhost:5000/projects", newProject);
-
-            // Redirect to dashboard after successful submission
+            await axios.post("http://localhost:5000/projects", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
             navigate('/dashboard');
         } catch (error) {
             console.error("There was an error adding the project!", error);
@@ -79,6 +84,10 @@ function AddProject() {
                         name="url"
                         onChange={handleChange}
                     />
+                    <br />
+                    <br />
+
+                    <input type="file" onChange={handleImageChange} />
                     <br />
                     <br />
 

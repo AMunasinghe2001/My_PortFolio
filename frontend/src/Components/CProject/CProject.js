@@ -1,12 +1,13 @@
 import React from 'react';
+import './CProject.css';
 
 function CProject({ project }) {
     const { title, technology, url } = project;
     return (
-        <div>
-            <h1>Title: {title}</h1>
-            <h1>Technology: {technology}</h1>
-            <h1>URL: {url}</h1>
+        <div className="project-card-content">
+            <h2>Title: {title}</h2>
+            <h2>Technology: {technology}</h2>
+            <h3>URL: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a></h3>
         </div>
     );
 }

@@ -22,7 +22,7 @@ function Dashboard() {
 
     return (
         <div className="dashboard-container">
-            <h1>Project Dashboard</h1>
+            <h1 className='PD'>Project Dashboard</h1>
             <div className="projects-grid">
                 {projects && projects.map((project, i) => (
                     <div key={i}>

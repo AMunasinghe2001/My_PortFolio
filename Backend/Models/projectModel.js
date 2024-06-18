@@ -1,14 +1,9 @@
-// add mongoose
 const mongoose = require("mongoose");
 
-// assign to schema
-const Schema = mongoose.Schema;
-
-// create a Schema function and call it
-const projectSchema = new Schema({
+const projectSchema = new mongoose.Schema({
     title: {
-        type: String, // data type
-        required: true, // validate, must be filled in our inputs
+        type: String,
+        required: true,
     },
     technology: {
         type: String,
@@ -17,10 +12,11 @@ const projectSchema = new Schema({
     url: {
         type: String,
         required: true,
+    },
+    image: {
+        type: String,
+        required: true,
     }
 });
 
-module.exports = mongoose.model(
-    "ProjectModel", // model name
-    projectSchema // schema
-);
+module.exports = mongoose.model("ProjectModel", projectSchema);
