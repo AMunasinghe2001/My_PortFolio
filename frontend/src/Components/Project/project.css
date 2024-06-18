@@ -1,3 +1,7 @@
+.projectContainer{
+    margin-top: 100px;
+}
+
 .hedder {
     font-size: 23px;
     display: flex;
@@ -16,10 +20,12 @@
 }
 
 .projectsGrid {
-    gap: 20px;
+    display: flex; /* Use flexbox for the grid */
+    flex-wrap: wrap; /* Allow wrapping if there are too many cards to fit in one row */
+    justify-content: center; /* Center the cards horizontally */
+    gap: 20px; /* Gap between the cards */
     width: 100%;
     margin-top: 20px;
-    
 }
 
 .project-card {
@@ -35,6 +41,7 @@
     cursor: pointer;
     position: relative; /* Ensures absolute positioning works */
     overflow: hidden; /* Ensures content doesn't overflow */
+    flex: 1 1 calc(33.333% - 40px); /* Allow flexible sizing of cards */
 }
 
 .project-card img{

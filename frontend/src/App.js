@@ -7,13 +7,14 @@ import Home from "./Components/Home/home";
 import Nav from "./Components/Nav/nav";
 import About from "./Components/About/about";
 import Journey from "./Components/Journey/journey";
-import Skills from "./Components/Skills/skill";
+import Skills from "./Components/Skills/skills";
 import Project from "./Components/Project/project";
 import Services from "./Components/Services/services";
 import Countact from "./Components/Countact/countact";
 import Footer from "./Components/Footer/footer";
 import AddProject from "./Components/AddProject/addproject";
 import Dashboard from "./Components/Dashboard/dashboard";
+
 
 function App() {
   return (

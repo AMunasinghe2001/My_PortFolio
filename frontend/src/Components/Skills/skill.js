@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
+import './skill.css';
 
-function skill() {
+const Skill = ({ title, percentage }) => {
   return (
-    <div>
-        
-        skill
+    <div className="skill-container">
+      <div className="skill-title">{title}</div>
+      <div className="skill-bar">
+        <div className="skill-percentage" style={{ width: `${percentage}%` }}></div>
+      </div>
+      <div className="skill-percentage-label">{percentage}%</div>
     </div>
-  )
-}
+  );
+};
 
-export default skill
+export default Skill;

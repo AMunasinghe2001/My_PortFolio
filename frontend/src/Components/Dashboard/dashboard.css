@@ -1,0 +1,23 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    padding: 40px;
+    background-color: aquamarine;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+.PD {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+}

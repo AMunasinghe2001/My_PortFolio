@@ -1,0 +1,35 @@
+.skills {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .technical-skills, .professional-skills {
+    width: 35%;
+    background-image: linear-gradient(to bottom right, #032c2f, rgb(5, 170, 170));
+    border-radius: 10px;
+    margin: 40px;
+    padding: 30px;
+    box-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
+  }
+  
+  .skill {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 20px 20px 30px;
+  }
+  .skillsTitle{
+    font-size: 23px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+  margin-top: 80px;
+  text-align: center;
+  }
+  .skills-title1{
+    color: rgb(5, 170, 170);
+  }
+  .skills-title2{
+    color: #032c2f;
+  }
