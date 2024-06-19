@@ -30,41 +30,43 @@ const Timeline = () => {
   ];
 
   return (
-    <div className="timeline-container">
-      <div className="timeline-title">
-        <h1 className="timeline-title1">Journ</h1>
-        <h1 className="timeline-title2">ey</h1>
-      </div>
+    <div id="journey">
+      <div className="timeline-container">
+        <div className="timeline-title">
+          <h1 className="timeline-title1">Journ</h1>
+          <h1 className="timeline-title2">ey</h1>
+        </div>
 
-      <div className="timeline">
-        {timelineData.map((item, index) => (
-          <div
-            key={item.id}
-            className={`timeline-item ${index % 2 === 0 ? "left" : "right"}`}
-            style={{ animationDelay: `${index * 1}s` }}
-          >
-            <div className="timeline-img">
-              {/* <img
+        <div className="timeline">
+          {timelineData.map((item, index) => (
+            <div
+              key={item.id}
+              className={`timeline-item ${index % 2 === 0 ? "left" : "right"}`}
+              style={{ animationDelay: `${index * 1}s` }}
+            >
+              <div className="timeline-img">
+                {/* <img
                 src={item.logo}
                 alt={`${item.title} logo`}
                 className="timeline-logo"
               /> */}
-            </div>
+              </div>
 
-            <div className="timeline-content">
-              <img
-                src={item.logo}
-                alt={`${item.title} logo`}
-                className="timeline-logo"
-              />
-              <h2>{item.title}</h2>
-              <br />
-              <h3>{item.duration}</h3>
-              <p>{item.institution}</p>
-              <span className="arrow"></span>
+              <div className="timeline-content">
+                <img
+                  src={item.logo}
+                  alt={`${item.title} logo`}
+                  className="timeline-logo"
+                />
+                <h2>{item.title}</h2>
+                <br />
+                <h3>{item.duration}</h3>
+                <p>{item.institution}</p>
+                <span className="arrow"></span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -43,6 +43,7 @@ function Project() {
     const interleavedProjects = getInterleavedProjects(projects);
 
     return (
+        <div id="project">
         <div className="projectContainer">
             <div className='hedder'>
                 <h1 className='Project'>Latest</h1>
@@ -68,6 +69,7 @@ function Project() {
                     </div>
                 ))}
             </div>
+        </div>
         </div>
     );
 }

@@ -21,7 +21,7 @@ const Skills = () => {
   ];
 
   return (
-    <div>
+    <div id="skills">
       <div className="skillsTitle">
         <h1 className="skills-title1">Skil</h1>
         <h1 className="skills-title2">ls</h1>

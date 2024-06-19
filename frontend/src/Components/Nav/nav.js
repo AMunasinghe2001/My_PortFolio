@@ -27,19 +27,19 @@ function Nav() {
             </a>
           </li>
           <li className="home-11">
-            <Link to="/journey" className="active home-a">
+            <a href="#journey" className="active home-a">
               <h1>Journey</h1>
-            </Link>
+            </a>
           </li>
           <li className="home-11">
-            <Link to="/skills" className="active home-a">
+            <a href="#skills" className="active home-a">
               <h1>Skills</h1>
-            </Link>
+            </a>
           </li>
           <li className="home-11">
-            <Link to="/project" className="active home-a">
+            <a href="#project" className="active home-a">
               <h1>Project</h1>
-            </Link>
+            </a>
           </li>
           <li className="home-11">
             <a href="#services" className="active home-a">
@@ -47,9 +47,9 @@ function Nav() {
             </a>
           </li>
           <li className="home-11">
-            <Link to="/contact" className="active home-a">
+            <a href="#contact" className="active home-a">
               <h1>Hire Me</h1>
-            </Link>
+            </a>
           </li>
         </ul>
       </div>

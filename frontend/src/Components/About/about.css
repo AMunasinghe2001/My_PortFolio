@@ -53,7 +53,7 @@
     }
   
     .about {
-      margin: 20px; /* Adjust margin for smaller screens */
+      margin: 20px;
     }
   
     .fullConten {
@@ -62,8 +62,11 @@
     }
   
     .abPic img {
-      max-width: 80vw; /* Increase width for better visibility */
+      max-width: 60vw; /* Increase width for better visibility */
       margin: 20px auto; /* Center image and adjust margins */
+    }
+    .abPic{
+      margin-bottom:60px;
     }
   }
   
