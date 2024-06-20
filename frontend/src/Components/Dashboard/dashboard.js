@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import './dashboard.css';
 
-const URL = "https://anushanga_munasinghe.vercel.app/projects";
+const URL = "my-portfolio-api-two.vercel.app/projects";
 
 const fetchHandler = async () => {
     return await axios.get(URL).then((res) => res.data);
