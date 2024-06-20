@@ -44,7 +44,7 @@ const Dashboard = () => {
                 {projects && projects.map((project, i) => (
                     <div key={i} className="card">
                         <div className='pic'>
-                            <img src={`https://anushanga_munasinghe.vercel.app/uploads/${project.image}`} alt={project.title} />
+                            <img src={`my-portfolio-api-two.vercel.app/uploads/${project.image}`} alt={project.title} />
                         </div>
                         <div className='dBContent'>
                             <h3>Project Name: {project.title}</h3>
