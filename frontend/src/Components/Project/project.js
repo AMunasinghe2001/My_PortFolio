@@ -3,7 +3,7 @@ import axios from 'axios';
 import './project.css';
 import { FaLink } from 'react-icons/fa';
 
-const URL = "http://localhost:5000/projects";
+const URL = "https://anushanga_munasinghe.vercel.app/projects";
 
 const fetchHandler = async () => {
     return await axios.get(URL).then((res) => res.data);
@@ -53,7 +53,7 @@ function Project() {
                 {interleavedProjects && interleavedProjects.map((project, i) => (
                     <div className="project-card " key={i}>
                         <img 
-                            src={`http://localhost:5000/uploads/${project.image}`} 
+                            src={`https://anushanga_munasinghe.vercel.app/uploads/${project.image}`} 
                             alt={project.title} 
                             className="project-image " 
                         />
