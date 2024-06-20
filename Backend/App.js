@@ -1,10 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const projectRoutes = require("./Routers/projectRoutes");
+const projectRoutes = require("./Routers/projectRoutes.js");
 const cors = require("cors");
 const path = require("path");
 
 const app = express();
+//deploy vercel 
+app.use(cors(
+    
+    {
+        origin: ["https://anushanga_munasinghe.vercel.app"],
+        methods:["GET","POST","PUT","DELETE"],
+        credentials: true
+    }
+));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
