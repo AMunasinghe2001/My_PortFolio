@@ -7,12 +7,12 @@ body {
 
 .countact {
   max-width: 600px;
-  padding: 60px 20px 20px;
-  margin: 50px auto;
+  padding: 5% 5% 2%;
+  margin: 5% auto;
   background-color: #fff;
   box-shadow: 4px 9px 33px rgba(0, 0, 0, 0.768);
   border-radius: 10px;
-  margin-bottom: 120px;
+  margin-bottom: 10%;
 }
 
 .contact-title {
@@ -20,7 +20,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 50px;
+  margin-bottom: 8%;
   text-align: center;
 }
 
@@ -51,7 +51,7 @@ input[type="Subject"],
 textarea {
   width: 95.5%;
   padding: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 3%;
   border: 1px solid #878585;
   border-radius: 4px;
   font-size: 16px;
@@ -98,19 +98,19 @@ textarea {
 
 .hBody {
   background-color: rgba(2, 17, 14, 0.686);
-  padding-top: 100px;
+  padding-top: 10%;
 }
 
 @media (max-width: 768px) {
   .countact {
-    margin: 20px;
+    margin: 5%;
     width: auto;
-    padding: 40px 15px 15px;
+    padding: 7% 5% 5%;
   }
 
   .contact-title {
     font-size: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 8%;
   }
 
   label {
