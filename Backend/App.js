@@ -9,7 +9,7 @@ const app = express();
 app.use(cors(
     
     {
-        origin: ["https://anushanga_munasinghe.vercel.app"],
+        origin: ["https://anushanga-munasinghe.vercel.app"],
         methods:["GET","POST","PUT","DELETE"],
         credentials: true
     }
