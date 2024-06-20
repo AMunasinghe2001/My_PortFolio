@@ -15,7 +15,7 @@ const Login = () => {
 
         if (username === adminUsername && password === adminPassword) {
             setMessage('Login successful');
-            navigate('https://anushanga-munasinghe.vercel.app/dashboard');
+            navigate('/dashboard');
         } else {
             setMessage('Login failed');
         }

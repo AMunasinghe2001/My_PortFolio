@@ -43,6 +43,8 @@ function App() {
             <Route path="/addproject" element={<AddProject />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/updateproject/:id" element={<UpdateProject />} />
+
+            <Route path="/https://anushanga-munasinghe.vercel.app/login" element={<Login/>} />
             {/* <Route path="/nav" element={<Nav />} /> */}
           </Routes>
         </React.Fragment>
