@@ -10,9 +10,8 @@
   margin-right: 20px;
   margin-bottom: -4px;
   margin-top: 80px;
-
 }
-.pic{
+.pic {
   bottom: 0px;
   z-index: 2;
 }
@@ -21,13 +20,14 @@
   padding: 0;
   bottom: 0;
   display: flex;
-  height: 90%;
+  height: 90%; /* Set a constant height for large screens */
   background-color: #ffffff;
   background-image: linear-gradient(
     to left,
     rgba(43, 105, 97, 0),
     rgba(43, 105, 97, 0.679)
   );
+  overflow: hidden; /* Prevent content from overflowing */
 }
 .job {
   font-size: 30px;
@@ -107,6 +107,7 @@
 @media (max-width: 768px) {
   .cover {
     flex-direction: column;
+    height: 550px; /* Set a constant height for smaller screens */
   }
 
   .header {
@@ -120,7 +121,20 @@
   .pic img {
     margin: 0 auto;
   }
-  .cover{
-    height: 650px;
+
+  .name {
+    font-size: 16px; /* Reduce the font size for smaller screens */
+  }
+
+  .job {
+    font-size: 21px; /* Adjust job title size for smaller screens */
+  }
+
+  .homeAbout {
+    font-size: 18px; /* Adjust about text size for smaller screens */
+  }
+
+  .btnCV {
+    font-size: 14px; /* Adjust button text size for smaller screens */
   }
 }
