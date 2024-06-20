@@ -140,8 +140,8 @@ body {
   .timeline-item {
     width: 100%;
     justify-content: flex-start;
-    padding-left: 70px;
-    padding-right: 70px;
+    padding-left: 30px;
+    padding-right: 10px;
   }
 
   .timeline-item.right {
@@ -151,6 +151,7 @@ body {
 
   .timeline-content {
     width: calc(100% - 20px);
+    margin: 0 auto;
   }
 
   .timeline-img {

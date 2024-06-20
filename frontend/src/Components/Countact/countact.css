@@ -99,3 +99,9 @@ textarea {
 background-color: rgba(2, 17, 14, 0.686);
 padding-top: 100px;
 }
+@media (max-width: 768px) {
+  .countact {
+    margin: 40px;
+    width: 400px;
+  }
+}
