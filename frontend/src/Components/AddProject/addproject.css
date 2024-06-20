@@ -40,3 +40,18 @@
 .add-project-container button:hover {
     background-color: #067c82;
 }
+.dashbord-title {
+    font-size: 23px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  .dashbord-title1 {
+    color: rgb(5, 170, 170);
+  }
+  
+  .dashbord-title2 {
+    color: #032c2f;
+  }

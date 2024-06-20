@@ -1,26 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const projectRoutes = require("./Routers/projectRoutes.js");
+const projectRoutes = require("./Routers/projectRoutes");
 const cors = require("cors");
-const multer = require("multer");
 const path = require("path");
 
 const app = express();
 
-// Set up storage for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/");
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 app.use(express.json());
 app.use(cors());
 app.use("/projects", projectRoutes);

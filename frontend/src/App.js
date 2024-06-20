@@ -10,9 +10,10 @@ import Skills from "./Components/Skills/skills";
 import Project from "./Components/Project/project";
 import Services from "./Components/Services/services";
 import Countact from "./Components/Countact/countact";
-import Footer from "./Components/Footer/footer";
+import Login from "./Components/Login/login";
 import AddProject from "./Components/AddProject/addproject";
 import Dashboard from "./Components/Dashboard/dashboard";
+import UpdateProject from './Components/UpdateProject/updateproject';
 
 function App() {
   return (
@@ -27,9 +28,10 @@ function App() {
         <Countact />
       </div>
 
-      <React.Fragment>
-        <Routes>
-          {/* <Route path="/mainhome" element={<Home />} />
+      <div className="App">
+        <React.Fragment>
+          <Routes>
+            {/* <Route path="/mainhome" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/journey" element={<Journey />} />
           <Route path="/skills" element={<Skills />} />
@@ -37,11 +39,14 @@ function App() {
           <Route path="/countact" element={<Countact />} />
           <Route path="/footer" element={<Footer />} />
           <Route path="/project" element={<Project />} /> */}
-          <Route path="/addproject" element={<AddProject />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/nav" element={<Nav />} /> */}
-        </Routes>
-      </React.Fragment>
+            <Route exact path="/login" element={<Login />} />
+            <Route path="/addproject" element={<AddProject />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/updateproject/:id" element={<UpdateProject />} />
+            {/* <Route path="/nav" element={<Nav />} /> */}
+          </Routes>
+        </React.Fragment>
+      </div>
     </div>
   );
 }

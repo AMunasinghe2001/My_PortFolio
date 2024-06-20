@@ -45,20 +45,20 @@ function Project() {
     return (
         <div id="project">
         <div className="projectContainer">
-            <div className='hedder'>
+            <div className='hedder animated-text'>
                 <h1 className='Project'>Latest</h1>
                 <h1 className='Dashboard'>Project</h1>
             </div>
-            <div className="projectsGrid">
+            <div className="projectsGrid ">
                 {interleavedProjects && interleavedProjects.map((project, i) => (
-                    <div className="project-card" key={i}>
+                    <div className="project-card " key={i}>
                         <img 
                             src={`http://localhost:5000/uploads/${project.image}`} 
                             alt={project.title} 
-                            className="project-image" 
+                            className="project-image " 
                         />
                         <div className="project-card-content">
-                            <h1 className='PCCtitle'>{project.title}</h1>
+                            <h1 className='PCCtitle animated-text'>{project.title}</h1>
                             <h2 className='PCCtitle'>Technology: {project.technology}</h2>
                             <div className='url'>
                                 <a href={project.url} target="_blank" rel="noopener noreferrer">

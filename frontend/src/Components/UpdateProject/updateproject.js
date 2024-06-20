@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./addproject.css";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import "../AddProject/addproject.css";
 
-function AddProject() {
+function UpdateProject() {
+    const { id } = useParams();
     const navigate = useNavigate();
     const [inputs, setInputs] = useState({
         title: "",
@@ -11,6 +12,23 @@ function AddProject() {
         url: "",
     });
     const [image, setImage] = useState(null);
+
+    useEffect(() => {
+        const fetchProject = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/projects/${id}`);
+                const project = res.data.project;
+                setInputs({
+                    title: project.title,
+                    technology: project.technology,
+                    url: project.url,
+                });
+            } catch (error) {
+                console.error("There was an error fetching the project!", error);
+            }
+        };
+        fetchProject();
+    }, [id]);
 
     const handleChange = (e) => {
         setInputs((prevState) => ({
@@ -29,25 +47,27 @@ function AddProject() {
         formData.append("title", inputs.title);
         formData.append("technology", inputs.technology);
         formData.append("url", inputs.url);
-        formData.append("image", image);
+        if (image) {
+            formData.append("image", image);
+        }
 
         try {
-            await axios.post("http://localhost:5000/projects", formData, {
+            await axios.put(`http://localhost:5000/projects/${id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
             navigate('/dashboard');
         } catch (error) {
-            console.error("There was an error adding the project!", error);
+            console.error("There was an error updating the project!", error);
         }
     };
 
     return (
         <div>
-            <div className="dashbord-title">
-                <h1 className="dashbord-title1">Add</h1>
-                <h1 className="dashbord-title2">New Project</h1>
+            <div className="contact-title">
+                <h1 className="contact-title1">Update</h1>
+                <h1 className="contact-title2">Project</h1>
             </div>
             <div className="countact">
                 <form onSubmit={handleSubmit}>
@@ -92,7 +112,7 @@ function AddProject() {
                     <br />
 
                     <button type="submit" className="submit-btn">
-                        Add Project <i className="fas fa-paper-plane"></i>
+                        Update Project <i className="fas fa-paper-plane"></i>
                     </button>
                     <br />
                     <br />
@@ -102,4 +122,4 @@ function AddProject() {
     );
 }
 
-export default AddProject;
+export default UpdateProject;

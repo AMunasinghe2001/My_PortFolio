@@ -50,9 +50,20 @@ const getProjectById = async (req, res, next) => {
 const updateProject = async (req, res, next) => {
     const id = req.params.id;
     const { title, technology, url } = req.body;
+    const image = req.file ? req.file.filename : null;
+
     let project;
     try {
-        project = await Project.findByIdAndUpdate(id, { title, technology, url }, { new: true });
+        project = await Project.findById(id);
+        if (project) {
+            project.title = title;
+            project.technology = technology;
+            project.url = url;
+            if (image) {
+                project.image = image;
+            }
+            await project.save();
+        }
     } catch (err) {
         console.log(err);
     }
@@ -78,8 +89,10 @@ const deleteProject = async (req, res, next) => {
 };
 
 // Export the controller functions
-exports.getAllProjects = getAllProjects;
-exports.addProject = addProject;
-exports.getProjectById = getProjectById;
-exports.updateProject = updateProject;
-exports.deleteProject = deleteProject;
+module.exports = {
+    getAllProjects,
+    addProject,
+    getProjectById,
+    updateProject,
+    deleteProject,
+};

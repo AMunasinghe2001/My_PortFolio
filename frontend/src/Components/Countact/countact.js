@@ -28,11 +28,11 @@ function Countact() {
   return (
     <div id="contact">
       <div className="hBody">
-        <div className="contact-title">
+        <div className="contact-title animated-text">
           <h1 className="contact-title1">Hire</h1>
           <h1 className="contact-title2">Me</h1>
         </div>
-        <div className="countact">
+        <div className="countact ">
           <form ref={form} onSubmit={sendEmail}>
             <label>Name</label>
             <br />

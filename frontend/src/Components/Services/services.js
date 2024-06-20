@@ -43,18 +43,18 @@ const Services = () => {
 
   return (
     <div id="services">
-      <div className="services-container">
-        <div className="services-title">
+      <div className="services-container ">
+        <div className="services-title animated-text">
           <h1 className="services-title1">Our</h1>
           <h1 className="services-title2">Services</h1>
         </div>
 
         <div className="services-grid">
           {servicesData.map((service) => (
-            <div key={service.id} className="service-card">
-              <div className="service-icon">{service.icon}</div>
-              <h2 className="service-title">{service.title}</h2>
-              <p className="service-description">{service.description}</p>
+            <div key={service.id} className="service-card ">
+              <div className="service-icon animated-text">{service.icon}</div>
+              <h2 className="service-title animated-text">{service.title}</h2>
+              <p className="service-description animated-text">{service.description}</p>
             </div>
           ))}
         </div>

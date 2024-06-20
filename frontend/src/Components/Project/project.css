@@ -74,6 +74,7 @@
     transition: bottom 0.5s, height 0.5s, background 0.5s, opacity 0.5s; /* Smooth transition for bottom and height */
     background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
     z-index: 2; /* Places it above the image */
+    color: #000;
   }
   
   .project-card:hover .project-card-content {

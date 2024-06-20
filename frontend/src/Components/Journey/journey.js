@@ -32,7 +32,7 @@ const Timeline = () => {
   return (
     <div id="journey">
       <div className="timeline-container">
-        <div className="timeline-title">
+        <div className="timeline-title animated-text">
           <h1 className="timeline-title1">Journ</h1>
           <h1 className="timeline-title2">ey</h1>
         </div>

@@ -22,13 +22,13 @@ const Skills = () => {
 
   return (
     <div id="skills">
-      <div className="skillsTitle">
+      <div className="skillsTitle animated-text">
         <h1 className="skills-title1">Skil</h1>
-        <h1 className="skills-title2">ls</h1>
+        <h1 className="skills-title2 ">ls</h1>
       </div>
       <div className="skills">
-        <div className="technical-skills">
-          <h2 className="skill">Technical Skills</h2>
+        <div className="technical-skills ">
+          <h2 className="skill animated-text">Technical Skills</h2>
           {technicalSkills.map((skill, index) => (
             <Skill
               key={index}
@@ -38,7 +38,7 @@ const Skills = () => {
           ))}
         </div>
         <div className="professional-skills">
-          <h2 className="skill">Professional Skills</h2>
+          <h2 className="skill animated-text">Professional Skills</h2>
           {professionalSkills.map((skill, index) => (
             <Skill
               key={index}
