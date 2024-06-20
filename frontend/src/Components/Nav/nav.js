@@ -1,13 +1,31 @@
-import React, { useState } from "react";
-import './nav.css';
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import './nav.css';
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const closeMenu = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("click", closeMenu);
+    } else {
+      document.removeEventListener("click", closeMenu);
+    }
+    return () => {
+      document.removeEventListener("click", closeMenu);
+    };
+  }, [isOpen]);
 
   return (
     <div>
@@ -15,7 +33,7 @@ function Nav() {
         <div className="hamburger" onClick={toggleMenu}>
           &#9776;
         </div>
-        <ul className={`home-u1 ${isOpen ? 'show' : ''}`}>
+        <ul ref={dropdownRef} className={`home-u1 ${isOpen ? 'show' : ''}`}>
           <li className="home-11">
             <a href="#home" className="active home-a">
               <h1>Home</h1>
@@ -51,10 +69,10 @@ function Nav() {
               <h1>Hire Me</h1>
             </a>
           </li>
-        <Link to="/login">
-          <button>
-            hi
-          </button>
+          <Link to="/login">
+            <button>
+              hi
+            </button>
           </Link>
         </ul>
       </div>

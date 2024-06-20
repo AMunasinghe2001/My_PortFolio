@@ -107,7 +107,7 @@
 @media (max-width: 768px) {
   .cover {
     flex-direction: column;
-    height: 550px; /* Set a constant height for smaller screens */
+    height: 500px; /* Set a constant height for smaller screens */
   }
 
   .header {
