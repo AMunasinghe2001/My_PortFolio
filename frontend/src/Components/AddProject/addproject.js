@@ -32,7 +32,7 @@ function AddProject() {
         formData.append("image", image);
 
         try {
-            await axios.post("https://anushanga_munasinghe.vercel.app/projects", formData, {
+            await axios.post("my-portfolio-api-two.vercel.app/projects", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
