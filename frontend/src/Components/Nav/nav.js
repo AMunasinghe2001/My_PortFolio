@@ -51,7 +51,7 @@ function Nav() {
               <h1>Hire Me</h1>
             </a>
           </li>
-        <Link href="https://anushanga-munasinghe.vercel.app/login">
+        <Link to="/login">
           <button>
             hi
           </button>
