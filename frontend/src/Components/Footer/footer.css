@@ -78,4 +78,9 @@
     font-weight: 400;
     margin: 0px 5px;
   }
+  @media (max-width: 768px) {
+    .socialIcons img{
+      max-width: 40px;
+    }
+  }
   
