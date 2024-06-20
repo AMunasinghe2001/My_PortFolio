@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './nav.css';
+import { Link } from "react-router-dom";
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +51,11 @@ function Nav() {
               <h1>Hire Me</h1>
             </a>
           </li>
+        <Link to="/login">
+          <button>
+            hi
+          </button>
+          </Link>
         </ul>
       </div>
     </div>
