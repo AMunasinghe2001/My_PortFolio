@@ -2,18 +2,19 @@
 
 .header {
   margin: 8% 5% 20px;
+  z-index: 1;
 }
 .pic img {
-  max-width: auto;
-  max-height: 85vh;
-  text-align: right;
-  margin-right: 20px;
-  margin-bottom: -4px;
-  margin-top: 80px;
+  max-width: 100%;
+  height: auto;
+  margin-right: 25px;
 }
 .pic {
-  bottom: 0px;
-  z-index: 2;
+  position: absolute;
+  right: 0;
+  z-index: 0;
+  margin-top: 5%;
+  width: 398px;
 }
 .cover {
   margin: 0;
@@ -28,6 +29,7 @@
     rgba(43, 105, 97, 0.679)
   );
   overflow: hidden; /* Prevent content from overflowing */
+  position: relative;
 }
 .job {
   font-size: 30px;
@@ -36,6 +38,7 @@
   margin-right: -6px;
   text-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
   min-height: 55px; /* Adjust as needed to match the height of one line of text */
+  white-space: nowrap; /* Prevent job text from wrapping */
 }
 .cursor {
   display: inline-block;
@@ -76,6 +79,7 @@
   font-size: 20px;
   color: #1f1f1f;
   font-weight: bold;
+  max-width:600px;
 }
 .header {
   color: #ffffff;
@@ -128,6 +132,7 @@
 
   .job {
     font-size: 21px; /* Adjust job title size for smaller screens */
+    white-space: nowrap; /* Prevent job text from wrapping */
   }
 
   .homeAbout {
