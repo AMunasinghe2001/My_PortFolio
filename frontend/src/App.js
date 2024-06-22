@@ -10,7 +10,7 @@ import Skills from "./Components/Skills/skills";
 import Project from "./Components/Project/project";
 import Services from "./Components/Services/services";
 import Countact from "./Components/Countact/countact";
-import Login from "./Components/Login/login";
+import Login from "./Components/Login/login.js";
 import AddProject from "./Components/AddProject/addproject";
 import Dashboard from "./Components/Dashboard/dashboard";
 import UpdateProject from './Components/UpdateProject/updateproject';
@@ -44,7 +44,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/updateproject/:id" element={<UpdateProject />} />
 
-            <Route path="https://anushanga-munasinghe.vercel.app/login" element={<Login/>} />
+            <Route path="/login" element={<Login/>} />
             {/* <Route path="/nav" element={<Nav />} /> */}
           </Routes>
         </React.Fragment>
