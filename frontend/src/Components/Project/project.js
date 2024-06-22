@@ -11,12 +11,15 @@ const fetchHandler = async () => {
 
 function Project() {
     const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchHandler().then((data) => {
             setProjects(data.projects);
+            setLoading(false); // Stop loading animation once data is fetched
         }).catch((error) => {
             console.error("There was an error fetching the projects!", error);
+            setLoading(false); // Stop loading animation even if there's an error
         });
     }, []);
 
@@ -44,32 +47,37 @@ function Project() {
 
     return (
         <div id="project">
-        <div className="projectContainer">
-            <div className='hedder animated-text'>
-                <h1 className='Project'>Latest</h1>
-                <h1 className='Dashboard'>Project</h1>
-            </div>
-            <div className="projectsGrid ">
-                {interleavedProjects && interleavedProjects.map((project, i) => (
-                    <div className="project-card " key={i}>
-                        <img 
-                            src={`https://my-portfolio-api-two.vercel.app/uploads/${project.image}`} 
-                            alt={project.title} 
-                            className="project-image " 
-                        />
-                        <div className="project-card-content">
-                            <h1 className='PCCtitle animated-text'>{project.title}</h1>
-                            <h2 className='PCCtitle'>Technology: {project.technology}</h2>
-                            <div className='url'>
-                                <a href={project.url} target="_blank" rel="noopener noreferrer">
-                                    <FaLink size={26} />
-                                </a>
+            <div className="projectContainer">
+                <div className='hedder animated-text'>
+                    <h1 className='Project'>Latest</h1>
+                    <h1 className='Dashboard'>Project</h1>
+                </div>
+                <div className="projectsGrid">
+                {loading && (
+                        <div className="small-loader-container">
+                            <div className="small-loader"></div>
+                        </div>
+                    )}
+                    {!loading && interleavedProjects && interleavedProjects.map((project, i) => (
+                        <div className="project-card" key={i}>
+                            <img 
+                                src={`https://my-portfolio-api-two.vercel.app/uploads/${project.image}`} 
+                                alt={project.title} 
+                                className="project-image" 
+                            />
+                            <div className="project-card-content">
+                                <h1 className='PCCtitle animated-text'>{project.title}</h1>
+                                <h2 className='PCCtitle'>Technology: {project.technology}</h2>
+                                <div className='url'>
+                                    <a href={project.url} target="_blank" rel="noopener noreferrer">
+                                        <FaLink size={26} />
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
         </div>
     );
 }
