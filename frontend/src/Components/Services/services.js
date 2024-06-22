@@ -6,14 +6,14 @@ const Services = () => {
   const servicesData = [
     {
       id: 1,
-      title: "Frontend Develope",
+      title: "Frontend Develop",
       description:
         "With proficiency in HTML, CSS, JavaScript, and React, I create visually appealing and user-friendly frontend experiences that adapt smoothly across devices.",
       icon: <FaLaptopCode />,
     },
     {
       id: 2,
-      title: "Backend Develope",
+      title: "Backend Develop",
       description:
         "Skilled in MongoDB and MySQL, I specialize in backend development. I handle data storage, retrieval, and manipulation, building efficient backend systems for web applications.",
       icon: <FaDatabase />,
