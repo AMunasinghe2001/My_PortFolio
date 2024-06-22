@@ -39,13 +39,13 @@ function App() {
           <Route path="/countact" element={<Countact />} />
           <Route path="/footer" element={<Footer />} />
           <Route path="/project" element={<Project />} /> */}
-            <Route exact path="/login" element={<Login />} />
+            
             <Route path="/addproject" element={<AddProject />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/updateproject/:id" element={<UpdateProject />} />
 
             <Route path="/login" element={<Login/>} />
-            {/* <Route path="/nav" element={<Nav />} /> */}
+            
           </Routes>
         </React.Fragment>
       </div>

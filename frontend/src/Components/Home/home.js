@@ -79,7 +79,9 @@ function Home() {
           </div>
 
           <button className="btnCV animated-text">
-            Download Resume <i className="fas fa-download"></i>
+            <a href="/Anushanga_Munasinghe_CV.pdf" download>
+              Download Resume <i className="fas fa-download"></i>
+            </a>
           </button>
         </div>
         <div className="pic">

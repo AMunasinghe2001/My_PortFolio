@@ -99,6 +99,13 @@
   transition: background-color 0.5s;
   border: none;
 }
+.btnCV a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btnCV a:hover {
+  color: white;
+}
 .btnCV i {
   margin-left: 10px;
   font-size: 18px;

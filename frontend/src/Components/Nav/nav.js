@@ -69,6 +69,7 @@ function Nav() {
               <h1>Hire Me</h1>
             </a>
           </li>
+          
           <Link to="/login">
             <button>
               hi
