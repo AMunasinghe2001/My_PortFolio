@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import './dashboard.css';
 
-const URL = "http://localhost:5000/projects";
+const URL = "https://my-port-folio-livid.vercel.app/projects";
 
 const fetchHandler = async () => {
     return await axios.get(URL).then((res) => res.data);
@@ -44,7 +44,7 @@ const Dashboard = () => {
                 {projects && projects.map((project, i) => (
                     <div key={i} className="card">
                         <div className='pic'>
-                            <img src={`http://localhost:5000/uploads/${project.image}`} alt={project.title} />
+                            <img src={`https://my-port-folio-livid.vercel.app/uploads/${project.image}`} alt={project.title} />
                         </div>
                         <div className='dBContent'>
                             <h3>Project Name: {project.title}</h3>

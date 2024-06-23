@@ -16,7 +16,7 @@ function UpdateProject() {
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/projects/${id}`);
+                const res = await axios.get(`https://my-port-folio-livid.vercel.app/projects/${id}`);
                 const project = res.data.project;
                 setInputs({
                     title: project.title,
@@ -52,7 +52,7 @@ function UpdateProject() {
         }
 
         try {
-            await axios.put(`http://localhost:5000/projects/${id}`, formData, {
+            await axios.put(`https://my-port-folio-livid.vercel.app/projects/${id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
