@@ -7,7 +7,6 @@
 .pic img {
   max-width: 100%;
   height: auto;
-  margin-right: 25px;
 }
 .pic {
   position: absolute;
@@ -15,6 +14,8 @@
   z-index: 0;
   margin-top: 5%;
   width: 398px;
+  margin-right: 5%;
+  height: auto;
 }
 .cover {
   margin: 0;
