@@ -14,10 +14,6 @@ app.use(cors(
         credentials: true
     }
 ));
-
-app.get('/', (req, res) => {
-    res.send('Hello World');
-  });
   
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
