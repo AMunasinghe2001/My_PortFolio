@@ -7,7 +7,7 @@ import Home from "./Components/Home/home";
 import About from "./Components/About/about";
 import Journey from "./Components/Journey/journey";
 import Skills from "./Components/Skills/skills";
-import Project from "./Components/Project/project";
+import Project from "./Components/Project/projects.js";
 import Services from "./Components/Services/services";
 import Countact from "./Components/Countact/countact";
 import Login from "./Components/Login/login.js";
