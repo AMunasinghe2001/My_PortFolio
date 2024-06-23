@@ -3,11 +3,19 @@ import "./journey.css";
 import rvc from "./img/rvc.png";
 import tnbs from "./img/tnbs.png";
 import sliit from "./img/sliit.png";
+import uom from "./img/uom.png";
 
 const Timeline = () => {
   const timelineData = [
     {
-      id: 1,
+      id: 4,
+      title: "Phython for Beginners",
+      duration: "2024",
+      institution: "University of Moratuwa",
+      logo: uom,
+    },
+    {
+      id: 3,
       title: "Bachelor of Information Technology",
       duration: "2022 - Present",
       institution: "Sri Lanka Institute of Information Technology",
@@ -21,12 +29,13 @@ const Timeline = () => {
       logo: rvc,
     },
     {
-      id: 3,
+      id: 1,
       title: "Information Communications Technology",
       duration: "2012 - 2017",
       institution: "H/Tangalle National Boys School",
       logo: tnbs,
     },
+    
   ];
 
   return (
