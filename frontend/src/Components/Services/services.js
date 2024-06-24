@@ -8,7 +8,7 @@ const Services = () => {
       id: 1,
       title: "Frontend Develop",
       description:
-        "With proficiency in HTML, CSS, JavaScript, and React, I create visually appealing and user-friendly frontend experiences that adapt smoothly across devices.",
+        "With proficiency in HTML, CSS, JavaScript, and React, I create visually appealing and user-friendly frontend experiences that adapt smoothly across devices. My focus is on building responsive and interactive interfaces that enhance user engagement..",
       icon: <FaLaptopCode />,
     },
     {
@@ -29,14 +29,14 @@ const Services = () => {
       id: 4,
       title: "Mobile App development",
       description:
-        "With a deep understanding of user-centered design principles, I specialize in creating exceptional UI/UX experiences. I collaborate closely with developers and conduct user research to ensure designs meet user needs.",
+        "With a deep understanding of user-centered design principles, I specialize in crafting outstanding UI/UX experiences. I closely collaborate with developers and conduct user research to create mobile applications that are not only functional but also intuitive and engaging.",
       icon: <FaAndroid />,
     },
     {
       id: 5,
       title: "Software development",
       description:
-        "With a deep understanding of user-centered design principles, I specialize in creating exceptional UI/UX experiences. I collaborate closely with developers and conduct user research to ensure designs meet user needs.",
+        "With specialized skills in MongoDB and MySQL, I excel in backend development, efficiently handling data storage, retrieval, and manipulation. I create robust and scalable backend systems for web applications, ensuring seamless performance and reliability.",
       icon: <FaCogs />,
     },
   ];

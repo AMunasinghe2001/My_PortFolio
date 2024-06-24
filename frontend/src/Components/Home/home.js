@@ -70,8 +70,8 @@ function Home() {
           </div>
           <div className="homeAbout animated-text">
             <p>
-              Welcome to my portfolio! I'm a full-stack developer and UI/UX
-              designer passionate about crafting exceptional digital
+              Welcome to my portfolio! I'm a full-stack developer, UI/UX
+              designer and Mobile app developer passionate about crafting exceptional digital
               experiences. Browse through my work and discover my expertise in
               front-end development and design. Let's create something
               extraordinary together!

@@ -25,17 +25,18 @@ function About() {
                 exceeds expectations and am adept at problem-solving.
                 <br />
                 <br />
-                Beyond my technical skills, I am also a dedicated YouTuber,
-                sharing my knowledge and insights with a wide audience. Through
-                my videos, I aim to educate and inspire others in web
-                development and design. By attending conferences and workshops,
-                I stay up-to-date with the latest industry trends and
-                continuously enhance my skills.
+                Beyond my technical skills, I am a talented artist, architect, 
+                photographer, etc. and a very active citizen in the arts.I share my 
+                artistic knowledge and insights extensively with my full-stack development
+                 and UI/UX design.My strong aim is to provide maximum satisfaction to my clients through web 
+                 development and design along with my artistic knowledge and technical knowledge.
                 <br />
                 <br />
-                I am enthusiastic about collaborating with like-minded
-                individuals and contributing my expertise to craft exceptional
-                web experiences that captivate and engage users.
+                I am enthusiastic about collaborating with like-minded individuals and 
+                contributing my expertise to craft exceptional web experiences that 
+                captivate and engage users.By attending conferences and workshops, 
+                I stay up-to-date with the latest industry 
+                trends and continuously enhance my skills.
                 <br />
                 <br />
               </p>
