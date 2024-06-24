@@ -3,6 +3,8 @@ import './projects.css';
 import { FaLink } from 'react-icons/fa';
 import projectImage1 from './img/portfolio.jpg';
 import projectImage2 from './img/hotelbook.jpg';
+import projectImage3 from './img/todo app.jpg';
+import projectImage4 from './img/game app.jpg';
 
 const projectData = [
     {
@@ -16,8 +18,22 @@ const projectData = [
         id: 2,
         title: "Hottel Booking",
         technology: "PHP,JavaScript,CSS,SQL",
-        url: "https://https://github.com/AMunasinghe2001/hotelBookingSystem",
+        url: "https://github.com/AMunasinghe2001/hotelBookingSystem",
         image: projectImage2,
+    },
+    {
+        id: 3,
+        title: "Task Master App",
+        technology: "Kotlin",
+        url: "https://github.com/AMunasinghe2001/TaskMasterApp",
+        image: projectImage3,
+    },
+    {
+        id: 4,
+        title: "Game App",
+        technology: "Kotlin",
+        url: "https://github.com/AMunasinghe2001/TaskMasterApp",
+        image: projectImage4,
     },
     
 ];
