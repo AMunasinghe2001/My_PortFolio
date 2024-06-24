@@ -1,8 +1,8 @@
 import React from 'react';
 import './projects.css';
 import { FaLink } from 'react-icons/fa';
-import projectImage1 from './img/portfolio.jpg'; // Example images
-
+import projectImage1 from './img/portfolio.jpg';
+import projectImage2 from './img/hotelbook.jpg';
 
 const projectData = [
     {
@@ -12,7 +12,13 @@ const projectData = [
         url: "https://github.com/AMunasinghe2001/My_PortFolio",
         image: projectImage1,
     },
-   
+    {
+        id: 2,
+        title: "Hottel Booking",
+        technology: "PHP,JavaScript,CSS,SQL",
+        url: "https://https://github.com/AMunasinghe2001/hotelBookingSystem",
+        image: projectImage2,
+    },
     
 ];
 

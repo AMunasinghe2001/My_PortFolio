@@ -87,7 +87,7 @@
 }
   
 .project-card-content {
-    padding: 20px;
+    padding: 10px;
     position: absolute; /* Allows positioning relative to .project-card */
     bottom: 0; /* Start at the bottom */
     width: 100%;
