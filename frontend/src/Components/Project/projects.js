@@ -5,6 +5,9 @@ import projectImage1 from './img/portfolio.jpg';
 import projectImage2 from './img/hotelbook.jpg';
 import projectImage3 from './img/todo app.jpg';
 import projectImage4 from './img/game app.jpg';
+import projectImage5 from './img/itp.jpg';
+import projectImage6 from './img/mad.jpg';
+import projectImage7 from './img/oop.jpg';
 
 const projectData = [
     {
@@ -32,10 +35,30 @@ const projectData = [
         id: 4,
         title: "Game App",
         technology: "Kotlin",
-        url: "https://github.com/AMunasinghe2001/TaskMasterApp",
+        url: "",
         image: projectImage4,
     },
-    
+    {
+        id: 5,
+        title: "Furniture Manage Web App",
+        technology: "MERN Stack",
+        url: "https://github.com/it22606006/Rukshan-Furniture",
+        image: projectImage5,
+    },
+    {
+        id: 6,
+        title: "Pet Care App",
+        technology: "Kotlin",
+        url: "",
+        image: projectImage6,
+    },
+    {
+        id: 7,
+        title: "Travel Booking Web",
+        technology: "Java,JavaScript,CSS,SQL",
+        url: "https://github.com/AMunasinghe2001/Book-Tour-website-OOP",
+        image: projectImage7,
+    },
 ];
 
 // Function to interleave the projects starting from the middle
