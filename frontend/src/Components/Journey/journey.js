@@ -8,6 +8,13 @@ import uom from "./img/uom.png";
 const Timeline = () => {
   const timelineData = [
     {
+      id: 5,
+      title: "•	Web Desing for Beginners",
+      duration: "2024",
+      institution: "University of Moratuwa",
+      logo: uom,
+    },
+    {
       id: 4,
       title: "Phython for Beginners",
       duration: "2024",
