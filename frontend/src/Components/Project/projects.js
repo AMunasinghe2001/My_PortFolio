@@ -8,6 +8,7 @@ import projectImage4 from './img/game app.jpg';
 import projectImage5 from './img/itp.jpg';
 import projectImage6 from './img/mad.jpg';
 import projectImage7 from './img/oop.jpg';
+import projectImage8 from './img/rukshanferniture.jpg';
 
 const projectData = [
     {
@@ -58,6 +59,13 @@ const projectData = [
         technology: "Java,JavaScript,CSS,SQL",
         url: "https://github.com/AMunasinghe2001/Book-Tour-website-OOP",
         image: projectImage7,
+    },
+    {
+        id: 8,
+        title: "Rukshan Furniture Web App",
+        technology: "MERN Stack,Vite+React",
+        url: "https://github.com/Bashitha-Weerapperuma/Rukshan-furniture",
+        image: projectImage8,
     },
 ];
 
