@@ -52,14 +52,14 @@ function Home() {
       <Nav />
       <div className="cover">
         <div className="header">
-          <h2 className="animated-text">Hello, It's Me...</h2>
+          <h2 className="homeh2 animated-text">Hello, It's Me...</h2>
           <br />
 
           <div className="name animated-text">
             <h1>Anushanga Munasinghe</h1>
             <br />
           </div>
-          <h2 className="animated-text">And I'm</h2>
+          <h2 className="homeh2 animated-text">And I'm</h2>
           <br />
           <div className="job animated-text">
             <h1>

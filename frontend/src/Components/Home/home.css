@@ -75,7 +75,13 @@
   color: #ffffff;
   font-weight: bold;
   font-size: 20px;
+  text-shadow: 4px 9px 13px rgba(0, 0, 0, 0.5);
 }
+
+.homeh2{
+  text-shadow: 4px 9px 13px rgba(63, 62, 62, 0.5);
+}
+
 .homeAbout {
   font-size: 20px;
   color: #1f1f1f;
@@ -119,7 +125,7 @@
 @media (max-width: 768px) {
   .cover {
     flex-direction: column;
-    height: 500px; /* Set a constant height for smaller screens */
+    height: auto;
   }
 
   .header {
@@ -135,12 +141,17 @@
   }
 
   .name {
-    font-size: 16px; /* Reduce the font size for smaller screens */
+    font-size: 16px;
+    color: #1f1f1f;
+  }
+
+  .homeh2{
+    color: #1f1f1f;
   }
 
   .job {
-    font-size: 21px; /* Adjust job title size for smaller screens */
-    white-space: nowrap; /* Prevent job text from wrapping */
+    font-size: 15px;
+    text-align: center;
   }
 
   .homeAbout {
@@ -150,4 +161,5 @@
   .btnCV {
     font-size: 14px; /* Adjust button text size for smaller screens */
   }
+  
 }
