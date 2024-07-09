@@ -36,7 +36,7 @@ const projectData = [
         id: 4,
         title: "Game App",
         technology: "Kotlin",
-        url: "",
+        url: "https://github.com/AMunasinghe2001/Game_App",
         image: projectImage4,
     },
     {
