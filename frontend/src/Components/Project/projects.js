@@ -62,7 +62,7 @@ const projectData = [
     },
     {
         id: 8,
-        title: "Rukshan Furniture Web App",
+        title: "Rukshan Furniture Web",
         technology: "MERN Stack,Vite+React",
         url: "https://github.com/Bashitha-Weerapperuma/Rukshan-furniture",
         image: projectImage8,
