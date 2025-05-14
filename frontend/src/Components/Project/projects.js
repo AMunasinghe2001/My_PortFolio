@@ -9,6 +9,8 @@ import projectImage5 from './img/itp.jpg';
 import projectImage6 from './img/mad.jpg';
 import projectImage7 from './img/oop.jpg';
 import projectImage8 from './img/rukshanferniture.jpg';
+import projectImage9 from './img/shareme.jpg';
+import projectImage10 from './img/ITPM.jpg';
 
 const projectData = [
     {
@@ -67,6 +69,21 @@ const projectData = [
         url: "https://github.com/Bashitha-Weerapperuma/Rukshan-furniture",
         image: projectImage8,
     },
+    {
+        id: 9,
+        title: "Share me Web",
+        technology: "React,Java",
+        url: "https://github.com/oshanLahiru0307/Share_me-App",
+        image: projectImage9,
+    },
+    {
+        id: 10,
+        title: "Home Stock Web App",
+        technology: "MERN Stack",
+        url: "https://github.com/oshanLahiru0307/ITPM_Project",
+        image: projectImage10,
+    },
+
 ];
 
 // Function to interleave the projects starting from the middle
