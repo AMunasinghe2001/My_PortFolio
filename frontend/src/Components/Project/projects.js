@@ -9,8 +9,8 @@ import projectImage5 from './img/itp.jpg';
 import projectImage6 from './img/mad.jpg';
 import projectImage7 from './img/oop.jpg';
 import projectImage8 from './img/rukshanferniture.jpg';
-import projectImage9 from './img/shareme.jpg';
-import projectImage10 from './img/ITPM.jpg';
+import projectImage9 from './img/PAF.png';
+import projectImage10 from './img/ITPM.png';
 
 const projectData = [
     {
