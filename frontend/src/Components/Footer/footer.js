@@ -31,7 +31,7 @@ function Footer() {
             <a href="https://github.com/AMunasinghe2001" data-popup="GitHub">
               <img src={github} alt="github" />
             </a>
-            <a href="https://www.linkedin.com/in/anushanga-kaushan-munasinghe-9b51882a2/" data-popup="LinkedIn">
+            <a href="https://www.linkedin.com/in/anushanga-munasinghe-9b51882a2/" data-popup="LinkedIn">
               <img src={linkin} alt="linkin" />
             </a>
           </div>
