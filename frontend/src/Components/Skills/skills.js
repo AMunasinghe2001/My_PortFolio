@@ -1,24 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Skill from "./skill.js";
+import api from "../../api/axios";
 import "./skills.css";
 
-const Skills = () => {
-  const technicalSkills = [
-    { title: "FIGMA", percentage: 97 },
-    { title: "HTML 5", percentage: 96 },
-    { title: "CSS", percentage: 96 },
-    { title: "JavaScript", percentage: 72 },
-    { title: "React JS", percentage: 89 },
-    { title: "PHP", percentage: 83 },
-    { title: "MySQL", percentage: 71 },
-  ];
+const fallbackTechnical = [
+  { title: "FIGMA", percentage: 97 },
+  { title: "HTML 5", percentage: 96 },
+  { title: "CSS", percentage: 96 },
+  { title: "JavaScript", percentage: 72 },
+  { title: "React JS", percentage: 89 },
+  { title: "PHP", percentage: 83 },
+  { title: "MySQL", percentage: 71 },
+];
 
-  const professionalSkills = [
-    { title: "Communication", percentage: 90 },
-    { title: "Team Work", percentage: 95 },
-    { title: "Project Management", percentage: 87 },
-    { title: "Creativity", percentage: 95 },
-  ];
+const fallbackProfessional = [
+  { title: "Communication", percentage: 90 },
+  { title: "Team Work", percentage: 95 },
+  { title: "Project Management", percentage: 87 },
+  { title: "Creativity", percentage: 95 },
+];
+
+const Skills = () => {
+  const [technicalSkills, setTechnicalSkills] = useState(fallbackTechnical);
+  const [professionalSkills, setProfessionalSkills] = useState(fallbackProfessional);
+
+  useEffect(() => {
+    api
+      .get("/skills")
+      .then((res) => {
+        const skills = res.data && res.data.skills;
+        if (Array.isArray(skills) && skills.length) {
+          setTechnicalSkills(skills.filter((s) => s.category === "technical"));
+          setProfessionalSkills(skills.filter((s) => s.category === "professional"));
+        }
+      })
+      .catch((error) => console.error("Skills fetch failed", error));
+  }, []);
 
   return (
     <div id="skills">
@@ -31,7 +48,7 @@ const Skills = () => {
           <h2 className="skill animated-text">Technical Skills</h2>
           {technicalSkills.map((skill, index) => (
             <Skill
-              key={index}
+              key={skill._id || index}
               title={skill.title}
               percentage={skill.percentage}
             />
@@ -41,7 +58,7 @@ const Skills = () => {
           <h2 className="skill animated-text">Professional Skills</h2>
           {professionalSkills.map((skill, index) => (
             <Skill
-              key={index}
+              key={skill._id || index}
               title={skill.title}
               percentage={skill.percentage}
             />

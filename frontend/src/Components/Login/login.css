@@ -51,4 +51,15 @@
   .login-form p {
     color: red;
   }
+
+  .login-form .back-home {
+    color: #9fe9e9;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 14px;
+  }
+  .login-form .back-home:hover {
+    color: aqua;
+  }
   

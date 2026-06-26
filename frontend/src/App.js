@@ -2,53 +2,44 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import Home from "./Components/Home/home";
-
-import About from "./Components/About/about";
-import Journey from "./Components/Journey/journey";
-import Skills from "./Components/Skills/skills";
-import Project from "./Components/Project/projects.js";
-import Services from "./Components/Services/services";
-import Countact from "./Components/Countact/countact";
+import PublicSite from "./Components/PublicSite";
 import Login from "./Components/Login/login.js";
+import ProtectedRoute from "./Components/ProtectedRoute";
+
+import AdminHome from "./Components/Admin/AdminHome";
+import ProfileEditor from "./Components/Admin/ProfileEditor";
+import SkillsEditor from "./Components/Admin/SkillsEditor";
+import JourneyEditor from "./Components/Admin/JourneyEditor";
+import ServicesEditor from "./Components/Admin/ServicesEditor";
+import ProjectsManager from "./Components/Dashboard/dashboard";
 import AddProject from "./Components/AddProject/addproject";
-import Dashboard from "./Components/Dashboard/dashboard";
-import UpdateProject from './Components/UpdateProject/updateproject';
+import UpdateProject from "./Components/UpdateProject/updateproject";
+
+const protect = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 
 function App() {
   return (
     <div className="fullApp">
-      <div className="pages">
-        <Home />
-        <About />
-        <Journey />
-        <Skills />
-        <Project />
-        <Services />
-        <Countact />
-      </div>
+      <Routes>
+        {/* Public portfolio */}
+        <Route path="/" element={<PublicSite />} />
 
-      <div className="App">
-        <React.Fragment>
-          <Routes>
-            {/* <Route path="/mainhome" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/journey" element={<Journey />} />
-          <Route path="/skills" element={<Skills />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/countact" element={<Countact />} />
-          <Route path="/footer" element={<Footer />} />
-          <Route path="/project" element={<Project />} /> */}
-            
-            <Route path="/addproject" element={<AddProject />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/updateproject/:id" element={<UpdateProject />} />
+        {/* Auth */}
+        <Route path="/login" element={<Login />} />
 
-            <Route path="/login" element={<Login/>} />
-            
-          </Routes>
-        </React.Fragment>
-      </div>
+        {/* Admin (token-protected) */}
+        <Route path="/admin" element={protect(<AdminHome />)} />
+        <Route path="/admin/profile" element={protect(<ProfileEditor />)} />
+        <Route path="/admin/projects" element={protect(<ProjectsManager />)} />
+        <Route path="/admin/projects/new" element={protect(<AddProject />)} />
+        <Route path="/admin/projects/:id/edit" element={protect(<UpdateProject />)} />
+        <Route path="/admin/skills" element={protect(<SkillsEditor />)} />
+        <Route path="/admin/journey" element={protect(<JourneyEditor />)} />
+        <Route path="/admin/services" element={protect(<ServicesEditor />)} />
+
+        {/* Fallback */}
+        <Route path="*" element={<PublicSite />} />
+      </Routes>
     </div>
   );
 }

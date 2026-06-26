@@ -1,64 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
-import './dashboard.css';
+import api from '../../api/axios';
+import AdminNav from '../Admin/AdminNav';
+import '../Admin/admin.css';
 
-const URL = "https://my-port-folio-livid.vercel.app/projects";
-
-const fetchHandler = async () => {
-    return await axios.get(URL).then((res) => res.data);
-}
-
-const Dashboard = () => {
+const ProjectsManager = () => {
     const [projects, setProjects] = useState([]);
+    const [msg, setMsg] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchHandler().then((data) => {
-            setProjects(data.projects.reverse());
-        }).catch((error) => {
-            console.error("There was an error fetching the projects!", error);
-        });
-    }, []);
-
-    const handleAddProject = () => {
-        navigate('/addproject');
+    const load = () => {
+        api.get('/projects')
+            .then((res) => setProjects((res.data.projects || []).slice().reverse()))
+            .catch(() => setMsg({ type: 'error', text: 'Failed to load projects.' }));
     };
+    useEffect(load, []);
 
-    const handleEditProject = (id) => {
-        navigate(`/updateproject/${id}`);
+    const remove = async (p) => {
+        if (!window.confirm(`Delete project "${p.title}"?`)) return;
+        try {
+            await api.delete(`/projects/${p._id}`);
+            load();
+        } catch (err) {
+            setMsg({ type: 'error', text: err.response?.data?.message || 'Delete failed.' });
+        }
     };
 
     return (
-        <div className="container">
-            <div className="dashbord-title">
-                <h1 className="dashbord-title1">Project</h1>
-                <h1 className="dashbord-title2">Dashboard</h1>
-            </div>
-            <button className="btn-add" onClick={handleAddProject}>
-                <FontAwesomeIcon icon={faPlus} /> Add Project
-            </button>
-            <div className="grid">
-                {projects && projects.map((project, i) => (
-                    <div key={i} className="card">
-                        <div className='pic'>
-                            <img src={`https://my-port-folio-livid.vercel.app/uploads/${project.image}`} alt={project.title} />
+        <div className="admin-page">
+            <AdminNav />
+            <div className="admin-container">
+                <h1 className="admin-title">Projects</h1>
+                {msg && <div className={`admin-msg ${msg.type}`}>{msg.text}</div>}
+                <button className="btn btn-primary" style={{ marginBottom: 20 }}
+                    onClick={() => navigate('/admin/projects/new')}>
+                    + Add Project
+                </button>
+                <div className="admin-cards">
+                    {projects.map((p) => (
+                        <div key={p._id} className="admin-card" style={{ cursor: 'default' }}>
+                            {p.image && (
+                                <img src={p.image} alt={p.title}
+                                    style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 10 }} />
+                            )}
+                            <h3>{p.title}</h3>
+                            <p>Tech: {p.technology}</p>
+                            {p.url && (
+                                <p style={{ wordBreak: 'break-all' }}>
+                                    <a href={p.url} target="_blank" rel="noopener noreferrer" style={{ color: '#0ad0dc' }}>View ↗</a>
+                                </p>
+                            )}
+                            <div className="admin-row-actions" style={{ marginTop: 10 }}>
+                                <button className="btn btn-secondary btn-sm"
+                                    onClick={() => navigate(`/admin/projects/${p._id}/edit`)}>Edit</button>
+                                <button className="btn btn-danger btn-sm" onClick={() => remove(p)}>Delete</button>
+                            </div>
                         </div>
-                        <div className='dBContent'>
-                            <h3>Project Name: {project.title}</h3>
-                            <h3>Used Technology: {project.technology}</h3>
-                            <h3>Git Hub URL: <a href={project.url} target="_blank" rel="noopener noreferrer">View Project</a></h3>
-                            <button className="btn-edit" onClick={() => handleEditProject(project._id)}>
-                                <FontAwesomeIcon icon={faEdit} /> Edit
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );
 };
 
-export default Dashboard;
+export default ProjectsManager;

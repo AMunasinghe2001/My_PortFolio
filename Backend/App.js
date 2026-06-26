@@ -1,30 +1,61 @@
+require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
-const projectRoutes = require("./Routers/projectRoutes.js");
 const cors = require("cors");
-const path = require("path");
+const connectDB = require("./config/db");
+
+const authRoutes = require("./Routers/authRoutes");
+const profileRoutes = require("./Routers/profileRoutes");
+const projectRoutes = require("./Routers/projectRoutes");
+const skillRoutes = require("./Routers/skillRoutes");
+const journeyRoutes = require("./Routers/journeyRoutes");
+const serviceRoutes = require("./Routers/serviceRoutes");
 
 const app = express();
-//deploy vercel 
-app.use(cors(
-    
-    {
-        origin: ["https://anushanga-munasinghe.vercel.app"],
-        methods:["GET","POST","PUT","DELETE"],
-        credentials: true
-    }
-));
-  
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(express.json());
-app.use(cors());
-app.use("/projects", projectRoutes);
 
-mongoose.connect("mongodb+srv://Anushanga:Anushanga2001@cluster0.4d2u3vi.mongodb.net")
-    .then(() => console.log("Connected to MongoDB"))
-    .then(() => {
-        app.listen(5000, () => {
-            console.log("Server is running on port 5000");
-        });
+// ---- CORS ----
+const allowedOrigins = [
+    "http://localhost:3000",
+    ...(process.env.CLIENT_ORIGIN
+        ? process.env.CLIENT_ORIGIN.split(",").map((s) => s.trim())
+        : []),
+];
+
+app.use(
+    cors({
+        origin: (origin, cb) => {
+            // Allow non-browser tools (no origin) and any whitelisted origin.
+            if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+            return cb(new Error("Not allowed by CORS"));
+        },
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true,
     })
-    .catch((err) => console.log(err));
+);
+
+app.use(express.json());
+
+// ---- Routes ----
+app.get("/", (req, res) => res.json({ status: "ok", message: "Portfolio API" }));
+app.use("/auth", authRoutes);
+app.use("/profile", profileRoutes);
+app.use("/projects", projectRoutes);
+app.use("/skills", skillRoutes);
+app.use("/journey", journeyRoutes);
+app.use("/services", serviceRoutes);
+
+// ---- DB + server ----
+// Start connecting immediately. Mongoose buffers queries until connected, so
+// the server can listen right away — even if the DB is briefly unreachable,
+// the process stays up and requests get a clear error instead of silently
+// dying. On Vercel (serverless) we must NOT call app.listen.
+const PORT = process.env.PORT || 5000;
+
+connectDB().catch((err) =>
+    console.log("DB connection error (server still running):", err.message)
+);
+
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+}
+
+module.exports = app;

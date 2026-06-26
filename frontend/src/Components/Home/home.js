@@ -1,37 +1,89 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../Nav/nav";
+import api from "../../api/axios";
 import "./home.css";
-import pic from "./img/pic.png";
+import picFallback from "./img/pic.png";
 
-const jobTitles = [
-  "Frontend Developer",
-  "Backend Developer",
-  "UI/UX Designer",
-  "Mobile App Developer",
-  "Software Developer"
-];
+const fallbackProfile = {
+  greeting: "Hello, It's Me...",
+  name: "Anushanga Munasinghe",
+  jobTitles: [
+    "Frontend Developer",
+    "Backend Developer",
+    "UI/UX Designer",
+    "Mobile App Developer",
+    "Software Developer",
+  ],
+  intro:
+    "Welcome to my portfolio! I'm a full-stack developer, UI/UX designer and Mobile app developer passionate about crafting exceptional digital experiences. Browse through my work and discover my expertise in front-end development and design. Let's create something extraordinary together!",
+  resumeUrl: "/Anushanga Munasinghe CV.pdf",
+  heroImage: "",
+};
 
 function Home() {
+  const [profile, setProfile] = useState(fallbackProfile);
+
+  // Typing animation state
   const [currentTitle, setCurrentTitle] = useState("");
   const [titleIndex, setTitleIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
+  const jobTitles =
+    profile.jobTitles && profile.jobTitles.length
+      ? profile.jobTitles
+      : fallbackProfile.jobTitles;
+
+  // Build a resume link that downloads as a properly-named PDF. For Cloudinary
+  // URLs we add fl_attachment (forces a download with a filename); for the
+  // bundled/static PDF the `download` attribute below handles the name.
+  const resumeHref = (() => {
+    const url = profile.resumeUrl || fallbackProfile.resumeUrl;
+    if (url && url.includes("res.cloudinary.com") && url.includes("/upload/")) {
+      let u = url.replace("/upload/", "/upload/fl_attachment:Anushanga-Munasinghe-CV/");
+      if (!/\.pdf(\?|$)/i.test(u)) u += ".pdf";
+      return u;
+    }
+    return url;
+  })();
+
+  useEffect(() => {
+    api
+      .get("/profile")
+      .then((res) => {
+        if (res.data && res.data.profile) {
+          setProfile((prev) => ({ ...prev, ...res.data.profile }));
+        }
+      })
+      .catch((error) => console.error("Profile fetch failed", error));
+  }, []);
+
+  // Restart the typing animation whenever the set of titles changes.
+  useEffect(() => {
+    setCurrentTitle("");
+    setTitleIndex(0);
+    setCharIndex(0);
+    setIsDeleting(false);
+    setIsPaused(false);
+  }, [profile.jobTitles]);
+
   useEffect(() => {
     if (isPaused) return;
 
+    const activeTitle = jobTitles[titleIndex] || jobTitles[0] || "";
+
     const typeTimeout = setTimeout(() => {
       if (!isDeleting) {
-        setCurrentTitle((prev) => prev + jobTitles[titleIndex].charAt(charIndex));
+        setCurrentTitle((prev) => prev + activeTitle.charAt(charIndex));
         setCharIndex((prev) => prev + 1);
 
-        if (charIndex === jobTitles[titleIndex].length) {
+        if (charIndex === activeTitle.length) {
           setIsPaused(true);
           setTimeout(() => {
             setIsPaused(false);
             setIsDeleting(true);
-          }, 2000); // Pause before deleting
+          }, 2000);
         }
       } else {
         setCurrentTitle((prev) => prev.slice(0, -1));
@@ -45,18 +97,18 @@ function Home() {
     }, isDeleting ? 100 : 150);
 
     return () => clearTimeout(typeTimeout);
-  }, [charIndex, isDeleting, isPaused, titleIndex]);
+  }, [charIndex, isDeleting, isPaused, titleIndex, jobTitles]);
 
   return (
     <div id="home">
       <Nav />
       <div className="cover">
         <div className="header">
-          <h2 className="homeh2 animated-text">Hello, It's Me...</h2>
+          <h2 className="homeh2 animated-text">{profile.greeting}</h2>
           <br />
 
           <div className="name animated-text">
-            <h1>Anushanga Munasinghe</h1>
+            <h1>{profile.name}</h1>
             <br />
           </div>
           <h2 className="homeh2 animated-text">And I'm</h2>
@@ -69,23 +121,17 @@ function Home() {
             <br />
           </div>
           <div className="homeAbout animated-text">
-            <p>
-              Welcome to my portfolio! I'm a full-stack developer, UI/UX
-              designer and Mobile app developer passionate about crafting exceptional digital
-              experiences. Browse through my work and discover my expertise in
-              front-end development and design. Let's create something
-              extraordinary together!
-            </p>
+            <p>{profile.intro}</p>
           </div>
 
           <button className="btnCV animated-text">
-            <a href="/Anushanga Munasinghe CV.pdf" download>
+            <a href={resumeHref} download="Anushanga-Munasinghe-CV.pdf">
               Download Resume <i className="fas fa-download"></i>
             </a>
           </button>
         </div>
         <div className="pic">
-          <img src={pic} alt="home pic" />
+          <img src={profile.heroImage || picFallback} alt="home pic" />
         </div>
       </div>
     </div>

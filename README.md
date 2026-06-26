@@ -17,6 +17,18 @@ Check out my portfolio here 👉 [**anushanga-munasinghe.vercel.app**](https://a
 
 ---
 
+## 🔧 Admin Dashboard (CMS)
+
+This portfolio is **fully data-driven**. Every section — hero, about, skills, journey, services, projects and social links — is stored in MongoDB and editable from a built-in admin dashboard (no code changes needed):
+
+1. Click **Login** in the navigation bar.
+2. Sign in with your admin credentials (JWT auth).
+3. Edit any section at **`/admin`** — changes go live instantly. Images are hosted on **Cloudinary**.
+
+➡️ Full setup, environment and deployment instructions: see **[SETUP.md](SETUP.md)**.
+
+---
+
 ## 🚀 Featured Projects
 
 <img width="1920" height="1080" alt="Project Showcase" src="https://github.com/user-attachments/assets/3a83a292-a9d2-4be0-a885-25e5cac98ab3" />

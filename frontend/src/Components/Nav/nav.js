@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import './nav.css';
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -23,6 +26,12 @@ function Nav() {
       targetElement.scrollIntoView({ behavior: 'smooth' });
       setIsOpen(false); // Close the menu after clicking a link
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsOpen(false);
+    navigate('/');
   };
 
   useEffect(() => {
@@ -78,12 +87,30 @@ function Nav() {
               <h1>Hire Me</h1>
             </a>
           </li>
-          
-          {/* <Link to="/login">
-            <button>
-              hi
-            </button>
-          </Link> */}
+
+          {/* Admin entry */}
+          {isAuthenticated ? (
+            <>
+              <li className="home-11">
+                <a href="/admin" className="active home-a nav-admin"
+                   onClick={(e) => { e.preventDefault(); setIsOpen(false); navigate('/admin'); }}>
+                  <h1>Dashboard</h1>
+                </a>
+              </li>
+              <li className="home-11">
+                <a href="/" className="active home-a nav-admin" onClick={(e) => { e.preventDefault(); handleLogout(); }}>
+                  <h1>Logout</h1>
+                </a>
+              </li>
+            </>
+          ) : (
+            <li className="home-11">
+              <a href="/login" className="active home-a nav-admin"
+                 onClick={(e) => { e.preventDefault(); setIsOpen(false); navigate('/login'); }}>
+                <h1>Login</h1>
+              </a>
+            </li>
+          )}
         </ul>
       </div>
     </div>

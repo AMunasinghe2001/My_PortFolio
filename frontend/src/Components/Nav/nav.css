@@ -55,6 +55,14 @@ body {
   align-items: center; /* Center items vertically */
 }
 
+/* Admin entry (Login / Dashboard / Logout) — teal accent */
+.home-11 a.nav-admin h1 {
+  color: rgb(5, 170, 170);
+}
+.home-11 a.nav-admin:hover h1 {
+  color: aqua;
+}
+
 .hamburger {
   display: none; /* Initially hide the hamburger */
   font-size: 30px;
