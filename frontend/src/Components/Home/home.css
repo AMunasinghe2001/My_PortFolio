@@ -129,6 +129,7 @@
   .cover {
     flex-direction: column;
     height: auto;
+    padding-top: 64px; /* clear the floating hamburger so the first line isn't cut */
   }
 
   .header {

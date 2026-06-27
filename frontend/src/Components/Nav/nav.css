@@ -77,10 +77,13 @@ body {
 }
 
 @media (max-width: 768px) {
-  /* Keep a real, visible bar in mobile (children are absolutely positioned,
-     so give the bar an explicit height). */
+  /* No solid bar on mobile — it was covering/cutting the hero text. Keep it
+     transparent and click-through; only the hamburger + dropdown stay tappable. */
   .mainDiv {
-    min-height: 54px;
+    min-height: 0;
+    background-color: transparent;
+    box-shadow: none;
+    pointer-events: none;
   }
 
   .home-11 {
@@ -94,12 +97,13 @@ body {
     width: 70%; /* Adjust width to your preference */
     max-width: 280px;
     position: absolute;
-    top: 54px; /* Sits just below the bar */
+    top: 54px; /* Sits just below the hamburger */
     right: 0;
     background-color: #333333f7;
     overflow: hidden; /* Prevent overflow */
     z-index: 1001;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    pointer-events: auto;
   }
 
   .home-u1.show {
@@ -114,6 +118,8 @@ body {
 
   .hamburger {
     display: block; /* Show hamburger on small screens */
+    color: #032c2f; /* dark teal — visible on the light hero (no bar behind now) */
+    pointer-events: auto;
     transition: transform 0.2s ease-in-out;
   }
   .hamburger:hover{
