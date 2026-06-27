@@ -16,19 +16,26 @@ const app = express();
 // ---- CORS ----
 const allowedOrigins = [
     "http://localhost:3000",
+    "https://anushanga-munasinghe.vercel.app",
     ...(process.env.CLIENT_ORIGIN
         ? process.env.CLIENT_ORIGIN.split(",").map((s) => s.trim())
         : []),
 ];
 
+// Allow non-browser tools (no origin), any whitelisted origin, and any Vercel
+// deployment of the frontend (production + preview URLs end in .vercel.app).
+const isAllowedOrigin = (origin) =>
+    !origin ||
+    allowedOrigins.includes(origin) ||
+    /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin);
+
 app.use(
     cors({
         origin: (origin, cb) => {
-            // Allow non-browser tools (no origin) and any whitelisted origin.
-            if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+            if (isAllowedOrigin(origin)) return cb(null, true);
             return cb(new Error("Not allowed by CORS"));
         },
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
     })
 );
