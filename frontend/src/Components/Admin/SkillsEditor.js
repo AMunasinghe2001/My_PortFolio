@@ -3,7 +3,7 @@ import api from "../../api/axios";
 import AdminNav from "./AdminNav";
 import "./admin.css";
 
-const blankNew = { title: "", percentage: 80, category: "technical" };
+const blankNew = { title: "", percentage: 80, category: "tool" };
 
 const SkillsEditor = () => {
   const [skills, setSkills] = useState([]);
@@ -111,14 +111,19 @@ const SkillsEditor = () => {
             <label>Category</label>
             <select value={newSkill.category}
               onChange={(e) => setNewSkill((n) => ({ ...n, category: e.target.value }))}>
-              <option value="technical">Technical</option>
+              <option value="tool">Tool</option>
               <option value="professional">Professional</option>
             </select>
           </div>
           <button type="submit" className="btn btn-primary">Add Skill</button>
         </form>
 
-        {renderGroup("technical", "Technical Skills")}
+        <p className="admin-hint" style={{ color: "#8fc4c4", margin: "20px 0 -6px", fontSize: 14 }}>
+          ℹ️ Technical Skills and Database Management are generated automatically
+          from your GitHub repositories — they are not edited here. Only Tools and
+          Professional skills below are managed manually.
+        </p>
+        {renderGroup("tool", "Tools")}
         {renderGroup("professional", "Professional Skills")}
       </div>
     </div>

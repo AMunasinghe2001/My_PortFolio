@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import './project.css';
-import { FaLink } from 'react-icons/fa';
+import { FaLink, FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 
 // Bundled images used as a fallback when the API is empty or unreachable.
 import portfolio from './img/portfolio.jpg';
@@ -48,6 +48,7 @@ const getInterleavedProjects = (projects) => {
 
 function Project() {
     const [projects, setProjects] = useState(fallbackProjects);
+    const [selected, setSelected] = useState(null);
 
     useEffect(() => {
         api.get('/projects')
@@ -60,6 +61,18 @@ function Project() {
             });
     }, []);
 
+    // While the popup is open: lock page scroll and close on Escape.
+    useEffect(() => {
+        if (!selected) return;
+        const onKey = (e) => { if (e.key === 'Escape') setSelected(null); };
+        document.addEventListener('keydown', onKey);
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.removeEventListener('keydown', onKey);
+            document.body.style.overflow = '';
+        };
+    }, [selected]);
+
     const interleavedProjects = getInterleavedProjects(projects);
 
     return (
@@ -71,7 +84,20 @@ function Project() {
                 </div>
                 <div className="projectsGrid">
                     {interleavedProjects.map((project, i) => (
-                        <div className="project-card" key={project._id || i}>
+                        <div
+                            className="project-card"
+                            key={project._id || i}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setSelected(project)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setSelected(project);
+                                }
+                            }}
+                            aria-label={`View details for ${project.title}`}
+                        >
                             {isDisplayable(project.image) && (
                                 <img
                                     src={project.image}
@@ -82,18 +108,82 @@ function Project() {
                             <div className="project-card-content">
                                 <h1 className='PCCtitle animated-text'>{project.title}</h1>
                                 <h2 className='PCCtitle'>Technology: {project.technology}</h2>
-                                {project.url && (
-                                    <div className='url'>
-                                        <a href={project.url} target="_blank" rel="noopener noreferrer">
-                                            <FaLink size={26} />
-                                        </a>
-                                    </div>
-                                )}
+                                <span className="project-view-hint">
+                                    <FaLink size={18} /> View details
+                                </span>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+
+            {selected && (
+                <div
+                    className="project-modal-overlay"
+                    onClick={() => setSelected(null)}
+                >
+                    <div
+                        className="project-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={selected.title}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            type="button"
+                            className="project-modal-close"
+                            onClick={() => setSelected(null)}
+                            aria-label="Close"
+                        >
+                            <FaTimes />
+                        </button>
+
+                        {isDisplayable(selected.image) && (
+                            <img
+                                src={selected.image}
+                                alt={selected.title}
+                                className="project-modal-image"
+                            />
+                        )}
+
+                        <div className="project-modal-body">
+                            <h2 className="project-modal-title">{selected.title}</h2>
+                            <p className="project-modal-tech">{selected.technology}</p>
+
+                            {selected.description ? (
+                                <p className="project-modal-desc">{selected.description}</p>
+                            ) : (
+                                <p className="project-modal-desc project-modal-desc-empty">
+                                    No description added yet.
+                                </p>
+                            )}
+
+                            <div className="project-modal-actions">
+                                {selected.url && (
+                                    <a
+                                        className="project-modal-btn github"
+                                        href={selected.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaGithub /> View on GitHub
+                                    </a>
+                                )}
+                                {selected.liveUrl && (
+                                    <a
+                                        className="project-modal-btn live"
+                                        href={selected.liveUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <FaExternalLinkAlt /> Live Demo
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

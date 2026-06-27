@@ -7,6 +7,7 @@ const authRoutes = require("./Routers/authRoutes");
 const profileRoutes = require("./Routers/profileRoutes");
 const projectRoutes = require("./Routers/projectRoutes");
 const skillRoutes = require("./Routers/skillRoutes");
+const githubSkillsRoutes = require("./Routers/githubSkillsRoutes");
 const journeyRoutes = require("./Routers/journeyRoutes");
 const serviceRoutes = require("./Routers/serviceRoutes");
 
@@ -40,6 +41,7 @@ app.use("/auth", authRoutes);
 app.use("/profile", profileRoutes);
 app.use("/projects", projectRoutes);
 app.use("/skills", skillRoutes);
+app.use("/github-skills", githubSkillsRoutes);
 app.use("/journey", journeyRoutes);
 app.use("/services", serviceRoutes);
 

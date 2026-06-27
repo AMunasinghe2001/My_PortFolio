@@ -133,15 +133,26 @@ const ProfileEditor = () => {
                 <textarea name="intro" value={form.intro} onChange={change} />
               </div>
               <div className="admin-grid-2">
-                <div className="admin-field">
+                <div className="admin-field admin-media">
                   <label>Hero image</label>
-                  {form.heroImage && <img src={form.heroImage} alt="hero" className="admin-thumb" />}
+                  {form.heroImage ? (
+                    <a className="admin-media-link" href={form.heroImage} target="_blank" rel="noreferrer">
+                      <img src={form.heroImage} alt="hero" className="admin-media-img" />
+                    </a>
+                  ) : (
+                    <div className="admin-media-empty">No image yet</div>
+                  )}
                   <input type="file" accept="image/*" onChange={(e) => setHeroFile(e.target.files[0])} />
                 </div>
-                <div className="admin-field">
+                <div className="admin-field admin-media">
                   <label>Resume (PDF) — upload or paste a URL below</label>
                   <input type="file" accept="application/pdf" onChange={(e) => setResumeFile(e.target.files[0])} />
-                  <input type="text" name="resumeUrl" value={form.resumeUrl} onChange={change} placeholder="Resume URL" style={{ marginTop: 8 }} />
+                  <input type="text" name="resumeUrl" value={form.resumeUrl} onChange={change} placeholder="Paste a resume URL" />
+                  {form.resumeUrl && (
+                    <a className="admin-media-current" href={form.resumeUrl} target="_blank" rel="noreferrer">
+                      Open current resume ↗
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -157,9 +168,15 @@ const ProfileEditor = () => {
                 <label>About paragraphs (one paragraph per line)</label>
                 <textarea name="aboutParagraphs" value={form.aboutParagraphs} onChange={change} style={{ minHeight: 160 }} />
               </div>
-              <div className="admin-field">
+              <div className="admin-field admin-media" style={{ maxWidth: 360 }}>
                 <label>About image</label>
-                {form.aboutImage && <img src={form.aboutImage} alt="about" className="admin-thumb" />}
+                {form.aboutImage ? (
+                  <a className="admin-media-link" href={form.aboutImage} target="_blank" rel="noreferrer">
+                    <img src={form.aboutImage} alt="about" className="admin-media-img" />
+                  </a>
+                ) : (
+                  <div className="admin-media-empty">No image yet</div>
+                )}
                 <input type="file" accept="image/*" onChange={(e) => setAboutFile(e.target.files[0])} />
               </div>
             </div>

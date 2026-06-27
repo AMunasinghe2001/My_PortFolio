@@ -14,7 +14,7 @@ const skillSchema = new mongoose.Schema(
         },
         category: {
             type: String,
-            enum: ["technical", "professional"],
+            enum: ["technical", "professional", "database", "tool"],
             default: "technical",
         },
         order: {

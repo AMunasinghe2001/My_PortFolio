@@ -1,14 +1,19 @@
 .skills {
   display: flex;
-  justify-content: space-around;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 36px;
+  padding: 0 30px;
   margin-bottom: 100px;
 }
 
-.technical-skills, .professional-skills {
-  width: 35%;
+.technical-skills, .professional-skills, .database-skills, .tools-skills {
+  flex: 1 1 300px;
+  max-width: 360px;
   background-image: linear-gradient(to bottom right, #032c2f, rgb(5, 170, 170));
   border-radius: 10px;
-  margin: 40px;
+  margin: 20px 0;
   padding: 30px;
   box-shadow: 4px 9px 13px rgba(10, 10, 10, 0.768);
 }
@@ -44,8 +49,10 @@
     margin-bottom: 50px; /* Adjust bottom margin for better spacing */
   }
 
-  .technical-skills, .professional-skills {
+  .technical-skills, .professional-skills, .database-skills, .tools-skills {
+    flex: 1 1 100%;
     width: 80%; /* Make the sections take most of the screen width */
+    max-width: 80%;
     margin: 20px auto; /* Center the sections with auto margins */
     padding: 20px; /* Adjust padding for smaller screens */
   }

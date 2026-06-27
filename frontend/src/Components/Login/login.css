@@ -1,65 +1,155 @@
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .login-form {
-    background: rgba(1, 28, 16, 0.64);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    width: 400px;
-    height: 300px;
-  }
-  
-  .login-form h2 {
-    margin-bottom: 1rem;
-  }
-  .login{
-    color: white;
-    font-size: 40px;
-  }
-  
-  .login-form input {
-    display: block;
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .login-form button {
-    width: 100%;
-    padding: 0.5rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 20px;
-    transition: background-color 0.5s;
-    border: none;
-  }
-  
-  .login-form button:hover {
-    background-color: #0056b3;
-  }
-  
-  .login-form p {
-    color: red;
-  }
+/* Same backdrop feel as the "Hire Me" section: the portfolio background photo
+   shown faintly, with a green overlay on top. */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    linear-gradient(rgba(2, 60, 47, 0.78), rgba(2, 40, 43, 0.86)),
+    url('../../bgPic.jpg') center / cover no-repeat fixed;
+}
 
-  .login-form .back-home {
-    color: #9fe9e9;
-    cursor: pointer;
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 14px;
-  }
-  .login-form .back-home:hover {
-    color: aqua;
-  }
-  
+.login-wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+/* Title above the card — white + teal, like "Hire Me" */
+.login-title {
+  font-size: 23px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  text-align: center;
+}
+.login-title1,
+.login-title2 {
+  margin: 0;
+  font-size: 40px;
+}
+.login-title1 { color: #ffffff; }
+.login-title2 { color: rgb(5, 170, 170); }
+
+/* Clean white card, like the contact form */
+.login-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 38px 30px 26px;
+  box-shadow: 4px 9px 33px rgba(0, 0, 0, 0.6);
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card label {
+  color: #555;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+.login-card input[type="text"],
+.login-card input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #878585;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+.login-card input[type="text"]:focus,
+.login-card input[type="password"]:focus {
+  outline: none;
+  border-color: rgb(1, 150, 150);
+  box-shadow: 0 0 0 1px rgb(1, 150, 150);
+}
+
+/* Password field + show/hide eye */
+.password-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.password-wrap input {
+  margin-bottom: 0 !important;
+  padding-right: 44px;
+}
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #777;
+  cursor: pointer;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  transition: color 0.2s, transform 0.15s;
+}
+.eye-btn:hover {
+  color: rgb(1, 150, 150);
+  transform: translateY(-50%) scale(1.15);
+}
+
+/* Teal button, like the contact "Send Message" button */
+.login-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 4px;
+  background-color: rgb(1, 150, 150);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.login-submit-btn:hover:not(:disabled) {
+  background-color: rgb(1, 83, 83);
+  transform: scale(1.03);
+}
+.login-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-error {
+  color: #c0392b;
+  background: #fdecea;
+  border: 1px solid #f5b7b1;
+  border-radius: 6px;
+  padding: 9px 12px;
+  margin: 16px 0 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.back-home {
+  color: rgb(1, 150, 150);
+  cursor: pointer;
+  margin: 20px 0 0;
+  font-size: 15px;
+  text-align: center;
+  transition: color 0.2s;
+}
+.back-home:hover { color: rgb(1, 83, 83); }
+
+@media (max-width: 768px) {
+  .login-title1, .login-title2 { font-size: 32px; }
+  .login-card { padding: 30px 22px 22px; }
+  .login-card label { font-size: 16px; }
+}

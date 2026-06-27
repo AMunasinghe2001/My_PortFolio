@@ -3,7 +3,7 @@ import api from "../../api/axios";
 import AdminNav from "./AdminNav";
 import "./admin.css";
 
-const blankNew = { title: "", duration: "", institution: "" };
+const blankNew = { title: "", duration: "", institution: "", order: 0 };
 
 const JourneyEditor = () => {
   const [items, setItems] = useState([]);
@@ -30,6 +30,7 @@ const JourneyEditor = () => {
       fd.append("title", item.title);
       fd.append("duration", item.duration || "");
       fd.append("institution", item.institution || "");
+      fd.append("order", item.order ?? 0);
       if (logoFiles[item._id]) fd.append("logo", logoFiles[item._id]);
       await api.put(`/journey/${item._id}`, fd);
       setLogoFiles((m) => ({ ...m, [item._id]: null }));
@@ -58,6 +59,7 @@ const JourneyEditor = () => {
       fd.append("title", newItem.title);
       fd.append("duration", newItem.duration);
       fd.append("institution", newItem.institution);
+      fd.append("order", newItem.order ?? 0);
       if (newLogo) fd.append("logo", newLogo);
       await api.post("/journey", fd);
       setNewItem(blankNew);
@@ -96,9 +98,16 @@ const JourneyEditor = () => {
                 onChange={(e) => setNewItem((n) => ({ ...n, institution: e.target.value }))} />
             </div>
           </div>
-          <div className="admin-field">
-            <label>Logo</label>
-            <input type="file" accept="image/*" onChange={(e) => setNewLogo(e.target.files[0])} />
+          <div className="admin-grid-2">
+            <div className="admin-field">
+              <label>Order (lower number shows first)</label>
+              <input type="number" value={newItem.order}
+                onChange={(e) => setNewItem((n) => ({ ...n, order: e.target.value }))} />
+            </div>
+            <div className="admin-field">
+              <label>Logo</label>
+              <input type="file" accept="image/*" onChange={(e) => setNewLogo(e.target.files[0])} />
+            </div>
           </div>
           <button type="submit" className="btn btn-primary">Add Entry</button>
         </form>
@@ -121,12 +130,19 @@ const JourneyEditor = () => {
                   <input type="text" value={item.institution || ""} onChange={(e) => editRow(item._id, "institution", e.target.value)} />
                 </div>
               </div>
-              <div className="admin-field" style={{ margin: 0 }}>
-                <label>Logo</label>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  {item.logo && <img src={item.logo} alt="logo" className="admin-thumb" />}
-                  <input type="file" accept="image/*"
-                    onChange={(e) => setLogoFiles((m) => ({ ...m, [item._id]: e.target.files[0] }))} />
+              <div className="admin-grid-2">
+                <div className="admin-field" style={{ margin: 0 }}>
+                  <label>Order (lower shows first)</label>
+                  <input type="number" value={item.order ?? 0}
+                    onChange={(e) => editRow(item._id, "order", e.target.value)} />
+                </div>
+                <div className="admin-field" style={{ margin: 0 }}>
+                  <label>Logo</label>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    {item.logo && <img src={item.logo} alt="logo" className="admin-thumb" />}
+                    <input type="file" accept="image/*"
+                      onChange={(e) => setLogoFiles((m) => ({ ...m, [item._id]: e.target.files[0] }))} />
+                  </div>
                 </div>
               </div>
               <div className="admin-row-actions">

@@ -30,12 +30,14 @@ const ProjectsManager = () => {
         <div className="admin-page">
             <AdminNav />
             <div className="admin-container">
-                <h1 className="admin-title">Projects</h1>
+                <div className="admin-header-row">
+                    <h1 className="admin-title">Projects</h1>
+                    <button className="btn btn-primary"
+                        onClick={() => navigate('/admin/projects/new')}>
+                        + Add Project
+                    </button>
+                </div>
                 {msg && <div className={`admin-msg ${msg.type}`}>{msg.text}</div>}
-                <button className="btn btn-primary" style={{ marginBottom: 20 }}
-                    onClick={() => navigate('/admin/projects/new')}>
-                    + Add Project
-                </button>
                 <div className="admin-cards">
                     {projects.map((p) => (
                         <div key={p._id} className="admin-card" style={{ cursor: 'default' }}>

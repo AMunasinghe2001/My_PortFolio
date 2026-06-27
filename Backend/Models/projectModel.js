@@ -11,6 +11,15 @@ const projectSchema = new mongoose.Schema(
             required: true,
         },
         url: {
+            // GitHub repository link.
+            type: String,
+        },
+        liveUrl: {
+            // Deployed/live website link (optional).
+            type: String,
+        },
+        description: {
+            // Longer write-up shown in the project detail popup.
             type: String,
         },
         image: {

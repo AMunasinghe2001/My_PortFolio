@@ -1,9 +1,33 @@
 /* ===== Admin area shared styles ===== */
 .admin-page {
   min-height: 100vh;
-  background: #021e20;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(2, 150, 160, 0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(10, 208, 220, 0.10), transparent 55%),
+    #021e20;
   color: #e8f6f6;
   padding-bottom: 60px;
+}
+
+/* ---- Prettier scrollbars (whole admin area + scrollable boxes) ---- */
+.admin-page * {
+  scrollbar-width: thin;
+  scrollbar-color: #0a5b61 transparent;
+}
+.admin-page *::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.admin-page *::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-page *::-webkit-scrollbar-thumb {
+  background: #0a5b61;
+  border-radius: 8px;
+  border: 2px solid #021e20;
+}
+.admin-page *::-webkit-scrollbar-thumb:hover {
+  background: #0296a0;
 }
 
 /* ---- Top nav ---- */
@@ -81,12 +105,31 @@
 }
 .admin-title {
   font-size: 34px;
-  margin: 0 0 4px;
-  color: #fff;
+  margin: 0 0 18px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  background: linear-gradient(90deg, #ffffff 0%, #0ad0dc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 .admin-subtitle {
   color: #8fc4c4;
   margin: 0 0 30px;
+}
+
+/* Page header with a title on the left and an action button on the right. */
+.admin-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.admin-header-row .admin-title {
+  margin: 0;
 }
 
 /* ---- Dashboard cards ---- */
@@ -124,18 +167,39 @@
 
 /* ---- Forms ---- */
 .admin-form {
-  background: #06363a;
+  background: linear-gradient(180deg, #073f44 0%, #06363a 100%);
   border: 1px solid #0a4d52;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 14px;
+  padding: 26px;
   margin-bottom: 24px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
+  text-align: left;
 }
 .admin-form h2 {
   margin-top: 0;
+  margin-bottom: 18px;
   color: #fff;
+  font-size: 21px;
+  text-align: left;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #0a4d52;
+}
+/* The contact page declares a GLOBAL `form { align-items: center }`, which
+   would otherwise shrink + centre every admin form field. Re-assert stretch
+   so all admin form fields fill the card to an equal width. */
+.admin-page form {
+  align-items: stretch;
+}
+/* Action buttons keep their natural size, left aligned (not stretched). */
+.admin-page form > .btn {
+  align-self: flex-start;
+  margin-top: 4px;
 }
 .admin-field {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 .admin-field label {
   display: block;
@@ -150,41 +214,162 @@
 .admin-field textarea {
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 11px 13px;
   border: 1px solid #0a5b61;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #021e20;
   color: #e8f6f6;
   font-size: 15px;
   font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.admin-field input:focus,
+.admin-field select:focus,
+.admin-field textarea:focus {
+  outline: none;
+  border-color: #0ad0dc;
+  background: #03282b;
+  box-shadow: 0 0 0 3px rgba(10, 208, 220, 0.18);
+}
+.admin-field input::placeholder,
+.admin-field textarea::placeholder {
+  color: #5e8a8a;
 }
 .admin-field textarea {
   min-height: 90px;
   resize: vertical;
+  line-height: 1.5;
 }
 .admin-field .hint {
   font-size: 12px;
   color: #6fa3a3;
   margin-top: 4px;
 }
+
+/* File inputs — themed, consistent with text fields */
+.admin-field input[type="file"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border: 1px dashed #0a5b61;
+  border-radius: 8px;
+  background: #021e20;
+  color: #b9e3e3;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.admin-field input[type="file"]:hover {
+  border-color: #0ad0dc;
+  background: #03282b;
+}
+.admin-field input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #0296a0;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.admin-field input[type="file"]:hover::file-selector-button {
+  background: #03b3bf;
+}
+
 .admin-grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
 }
 @media (max-width: 640px) {
   .admin-grid-2 { grid-template-columns: 1fr; }
 }
 
+/* Media panel — used for image/resume uploads so each block reads as an
+   equal-width card with a large, clickable preview. */
+.admin-media {
+  background: #052b2f;
+  border: 1px solid #0a5b61;
+  border-radius: 12px;
+  padding: 16px;
+  gap: 12px;
+}
+.admin-media > label {
+  color: #b9e3e3;
+  font-weight: 600;
+}
+.admin-media-img {
+  display: block;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #0a5b61;
+  background: #021e20;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s;
+}
+.admin-media-link {
+  display: block;
+  position: relative;
+  cursor: zoom-in;
+}
+.admin-media-link::after {
+  content: "⤢ View full size";
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: rgba(2, 30, 32, 0.82);
+  color: #cfeaea;
+  font-size: 12px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.admin-media-link:hover .admin-media-img {
+  border-color: #0ad0dc;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+.admin-media-link:hover::after { opacity: 1; }
+.admin-media-current {
+  color: #0ad0dc;
+  font-size: 13px;
+  text-decoration: none;
+}
+.admin-media-current:hover { text-decoration: underline; }
+.admin-media-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 210px;
+  border: 1px dashed #0a5b61;
+  border-radius: 10px;
+  color: #5e8a8a;
+  font-size: 14px;
+  background: #021e20;
+}
+
 /* ---- Buttons ---- */
 .btn {
   border: none;
-  border-radius: 6px;
-  padding: 10px 18px;
+  border-radius: 8px;
+  padding: 11px 20px;
   cursor: pointer;
   font-size: 15px;
   color: #fff;
-  transition: background 0.2s, opacity 0.2s;
+  transition: background 0.2s, opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-primary { background: #0296a0; }
@@ -202,10 +387,15 @@
 .admin-row {
   background: #06363a;
   border: 1px solid #0a4d52;
-  border-radius: 10px;
-  padding: 16px;
+  border-radius: 12px;
+  padding: 18px;
   display: grid;
-  gap: 12px;
+  gap: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.admin-row:hover {
+  border-color: #0a6a70;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 .admin-row-actions {
   display: flex;
@@ -213,12 +403,33 @@
   justify-content: flex-end;
 }
 .admin-thumb {
-  width: 54px;
-  height: 54px;
+  width: 72px;
+  height: 72px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #0a5b61;
   background: #021e20;
+  cursor: zoom-in;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s;
+}
+.admin-thumb:hover {
+  transform: scale(2.2);
+  transform-origin: top left;
+  border-color: #0ad0dc;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
+  z-index: 5;
+  position: relative;
+}
+
+/* Bigger image previews inside the Profile/Hero/About forms. */
+.admin-field > img.admin-thumb {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+}
+.admin-field > img.admin-thumb:hover {
+  transform: scale(2.6);
 }
 .admin-section-label {
   margin: 26px 0 10px;

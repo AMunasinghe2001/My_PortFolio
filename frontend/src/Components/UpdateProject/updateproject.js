@@ -7,7 +7,7 @@ import "../Admin/admin.css";
 function UpdateProject() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [inputs, setInputs] = useState({ title: "", technology: "", url: "" });
+    const [inputs, setInputs] = useState({ title: "", technology: "", url: "", liveUrl: "", description: "" });
     const [currentImage, setCurrentImage] = useState("");
     const [image, setImage] = useState(null);
     const [saving, setSaving] = useState(false);
@@ -21,6 +21,8 @@ function UpdateProject() {
                     title: project.title || "",
                     technology: project.technology || "",
                     url: project.url || "",
+                    liveUrl: project.liveUrl || "",
+                    description: project.description || "",
                 });
                 setCurrentImage(project.image || "");
             })
@@ -38,6 +40,8 @@ function UpdateProject() {
         formData.append("title", inputs.title);
         formData.append("technology", inputs.technology);
         formData.append("url", inputs.url);
+        formData.append("liveUrl", inputs.liveUrl);
+        formData.append("description", inputs.description);
         if (image) formData.append("image", image);
         try {
             await api.put(`/projects/${id}`, formData);
@@ -64,9 +68,19 @@ function UpdateProject() {
                         <label>Technology</label>
                         <input type="text" name="technology" value={inputs.technology} onChange={handleChange} required />
                     </div>
+                    <div className="admin-grid-2">
+                        <div className="admin-field">
+                            <label>GitHub URL</label>
+                            <input type="text" name="url" value={inputs.url} onChange={handleChange} placeholder="https://github.com/..." />
+                        </div>
+                        <div className="admin-field">
+                            <label>Live website URL (optional)</label>
+                            <input type="text" name="liveUrl" value={inputs.liveUrl} onChange={handleChange} placeholder="https://..." />
+                        </div>
+                    </div>
                     <div className="admin-field">
-                        <label>URL (GitHub / live link)</label>
-                        <input type="text" name="url" value={inputs.url} onChange={handleChange} />
+                        <label>Description (shown in the project popup)</label>
+                        <textarea name="description" value={inputs.description} onChange={handleChange} style={{ minHeight: 120 }} />
                     </div>
                     <div className="admin-field">
                         <label>Image (leave empty to keep current)</label>

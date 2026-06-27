@@ -13,10 +13,10 @@ const getAllProjects = async (req, res) => {
 
 // POST /projects  (auth)
 const addProject = async (req, res) => {
-    const { title, technology, url, order } = req.body;
+    const { title, technology, url, liveUrl, description, order } = req.body;
     const image = req.file ? req.file.path : undefined; // Cloudinary URL
     try {
-        const project = new Project({ title, technology, url, image, order });
+        const project = new Project({ title, technology, url, liveUrl, description, image, order });
         await project.save();
         return res.status(201).json({ project });
     } catch (err) {
@@ -41,7 +41,7 @@ const getProjectById = async (req, res) => {
 
 // PUT /projects/:id  (auth)
 const updateProject = async (req, res) => {
-    const { title, technology, url, order } = req.body;
+    const { title, technology, url, liveUrl, description, order } = req.body;
     const image = req.file ? req.file.path : null; // Cloudinary URL
     try {
         const project = await Project.findById(req.params.id);
@@ -51,6 +51,8 @@ const updateProject = async (req, res) => {
         if (title !== undefined) project.title = title;
         if (technology !== undefined) project.technology = technology;
         if (url !== undefined) project.url = url;
+        if (liveUrl !== undefined) project.liveUrl = liveUrl;
+        if (description !== undefined) project.description = description;
         if (order !== undefined) project.order = order;
         if (image) project.image = image;
         await project.save();

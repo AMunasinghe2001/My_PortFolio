@@ -20,18 +20,53 @@ const fallbackProfessional = [
   { title: "Creativity", percentage: 95 },
 ];
 
+const fallbackDatabase = [
+  { title: "MongoDB", percentage: 90 },
+  { title: "MySQL", percentage: 85 },
+  { title: "Supabase", percentage: 82 },
+  { title: "Firebase", percentage: 78 },
+];
+
+const fallbackTools = [
+  { title: "Git / GitHub", percentage: 92 },
+  { title: "VS Code", percentage: 95 },
+  { title: "Figma", percentage: 90 },
+  { title: "Postman", percentage: 85 },
+  { title: "XAMPP", percentage: 80 },
+];
+
 const Skills = () => {
   const [technicalSkills, setTechnicalSkills] = useState(fallbackTechnical);
+  const [databaseSkills, setDatabaseSkills] = useState(fallbackDatabase);
+  const [toolsSkills, setToolsSkills] = useState(fallbackTools);
   const [professionalSkills, setProfessionalSkills] = useState(fallbackProfessional);
 
   useEffect(() => {
+    // Technical Skills + Database Management are generated automatically from
+    // GitHub (falling back to the hardcoded defaults above). Tools +
+    // Professional skills come from the admin-managed DB.
+    api
+      .get("/github-skills")
+      .then((res) => {
+        const data = res.data || {};
+        if (Array.isArray(data.skills) && data.skills.length) {
+          setTechnicalSkills(data.skills);
+        }
+        if (Array.isArray(data.databases) && data.databases.length) {
+          setDatabaseSkills(data.databases);
+        }
+      })
+      .catch((error) => console.error("GitHub skills fetch failed", error));
+
     api
       .get("/skills")
       .then((res) => {
         const skills = res.data && res.data.skills;
         if (Array.isArray(skills) && skills.length) {
-          setTechnicalSkills(skills.filter((s) => s.category === "technical"));
-          setProfessionalSkills(skills.filter((s) => s.category === "professional"));
+          const tools = skills.filter((s) => s.category === "tool");
+          if (tools.length) setToolsSkills(tools);
+          const prof = skills.filter((s) => s.category === "professional");
+          if (prof.length) setProfessionalSkills(prof);
         }
       })
       .catch((error) => console.error("Skills fetch failed", error));
@@ -47,6 +82,26 @@ const Skills = () => {
         <div className="technical-skills ">
           <h2 className="skill animated-text">Technical Skills</h2>
           {technicalSkills.map((skill, index) => (
+            <Skill
+              key={skill._id || index}
+              title={skill.title}
+              percentage={skill.percentage}
+            />
+          ))}
+        </div>
+        <div className="database-skills">
+          <h2 className="skill animated-text">Database Management</h2>
+          {databaseSkills.map((skill, index) => (
+            <Skill
+              key={skill._id || index}
+              title={skill.title}
+              percentage={skill.percentage}
+            />
+          ))}
+        </div>
+        <div className="tools-skills">
+          <h2 className="skill animated-text">Tools</h2>
+          {toolsSkills.map((skill, index) => (
             <Skill
               key={skill._id || index}
               title={skill.title}

@@ -9,12 +9,19 @@ function Nav() {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const toggleMenu = (e) => {
+    // Stop the tap from bubbling to the document `closeMenu` listener, which
+    // would otherwise immediately re-close the menu on some mobile browsers.
+    e.stopPropagation();
+    setIsOpen((open) => !open);
   };
 
   const closeMenu = (e) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target) &&
+      !e.target.closest('.hamburger')
+    ) {
       setIsOpen(false);
     }
   };
