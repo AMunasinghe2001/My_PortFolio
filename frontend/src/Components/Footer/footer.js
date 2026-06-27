@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../api/axios";
+import { getCachedProfile, fetchProfile } from "../../api/profile";
 import "./footer.css";
 import facebook from "./img/facebook.png";
 import watsapp from "./img/watsapp.png";
@@ -19,22 +19,23 @@ const fallback = {
   },
 };
 
+const toData = (p) => ({
+  name: p.name || fallback.name,
+  footerTagline: p.footerTagline || fallback.footerTagline,
+  copyrightName: p.copyrightName || fallback.copyrightName,
+  social: { ...fallback.social, ...(p.social || {}) },
+});
+
 function Footer() {
-  const [data, setData] = useState(fallback);
+  const [data, setData] = useState(() => {
+    const p = getCachedProfile();
+    return p ? toData(p) : fallback;
+  });
 
   useEffect(() => {
-    api
-      .get("/profile")
-      .then((res) => {
-        const p = res.data && res.data.profile;
-        if (p) {
-          setData({
-            name: p.name || fallback.name,
-            footerTagline: p.footerTagline || fallback.footerTagline,
-            copyrightName: p.copyrightName || fallback.copyrightName,
-            social: { ...fallback.social, ...(p.social || {}) },
-          });
-        }
+    fetchProfile()
+      .then((p) => {
+        if (p) setData(toData(p));
       })
       .catch((error) => console.error("Footer fetch failed", error));
   }, []);

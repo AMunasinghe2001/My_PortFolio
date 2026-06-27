@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../Nav/nav";
-import api from "../../api/axios";
+import { getCachedProfile, fetchProfile } from "../../api/profile";
 import "./home.css";
 import picFallback from "./img/pic.png";
 
@@ -21,7 +21,12 @@ const fallbackProfile = {
 };
 
 function Home() {
-  const [profile, setProfile] = useState(fallbackProfile);
+  // Start from the cached profile (if any) so reloads show the correct hero
+  // image immediately instead of flashing the old bundled one first.
+  const [profile, setProfile] = useState(() => ({
+    ...fallbackProfile,
+    ...(getCachedProfile() || {}),
+  }));
 
   // Typing animation state
   const [currentTitle, setCurrentTitle] = useState("");
@@ -49,12 +54,9 @@ function Home() {
   })();
 
   useEffect(() => {
-    api
-      .get("/profile")
-      .then((res) => {
-        if (res.data && res.data.profile) {
-          setProfile((prev) => ({ ...prev, ...res.data.profile }));
-        }
+    fetchProfile()
+      .then((p) => {
+        if (p) setProfile((prev) => ({ ...prev, ...p }));
       })
       .catch((error) => console.error("Profile fetch failed", error));
   }, []);

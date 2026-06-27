@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../api/axios";
+import { getCachedProfile, fetchProfile } from "../../api/profile";
 import "./about.css";
 import aboutPicFallback from "./img/aboutPic.png";
 
@@ -10,14 +10,19 @@ const fallbackParagraphs = [
 ];
 
 function About() {
-  const [paragraphs, setParagraphs] = useState(fallbackParagraphs);
-  const [aboutImage, setAboutImage] = useState("");
+  // Seed from the cached profile so the correct About image/text render
+  // immediately on reload (no flash of the old bundled image).
+  const [paragraphs, setParagraphs] = useState(() => {
+    const c = getCachedProfile();
+    return c && Array.isArray(c.aboutParagraphs) && c.aboutParagraphs.length
+      ? c.aboutParagraphs
+      : fallbackParagraphs;
+  });
+  const [aboutImage, setAboutImage] = useState(() => (getCachedProfile() || {}).aboutImage || "");
 
   useEffect(() => {
-    api
-      .get("/profile")
-      .then((res) => {
-        const p = res.data && res.data.profile;
+    fetchProfile()
+      .then((p) => {
         if (p) {
           if (Array.isArray(p.aboutParagraphs) && p.aboutParagraphs.length) {
             setParagraphs(p.aboutParagraphs);
