@@ -94,26 +94,44 @@ body {
   .home-u1 {
     display: flex;
     flex-direction: column;
-    width: 70%; /* Adjust width to your preference */
-    max-width: 280px;
+    width: 72%; /* Adjust width to your preference */
+    max-width: 290px;
     position: absolute;
-    top: 54px; /* Sits just below the hamburger */
-    right: 0;
-    background-color: #333333f7;
+    top: 58px; /* Sits just below the hamburger */
+    right: 10px;
+    background-color: #04282b; /* solid (opaque) — hero text no longer bleeds through */
+    border: 1px solid rgba(10, 208, 220, 0.25);
+    border-radius: 14px;
+    padding: 8px 0;
     overflow: hidden; /* Prevent overflow */
     z-index: 1001;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
     pointer-events: auto;
   }
 
   .home-u1.show {
-    max-height: 500px; /* Adjust based on content height */
+    max-height: 640px; /* comfortably fits every item (incl. Dashboard/Logout) */
     opacity: 1; /* Fully visible */
   }
 
   .home-11 a {
     text-align: left;
-    padding: 14px 22px;
+    padding: 13px 22px;
+    border-radius: 8px;
+    margin: 0 8px;
+  }
+  /* Give text room so descenders (g, y, j) never clip */
+  .home-11 h1 {
+    line-height: 1.45;
+  }
+  /* Clean highlight instead of the scale shift used on desktop */
+  .home-11 a:hover {
+    background-color: rgba(2, 150, 160, 0.25);
+    color: #ffffff;
+    transform: none;
+  }
+  .home-11:hover h1 {
+    transform: none;
   }
 
   .hamburger {
