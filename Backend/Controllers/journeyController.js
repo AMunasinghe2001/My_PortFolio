@@ -44,6 +44,24 @@ const updateJourney = async (req, res) => {
     }
 };
 
+// PUT /journey/reorder  (auth) — persist a new display order from drag & drop.
+// Body: { ids: [orderedJourneyId, ...] }
+const reorderJourney = async (req, res) => {
+    const { ids } = req.body;
+    if (!Array.isArray(ids)) {
+        return res.status(400).json({ message: "ids must be an array" });
+    }
+    try {
+        await Promise.all(
+            ids.map((id, index) => Journey.findByIdAndUpdate(id, { order: index }))
+        );
+        return res.status(200).json({ message: "Journey reordered" });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Reorder failed" });
+    }
+};
+
 // DELETE /journey/:id  (auth)
 const deleteJourney = async (req, res) => {
     try {
@@ -58,4 +76,4 @@ const deleteJourney = async (req, res) => {
     }
 };
 
-module.exports = { getAllJourney, addJourney, updateJourney, deleteJourney };
+module.exports = { getAllJourney, addJourney, updateJourney, reorderJourney, deleteJourney };

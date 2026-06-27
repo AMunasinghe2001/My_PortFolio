@@ -6,9 +6,10 @@ import "./admin.css";
 const sections = [
   { to: "/admin/profile", title: "Profile & Hero", desc: "Name, titles, intro, about, social links, resume & images", icon: "🧑" },
   { to: "/admin/projects", title: "Projects", desc: "Add, edit or delete portfolio projects", icon: "💼" },
-  { to: "/admin/skills", title: "Skills", desc: "Technical & professional skill bars", icon: "📊" },
+  { to: "/admin/skills", title: "Skills", desc: "Tools & professional bars (tech & databases auto from GitHub)", icon: "📊" },
   { to: "/admin/journey", title: "Journey", desc: "Education & timeline entries", icon: "🎓" },
   { to: "/admin/services", title: "Services", desc: "Service cards shown on the site", icon: "🛠️" },
+  { to: "/admin/account", title: "Account", desc: "Change your admin username & password", icon: "🔐" },
 ];
 
 const AdminHome = () => {

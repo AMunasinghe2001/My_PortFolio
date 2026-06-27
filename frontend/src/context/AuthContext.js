@@ -26,9 +26,21 @@ export const AuthProvider = ({ children }) => {
         setUsername("");
     }, []);
 
+    // Apply a freshly-issued token/username (e.g. after changing credentials).
+    const refreshAuth = useCallback((newToken, name) => {
+        if (newToken) {
+            localStorage.setItem("token", newToken);
+            setToken(newToken);
+        }
+        if (name) {
+            localStorage.setItem("username", name);
+            setUsername(name);
+        }
+    }, []);
+
     return (
         <AuthContext.Provider
-            value={{ token, username, isAuthenticated: !!token, login, logout }}
+            value={{ token, username, isAuthenticated: !!token, login, logout, refreshAuth }}
         >
             {children}
         </AuthContext.Provider>

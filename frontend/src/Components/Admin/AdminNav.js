@@ -10,6 +10,7 @@ const links = [
   { to: "/admin/skills", label: "Skills" },
   { to: "/admin/journey", label: "Journey" },
   { to: "/admin/services", label: "Services" },
+  { to: "/admin/account", label: "Account" },
 ];
 
 const AdminNav = () => {

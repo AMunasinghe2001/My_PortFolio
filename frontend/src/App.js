@@ -14,6 +14,7 @@ import ServicesEditor from "./Components/Admin/ServicesEditor";
 import ProjectsManager from "./Components/Dashboard/dashboard";
 import AddProject from "./Components/AddProject/addproject";
 import UpdateProject from "./Components/UpdateProject/updateproject";
+import AccountEditor from "./Components/Admin/AccountEditor";
 
 const protect = (element) => <ProtectedRoute>{element}</ProtectedRoute>;
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/admin/skills" element={protect(<SkillsEditor />)} />
         <Route path="/admin/journey" element={protect(<JourneyEditor />)} />
         <Route path="/admin/services" element={protect(<ServicesEditor />)} />
+        <Route path="/admin/account" element={protect(<AccountEditor />)} />
 
         {/* Fallback */}
         <Route path="*" element={<PublicSite />} />

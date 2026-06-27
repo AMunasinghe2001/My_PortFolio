@@ -1,5 +1,6 @@
 /* ===== Admin area shared styles ===== */
 .admin-page {
+  box-sizing: border-box; /* keep padding inside 100vh so short pages don't scroll */
   min-height: 100vh;
   background:
     radial-gradient(1200px 600px at 80% -10%, rgba(2, 150, 160, 0.18), transparent 60%),
@@ -78,14 +79,24 @@
 }
 .admin-logout,
 .admin-view-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: #0296a0;
   border: none;
   color: #fff;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 9px 16px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
+  font-weight: 600;
+  line-height: 1;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.admin-logout:hover,
+.admin-view-site:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 .admin-logout {
   background: #c0392b;
@@ -210,6 +221,8 @@
 .admin-field input[type="text"],
 .admin-field input[type="number"],
 .admin-field input[type="url"],
+.admin-field input[type="password"],
+.admin-field input[type="email"],
 .admin-field select,
 .admin-field textarea {
   width: 100%;
@@ -234,6 +247,16 @@
 .admin-field input::placeholder,
 .admin-field textarea::placeholder {
   color: #5e8a8a;
+}
+/* Keep browser-autofilled fields (e.g. password manager) dark, not white. */
+.admin-field input:-webkit-autofill,
+.admin-field input:-webkit-autofill:hover,
+.admin-field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #e8f6f6;
+  -webkit-box-shadow: 0 0 0 1000px #021e20 inset;
+  box-shadow: 0 0 0 1000px #021e20 inset;
+  caret-color: #e8f6f6;
+  transition: background-color 9999s ease-in-out 0s;
 }
 .admin-field textarea {
   min-height: 90px;
@@ -397,6 +420,33 @@
   border-color: #0a6a70;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
+.admin-row.is-dragging {
+  opacity: 0.45;
+  border-color: #0ad0dc;
+}
+
+/* Drag handle for reorderable rows (Journey) */
+.drag-handle {
+  width: fit-content;
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: #04282b;
+  border: 1px solid #0a4d52;
+  color: #5e9a9a;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: 2px;
+  cursor: grab;
+  user-select: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.drag-handle:hover {
+  color: #0ad0dc;
+  border-color: #0a6a70;
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
 .admin-row-actions {
   display: flex;
   gap: 8px;
@@ -445,6 +495,8 @@
 .admin-msg.error { background: #41201c; color: #f0a79c; border: 1px solid #c0392b; }
 
 .admin-back {
+  display: block;
+  width: fit-content;
   background: none;
   border: none;
   color: #9fe9e9;
