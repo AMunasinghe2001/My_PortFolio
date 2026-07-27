@@ -1,0 +1,6 @@
+{
+  "//": "Watch .env too — it is only read at startup, so editing it without a restart silently leaves the old values in memory.",
+  "ext": "js,json,env",
+  "watch": ["."],
+  "ignore": ["node_modules", "uploads"]
+}

@@ -26,59 +26,6 @@
   font-size: 0.96rem;
 }
 
-/* Email + location, styled as glass pills to match the social buttons below. */
-.contact {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 26px;
-}
-
-.contactItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  padding: 10px 20px 10px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  transition: transform 0.4s var(--ease), background 0.4s var(--ease),
-    border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
-}
-
-.contactItem:hover {
-  transform: translateY(-3px);
-  background: var(--glass-bg-hover);
-  border-color: var(--glass-border-lit);
-  box-shadow: 0 12px 26px rgba(10, 208, 220, 0.24);
-}
-
-.contactIcon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(10, 208, 220, 0.16);
-  border: 1px solid rgba(126, 249, 255, 0.26);
-  color: var(--teal-400);
-  font-size: 0.86rem;
-}
-
-.contactText {
-  font-size: 0.9rem;
-  color: var(--text);
-  transition: color 0.3s;
-}
-
-.contactItem:hover .contactText {
-  color: var(--aqua);
-}
-
 .socials {
   display: flex;
   justify-content: center;

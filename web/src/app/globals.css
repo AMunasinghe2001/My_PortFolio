@@ -115,9 +115,16 @@ p {
   margin: 0;
 }
 
+/* Opaque, high-contrast selection. A translucent highlight washed out against
+   the glass panels and autofilled inputs, leaving selected text unreadable. */
 ::selection {
-  background: rgba(10, 208, 220, 0.32);
-  color: #fff;
+  background: #0ad0dc;
+  color: #01262a;
+}
+
+::-moz-selection {
+  background: #0ad0dc;
+  color: #01262a;
 }
 
 /* ---- Scrollbar ---- */
@@ -446,9 +453,38 @@ p {
   resize: vertical;
 }
 
+/* Native selects get the OS arrow and padding; replace both so they match the
+   glass inputs beside them. The arrow is an inline SVG data URI, tinted to the
+   accent colour. */
+.field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 44px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%230ad0dc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 13px;
+}
+
+.field select:hover {
+  border-color: var(--glass-border-lit);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* The open list is drawn by the OS, so only colours can be influenced here —
+   these keep it dark instead of the default white-on-white. */
 .field select option {
-  background: var(--teal-900);
+  background-color: #063336;
   color: var(--text);
+  padding: 10px;
+}
+
+.field select option:checked,
+.field select option:hover {
+  background: linear-gradient(var(--teal-600), var(--teal-600));
+  color: #01262a;
 }
 
 .input:focus,
@@ -463,6 +499,22 @@ p {
 .field input::placeholder,
 .field textarea::placeholder {
   color: var(--text-faint);
+}
+
+/* Chrome paints autofilled inputs with its own light background, which breaks
+   the dark theme and makes the text hard to read. There's no way to set the
+   background directly, so an inset shadow the size of the field stands in for
+   it, and the text colour is forced via -webkit-text-fill-color. */
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px rgba(6, 48, 51, 0.96) inset;
+  box-shadow: 0 0 0 1000px rgba(6, 48, 51, 0.96) inset;
+  caret-color: var(--text);
+  /* Long delay so the browser's own fade-in never repaints over it. */
+  transition: background-color 100000s ease-in-out 0s;
 }
 
 .field input[type="file"] {

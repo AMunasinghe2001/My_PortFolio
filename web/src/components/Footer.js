@@ -22,23 +22,24 @@ const FALLBACK = {
     whatsapp: "https://wa.me/qr/PNKZI5JKCMJKK1",
     github: "https://github.com/AMunasinghe2001",
     linkedin: "https://www.linkedin.com/in/anushanga-munasinghe-9b51882a2/",
+    email: "anushangamunasinghe@gmail.com",
+    locationLabel: "Tangalle, Sri Lanka",
+    locationUrl:
+      "https://www.google.com/maps/search/?api=1&query=6.0317151,80.7904811",
   },
 };
 
+// Every contact route renders as the same round icon button. `email` and
+// `location` are built from their own fields rather than being plain URLs,
+// so they get a mailto: link and a tooltip respectively.
 const SOCIALS = [
+  { key: "email", label: "Email", Icon: FaEnvelope },
+  { key: "location", label: "Location", Icon: FaMapMarkerAlt },
   { key: "facebook", label: "Facebook", Icon: FaFacebookF },
   { key: "whatsapp", label: "WhatsApp", Icon: FaWhatsapp },
   { key: "github", label: "GitHub", Icon: FaGithub },
   { key: "linkedin", label: "LinkedIn", Icon: FaLinkedinIn },
 ];
-
-const EMAIL = "anushangamunasinghe@gmail.com";
-
-// Home location (Tangalle). `?q=<lat>,<lng>` drops a pin at exactly these
-// coordinates and opens the Google Maps app on mobile.
-const LOCATION_LABEL = "Tangalle, Sri Lanka";
-const LOCATION_URL =
-  "https://www.google.com/maps/search/?api=1&query=6.0317151,80.7904811";
 
 const toData = (p) => ({
   name: p.name || FALLBACK.name,
@@ -65,40 +66,41 @@ export default function Footer() {
         <h3 className={styles.name}>{data.name}</h3>
         <p className={styles.tagline}>{data.footerTagline}</p>
 
-        <div className={styles.contact}>
-          <a className={styles.contactItem} href={`mailto:${EMAIL}`}>
-            <span className={styles.contactIcon}>
-              <FaEnvelope />
-            </span>
-            <span className={styles.contactText}>{EMAIL}</span>
-          </a>
-
-          <a
-            className={styles.contactItem}
-            href={LOCATION_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className={styles.contactIcon}>
-              <FaMapMarkerAlt />
-            </span>
-            <span className={styles.contactText}>{LOCATION_LABEL}</span>
-          </a>
-        </div>
-
+        {/* Email, location and the social profiles share one row of icon
+            buttons — every contact route reads as a single set. */}
         <div className={styles.socials}>
           {SOCIALS.map(({ key, label, Icon }) => {
-            const href = data.social?.[key];
-            if (!href) return null;
+            const s = data.social || {};
+
+            let href;
+            let title = label;
+            let external = true;
+
+            if (key === "email") {
+              if (!s.email) return null;
+              href = `mailto:${s.email}`;
+              title = s.email;
+              // mailto: must open in the mail client, not a new tab.
+              external = false;
+            } else if (key === "location") {
+              if (!s.locationUrl) return null;
+              href = s.locationUrl;
+              title = s.locationLabel || label;
+            } else {
+              if (!s[key]) return null;
+              href = s[key];
+            }
+
             return (
               <a
                 key={key}
                 href={href}
                 className={styles.social}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                title={label}
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                aria-label={title}
+                title={title}
               >
                 <Icon />
               </a>

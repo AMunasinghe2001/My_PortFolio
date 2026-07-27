@@ -21,7 +21,15 @@ const EMPTY = {
   resumeUrl: "",
   footerTagline: "",
   copyrightName: "",
-  social: { facebook: "", whatsapp: "", github: "", linkedin: "" },
+  social: {
+    facebook: "",
+    whatsapp: "",
+    github: "",
+    linkedin: "",
+    email: "",
+    locationUrl: "",
+    locationLabel: "",
+  },
   heroImage: "",
   aboutImage: "",
 };
@@ -55,6 +63,9 @@ export default function ProfileEditorPage() {
             whatsapp: p.social?.whatsapp || "",
             github: p.social?.github || "",
             linkedin: p.social?.linkedin || "",
+            email: p.social?.email || "",
+            locationUrl: p.social?.locationUrl || "",
+            locationLabel: p.social?.locationLabel || "",
           },
           heroImage: p.heroImage || "",
           aboutImage: p.aboutImage || "",
@@ -207,7 +218,12 @@ export default function ProfileEditorPage() {
             </div>
           </Panel>
 
-          <Panel title="Social links & footer">
+          <Panel title="Contact & social links">
+            <Hint>
+              Each filled-in item below becomes an icon button in the footer.
+              Leave one blank to hide it.
+            </Hint>
+
             <Grid2>
               <div className="field">
                 <label htmlFor="facebook">Facebook URL</label>
@@ -224,6 +240,50 @@ export default function ProfileEditorPage() {
               <div className="field">
                 <label htmlFor="linkedin">LinkedIn URL</label>
                 <input id="linkedin" type="text" name="linkedin" value={form.social.linkedin} onChange={changeSocial} />
+              </div>
+            </Grid2>
+
+            <div className="field">
+              <label htmlFor="email">Email address</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={form.social.email}
+                onChange={changeSocial}
+                placeholder="you@example.com"
+              />
+              <span className="hint">
+                Clicking the footer icon opens a new email to this address.
+              </span>
+            </div>
+
+            <Grid2>
+              <div className="field">
+                <label htmlFor="locationLabel">Location name</label>
+                <input
+                  id="locationLabel"
+                  type="text"
+                  name="locationLabel"
+                  value={form.social.locationLabel}
+                  onChange={changeSocial}
+                  placeholder="Tangalle, Sri Lanka"
+                />
+                <span className="hint">Shown when hovering the map icon.</span>
+              </div>
+              <div className="field">
+                <label htmlFor="locationUrl">Location map URL</label>
+                <input
+                  id="locationUrl"
+                  type="text"
+                  name="locationUrl"
+                  value={form.social.locationUrl}
+                  onChange={changeSocial}
+                  placeholder="https://www.google.com/maps/..."
+                />
+                <span className="hint">
+                  Open your place in Google Maps, use Share → Copy link, and paste it here.
+                </span>
               </div>
             </Grid2>
 

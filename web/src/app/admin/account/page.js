@@ -4,6 +4,7 @@ import { useState } from "react";
 import api from "@/lib/api";
 import { useAuth } from "@/lib/AuthContext";
 import { PageHeader, Message, Panel, Grid2 } from "@/components/admin/ui";
+import PasswordField from "@/components/admin/PasswordField";
 
 export default function AccountEditorPage() {
   const { username, refreshAuth } = useAuth();
@@ -79,19 +80,16 @@ export default function AccountEditorPage() {
 
       <form onSubmit={submit} style={{ maxWidth: 640 }}>
         <Panel title="Login credentials">
-          <div className="field">
-            <label htmlFor="currentPassword">Current password</label>
-            <input
-              id="currentPassword"
-              type="password"
-              name="currentPassword"
-              value={form.currentPassword}
-              onChange={change}
-              autoComplete="current-password"
-              required
-            />
-            <span className="hint">Required to confirm any change.</span>
-          </div>
+          <PasswordField
+            id="currentPassword"
+            name="currentPassword"
+            label="Current password"
+            value={form.currentPassword}
+            onChange={change}
+            autoComplete="current-password"
+            required
+            hint="Required to confirm any change."
+          />
 
           <div className="field">
             <label htmlFor="newUsername">Username</label>
@@ -106,30 +104,24 @@ export default function AccountEditorPage() {
           </div>
 
           <Grid2>
-            <div className="field">
-              <label htmlFor="newPassword">New password</label>
-              <input
-                id="newPassword"
-                type="password"
-                name="newPassword"
-                value={form.newPassword}
-                onChange={change}
-                autoComplete="new-password"
-                placeholder="Leave blank to keep current"
-              />
-              <span className="hint">At least 6 characters.</span>
-            </div>
-            <div className="field">
-              <label htmlFor="confirmPassword">Confirm new password</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={change}
-                autoComplete="new-password"
-              />
-            </div>
+            <PasswordField
+              id="newPassword"
+              name="newPassword"
+              label="New password"
+              value={form.newPassword}
+              onChange={change}
+              autoComplete="new-password"
+              placeholder="Leave blank to keep current"
+              hint="At least 6 characters."
+            />
+            <PasswordField
+              id="confirmPassword"
+              name="confirmPassword"
+              label="Confirm new password"
+              value={form.confirmPassword}
+              onChange={change}
+              autoComplete="new-password"
+            />
           </Grid2>
         </Panel>
 

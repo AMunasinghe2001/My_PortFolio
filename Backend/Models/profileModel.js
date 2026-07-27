@@ -17,12 +17,18 @@ const profileSchema = new mongoose.Schema(
         aboutParagraphs: { type: [String], default: [] },
         aboutImage: { type: String, default: "" },
 
-        // ---- Social links ----
+        // ---- Contact & social links ----
+        // These all render as the same row of icon buttons in the footer.
         social: {
             facebook: { type: String, default: "" },
             whatsapp: { type: String, default: "" },
             github: { type: String, default: "" },
             linkedin: { type: String, default: "" },
+            // Plain address (no "mailto:"); the footer builds the link.
+            email: { type: String, default: "" },
+            // A maps URL to open, plus the place name used as the tooltip.
+            locationUrl: { type: String, default: "" },
+            locationLabel: { type: String, default: "" },
         },
 
         // ---- Footer ----

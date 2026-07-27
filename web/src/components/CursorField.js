@@ -15,7 +15,7 @@ import styles from "./CursorField.module.css";
  *  - It is purely decorative: `aria-hidden`, no pointer events, and it does
  *    not render at all for users who prefer reduced motion.
  */
-export default function CursorField() {
+export default function CursorField({ fadeOnScroll = true }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -94,18 +94,23 @@ export default function CursorField() {
     /** @type {{x:number,y:number,vx:number,vy:number,life:number,r:number}[]} */
     const sparks = [];
 
-    // --- Fade out as the hero scrolls away ---------------------------------
+    // --- Fade out as the section scrolls away ------------------------------
+    // On the home page the field belongs to the hero only, so it dims as the
+    // sections below arrive. On a single-screen page (login) there is nothing
+    // to scroll past, so it stays at full strength.
     let fade = 1;
     const onScroll = () => {
       const y = window.scrollY;
       const h = window.innerHeight;
       fade = Math.max(0, 1 - y / (h * 0.7));
     };
-    onScroll();
+    if (fadeOnScroll) {
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
 
     window.addEventListener("pointermove", onMove, { passive: true });
     window.addEventListener("pointerleave", onLeave);
-    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", resize);
 
     let raf = 0;
@@ -192,7 +197,7 @@ export default function CursorField() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [fadeOnScroll]);
 
   return <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />;
 }
