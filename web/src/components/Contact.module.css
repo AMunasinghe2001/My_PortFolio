@@ -1,0 +1,57 @@
+/* ---- Form ---- */
+
+/* The form is the whole section now — centred, with a readable max width so
+   the fields don't stretch uncomfortably wide on large screens. */
+.formCard {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 38px 36px;
+}
+
+.submitRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.status {
+  margin-top: 18px;
+  padding: 13px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.ok {
+  background: rgba(46, 219, 145, 0.14);
+  border-color: rgba(46, 219, 145, 0.36);
+  color: #83f2c4;
+}
+
+.bad {
+  background: rgba(255, 86, 86, 0.14);
+  border-color: rgba(255, 86, 86, 0.36);
+  color: #ff9d9d;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .formCard {
+    padding: 26px 22px;
+  }
+  /* Full-width tap target on phones. */
+  .submitRow > * {
+    width: 100%;
+  }
+}

@@ -1,0 +1,44 @@
+.handle {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--text-faint);
+  cursor: grab;
+  transition: color 0.3s, background 0.3s;
+}
+
+.handle:hover {
+  color: var(--teal-400);
+  background: rgba(10, 208, 220, 0.14);
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
+.dragging {
+  opacity: 0.5;
+  border-color: var(--glass-border-lit);
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 5px;
+  flex-shrink: 0;
+}

@@ -1,0 +1,299 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  /* Padding scales with the viewport so the whole hero — portrait included —
+     still fits on a short laptop screen at 100% zoom instead of overflowing. */
+  padding: calc(var(--nav-h) + clamp(16px, 4vh, 48px)) 24px clamp(24px, 6vh, 72px);
+  overflow: hidden;
+}
+
+.inner {
+  position: relative;
+  /* Above the particle canvas, so the copy always reads cleanly over it. */
+  z-index: 1;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: 56px;
+}
+
+/* Both columns keep their own height rather than being re-centred against each
+   other, so a height change in one can never nudge the other. The typed role
+   below is also height-pinned, so in practice nothing changes height at all. */
+.copy,
+.portrait {
+  align-self: center;
+}
+
+/* ---- Copy column ---- */
+
+.copy {
+  min-width: 0;
+}
+
+.greeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px 8px 14px;
+  margin-bottom: 22px;
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  animation: rise 0.8s var(--ease) both;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal-400);
+  box-shadow: 0 0 12px var(--teal-400);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.8); }
+}
+
+.name {
+  font-size: clamp(2.4rem, 6.2vw, 4.3rem);
+  line-height: 1.04;
+  margin-bottom: 16px;
+  background: linear-gradient(120deg, #ffffff 20%, #b6f4f8 60%, var(--teal-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rise 0.8s 0.08s var(--ease) both;
+}
+
+.and {
+  font-size: 1.02rem;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  animation: rise 0.8s 0.16s var(--ease) both;
+}
+
+/* The typed role. Its height is pinned to exactly one line so the rest of the
+   hero never moves as characters are added and deleted — `min-height` alone is
+   only a floor, so the line box still collapsed when the text emptied and
+   pushed everything below it up and down. */
+.role {
+  /* Sized so the longest title ("Mobile App Developer", ~20 chars) still fits
+     on one line at the narrowest phone width — nowrap below means anything
+     wider would be clipped rather than wrapped. */
+  --role-size: clamp(1.35rem, 6.4vw, 2.9rem);
+  --role-leading: 1.25;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: calc(var(--role-size) * var(--role-leading));
+  /* Keep the row from being wider than the column; the caret stays pinned
+     beside the text because it never shrinks (flex-shrink: 0 below). */
+  max-width: 100%;
+  margin-bottom: 22px;
+  animation: rise 0.8s 0.24s var(--ease) both;
+}
+
+.roleText {
+  font-size: var(--role-size);
+  line-height: var(--role-leading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  /* Longer titles must never wrap to a second line — that would change the
+     block height even with the height above pinned. */
+  white-space: nowrap;
+  background: linear-gradient(120deg, var(--teal-400), var(--aqua));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.caret {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 3px;
+  /* Sized from the same token as the text so it stays visually centred. */
+  height: calc(var(--role-size) * 0.92);
+  border-radius: 2px;
+  background: var(--teal-400);
+  box-shadow: 0 0 14px var(--teal-400);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.intro {
+  max-width: 560px;
+  color: var(--text-dim);
+  font-size: 1.02rem;
+  margin-bottom: 34px;
+  animation: rise 0.8s 0.32s var(--ease) both;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  animation: rise 0.8s 0.4s var(--ease) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---- Portrait ---- */
+
+.portrait {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  animation: rise 1s 0.2s var(--ease) both;
+}
+
+.portraitGlow {
+  position: absolute;
+  inset: 4% 10% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, rgba(10, 208, 220, 0.42), transparent 68%);
+  filter: blur(46px);
+  z-index: 0;
+}
+
+.portraitFrame {
+  position: relative;
+  z-index: 1;
+  /* The width is capped by the height available on screen (3/4 of it, matching
+     the aspect ratio) so a short window shrinks the frame proportionally
+     instead of pushing content below the fold. Capping max-height instead
+     would fight aspect-ratio and squash the photo. */
+  width: min(100%, 460px, calc((100svh - var(--nav-h) - 130px) * 0.75));
+  aspect-ratio: 3 / 4;
+  border-radius: 32px;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  animation: float 7s ease-in-out infinite;
+}
+
+.portraitImg {
+  object-fit: cover;
+  object-position: top center;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+/* ---- Scroll cue ---- */
+
+.scrollCue {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  opacity: 0.75;
+  transition: opacity 0.3s;
+}
+
+.scrollCue:hover {
+  opacity: 1;
+}
+
+.mouse {
+  display: block;
+  width: 26px;
+  height: 42px;
+  border-radius: var(--radius-pill);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+}
+
+.wheel {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--teal-400);
+  animation: wheel 1.8s var(--ease) infinite;
+}
+
+@keyframes wheel {
+  0% { opacity: 0; transform: translateY(0); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(14px); }
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 900px) {
+  .hero {
+    padding: calc(var(--nav-h) + 34px) 20px 88px;
+  }
+
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  /* Portrait leads on mobile — the face is the strongest hook at this size. */
+  .portrait {
+    order: -1;
+  }
+
+  .portraitFrame {
+    width: min(78vw, 320px);
+  }
+
+  .greeting {
+    margin-bottom: 18px;
+  }
+
+  .role {
+    justify-content: center;
+  }
+
+  .intro {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ctas {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .ctas .btn,
+  .ctas > * {
+    flex: 1 1 100%;
+  }
+  .scrollCue {
+    display: none;
+  }
+}

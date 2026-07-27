@@ -1,0 +1,145 @@
+.grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  /* Top-aligned, not centred: the portrait now starts on the same line as the
+     text panel, so changing its size never drifts it up or down. */
+  align-items: start;
+  gap: 54px;
+}
+
+/* ---- Image ---- */
+
+.imageCol {
+  display: flex;
+  justify-content: center;
+}
+
+/* Exactly the size of the circle, so the halo can be centred on the image
+   rather than on a taller column box. */
+.imageWrap {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1 / 1;
+}
+
+/* Concentric with the portrait — slightly larger so it reads as an even halo
+   all the way round instead of pooling on one edge. */
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 118%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(2, 150, 160, 0.42), transparent 68%);
+  filter: blur(50px);
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Circular portrait inside an evenly-lit glass ring. Every shadow here is
+     offset-free and spread evenly around the circle — the shared --shadow-lg
+     is cast downward, which on a circle reads as a bright crescent on one
+     side rather than a balanced rim. */
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 0 60px rgba(2, 150, 160, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+
+.img {
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ---- Text ---- */
+
+.textCol {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  padding: 34px;
+}
+
+.para {
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+.para + .para {
+  margin-top: 16px;
+}
+
+/* ---- Stats ---- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 12px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(120deg, var(--teal-400), var(--aqua));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.statLabel {
+  font-size: 0.82rem;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .frame {
+    width: min(70vw, 320px);
+  }
+
+  .card {
+    padding: 26px;
+  }
+}
+
+@media (max-width: 520px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px 20px;
+  }
+}

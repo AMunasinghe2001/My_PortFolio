@@ -1,0 +1,110 @@
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.title {
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  background: linear-gradient(120deg, #ffffff, var(--aqua));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin-top: 6px;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+
+/* ---- Banner ---- */
+
+.msg {
+  padding: 13px 18px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 22px;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+}
+
+.ok {
+  background: rgba(46, 219, 145, 0.14);
+  border-color: rgba(46, 219, 145, 0.36);
+  color: #83f2c4;
+}
+
+.bad {
+  background: rgba(255, 86, 86, 0.14);
+  border-color: rgba(255, 86, 86, 0.36);
+  color: #ff9d9d;
+}
+
+/* ---- Panels & rows ---- */
+
+.panel {
+  padding: 28px 26px;
+  margin-bottom: 22px;
+}
+
+.panelTitle {
+  font-size: 1.15rem;
+  margin-bottom: 20px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--text);
+}
+
+.sectionLabel {
+  font-size: 0.79rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--teal-400);
+  margin: 30px 0 14px;
+}
+
+.row {
+  padding: 22px 24px;
+  margin-bottom: 14px;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.hint {
+  color: var(--text-faint);
+  font-size: 0.87rem;
+  margin: 6px 0 0;
+}
+
+.empty {
+  padding: 30px;
+  text-align: center;
+  color: var(--text-faint);
+  font-size: 0.93rem;
+}
+
+@media (max-width: 700px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .panel,
+  .row {
+    padding: 22px 20px;
+  }
+}

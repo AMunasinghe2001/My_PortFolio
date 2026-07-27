@@ -1,0 +1,72 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.card {
+  padding: 30px 26px;
+}
+
+.cardTitle {
+  font-size: 1.12rem;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--glass-border);
+  background: linear-gradient(120deg, #ffffff, var(--aqua));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.barHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+  gap: 10px;
+}
+
+.barTitle {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.barPct {
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: var(--teal-400);
+  flex-shrink: 0;
+}
+
+.track {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--teal-600), var(--aqua));
+  box-shadow: 0 0 14px rgba(10, 208, 220, 0.55);
+  /* Width starts at 0 and animates once the bar is scrolled into view. */
+  transition: width 1.25s var(--ease);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 26px 22px;
+  }
+}

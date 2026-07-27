@@ -1,0 +1,565 @@
+/* ==========================================================================
+   Liquid Glass design system
+   --------------------------------------------------------------------------
+   One dark teal canvas for the whole site. Content sits on frosted panels
+   that share a single recipe: a translucent tinted fill, a backdrop blur, a
+   light top edge (the "lit rim") and a soft drop shadow. Everything below is
+   built from the tokens in :root — change a token, change the whole site.
+   ========================================================================== */
+
+:root {
+  /* ---- Brand palette (carried over from the original site) ---- */
+  --teal-950: #021c1e;
+  --teal-900: #032c2f;
+  --teal-800: #04413f;
+  --teal-600: #0296a0;
+  --teal-400: #0ad0dc;
+  --aqua: #7ef9ff;
+
+  /* ---- Page canvas ---- */
+  --bg: var(--teal-950);
+  --text: #eaf7f8;
+  --text-dim: #a9c9cc;
+  --text-faint: #7ba1a6;
+
+  /* ---- Glass recipe ----
+     --glass-bg      the translucent fill
+     --glass-border  the visible edge of the pane
+     --glass-rim     the bright top highlight that sells the "lit glass" look
+     --glass-blur    backdrop blur strength                                   */
+  --glass-bg: rgba(255, 255, 255, 0.055);
+  --glass-bg-strong: rgba(255, 255, 255, 0.085);
+  --glass-bg-hover: rgba(255, 255, 255, 0.11);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-border-lit: rgba(126, 249, 255, 0.38);
+  --glass-rim: rgba(255, 255, 255, 0.5);
+  --glass-blur: 18px;
+  --glass-blur-lg: 34px;
+
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.28);
+  --shadow: 0 12px 36px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 26px 70px rgba(0, 0, 0, 0.5);
+  --glow: 0 0 42px rgba(10, 208, 220, 0.28);
+
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-h: 74px;
+  --maxw: 1240px;
+
+  --font-sans: var(--font-outfit), "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor jumps clear the fixed navbar. */
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+::selection {
+  background: rgba(10, 208, 220, 0.32);
+  color: #fff;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--teal-950);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(10, 208, 220, 0.28);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--teal-950);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 208, 220, 0.5);
+}
+
+/* ==========================================================================
+   Ambient background
+   Three slow-drifting colour orbs behind everything. They are what the glass
+   panels refract — without moving colour underneath, frosted panels read as
+   flat grey boxes.
+   ========================================================================== */
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(1200px 800px at 78% -10%, rgba(2, 150, 160, 0.3), transparent 60%),
+    radial-gradient(900px 700px at 8% 20%, rgba(4, 65, 63, 0.55), transparent 62%),
+    var(--teal-950);
+}
+
+.ambient::after {
+  /* Fine grain so the large flat gradients don't band on wide displays. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  will-change: transform;
+}
+
+.orb-1 {
+  width: 620px;
+  height: 620px;
+  top: -160px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(10, 208, 220, 0.55), transparent 70%);
+  animation: drift-1 26s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 520px;
+  height: 520px;
+  bottom: -140px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(2, 150, 160, 0.5), transparent 70%);
+  animation: drift-2 32s ease-in-out infinite;
+}
+
+.orb-3 {
+  width: 460px;
+  height: 460px;
+  top: 44%;
+  left: 52%;
+  background: radial-gradient(circle, rgba(126, 249, 255, 0.22), transparent 70%);
+  animation: drift-3 38s ease-in-out infinite;
+}
+
+@keyframes drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, 70px) scale(1.12); }
+}
+@keyframes drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(90px, -60px) scale(1.15); }
+}
+@keyframes drift-3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-35%, -62%) scale(1.2); }
+}
+
+/* ==========================================================================
+   Glass primitives
+   ========================================================================== */
+
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* The lit rim: a 1px gradient line along the top edge, brightest in the
+   middle. This is the single detail that most reads as "liquid glass". */
+.glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-rim), transparent);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-lg)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg)) saturate(180%);
+}
+
+/* Interactive panes lift and brighten on hover. */
+.glass-hover {
+  transition:
+    transform 0.5s var(--ease),
+    background 0.5s var(--ease),
+    border-color 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+
+.glass-hover:hover {
+  transform: translateY(-6px);
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-lit);
+  box-shadow: var(--shadow-lg), var(--glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Layout + section headings
+   ========================================================================== */
+
+.section {
+  position: relative;
+  padding: 108px 24px;
+  scroll-margin-top: var(--nav-h);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+
+.section-title {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 12px;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  margin-bottom: 16px;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.section-title .t-light {
+  color: var(--text);
+}
+
+.section-title .t-accent {
+  background: linear-gradient(120deg, var(--teal-400), var(--aqua));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.section-sub {
+  text-align: center;
+  color: var(--text-dim);
+  max-width: 620px;
+  margin: 0 auto 62px;
+  font-size: 1.02rem;
+}
+
+/* Small capsule label above section titles. */
+.eyebrow {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 18px;
+  padding: 7px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  color: var(--teal-400);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 30px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.97rem;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease),
+    background 0.35s var(--ease), border-color 0.35s var(--ease), opacity 0.2s;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, var(--teal-600), var(--teal-400));
+  color: #01262a;
+  box-shadow: 0 10px 30px rgba(2, 150, 160, 0.42);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 42px rgba(10, 208, 220, 0.55);
+}
+
+.btn-glass {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-color: var(--glass-border);
+  color: var(--text);
+}
+
+.btn-glass:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-lit);
+}
+
+.btn-danger {
+  background: rgba(255, 86, 86, 0.16);
+  border-color: rgba(255, 86, 86, 0.4);
+  color: #ff9d9d;
+}
+.btn-danger:hover:not(:disabled) {
+  background: rgba(255, 86, 86, 0.28);
+}
+
+.btn-success {
+  background: rgba(46, 219, 145, 0.16);
+  border-color: rgba(46, 219, 145, 0.4);
+  color: #83f2c4;
+}
+.btn-success:hover:not(:disabled) {
+  background: rgba(46, 219, 145, 0.28);
+}
+
+.btn-sm {
+  padding: 9px 20px;
+  font-size: 0.86rem;
+}
+
+/* ==========================================================================
+   Form controls (shared by Contact, Login and every admin editor)
+   ========================================================================== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.field label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+
+.field .hint {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.input,
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"],
+.field input[type="number"],
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field select option {
+  background: var(--teal-900);
+  color: var(--text);
+}
+
+.input:focus,
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--glass-border-lit);
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 0 4px rgba(10, 208, 220, 0.14);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.field input[type="file"] {
+  padding: 10px;
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+
+.field input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-strong);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.84rem;
+}
+
+/* ==========================================================================
+   Scroll reveal — elements fade/rise as they enter the viewport.
+   Driven by the useReveal hook; `.reveal` is the start state, `.is-visible`
+   the settled state.
+   ========================================================================== */
+
+/* Default (and "waiting below the fold") state: sunk and faded. */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Exit states. The hook tags an element with the side it left by, so the
+   animation reverses naturally: content leaving downward sinks, content
+   leaving past the top rises. Scrolling back up therefore replays the entry
+   animation in the opposite direction. */
+.reveal.reveal-below {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.reveal.reveal-above {
+  opacity: 0;
+  transform: translateY(-28px);
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--teal-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Backdrop-filter is well supported, but where it is not the panels would
+   read as nearly-invisible washes. Fall back to opaque tinted panels. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-strong {
+    background: rgba(3, 44, 47, 0.9);
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 76px 18px;
+  }
+  .section-sub {
+    margin-bottom: 44px;
+  }
+  /* Large blurs are expensive on mobile GPUs; ease them off. */
+  :root {
+    --glass-blur: 14px;
+    --glass-blur-lg: 22px;
+  }
+}
