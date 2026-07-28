@@ -1,5 +1,6 @@
 import { Outfit } from "next/font/google";
 import { AuthProvider } from "@/lib/AuthContext";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -7,8 +8,6 @@ const outfit = Outfit({
   display: "swap",
   variable: "--font-outfit",
 });
-
-const SITE_URL = "https://anushanga-munasinghe.vercel.app";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -45,7 +44,19 @@ export const metadata = {
   verification: {
     google: "L4cPCsvIWxZWUMpPd6snkYnGWsWZ8cZIJjYDrqjPqSY",
   },
-  robots: { index: true, follow: true },
+  // Tells Google which URL is authoritative, so the preview/branch deploys of
+  // this same content don't compete with the live site in search results.
+  alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: { icon: "/favicon.ico" },
 };
 
