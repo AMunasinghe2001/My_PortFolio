@@ -1,7 +1,11 @@
 const Profile = require("../Models/profileModel");
+const { isMongoReady } = require("../utils/mongoStatus");
 
 // There is only ever one profile document. Create an empty one on first read.
 const getProfileDoc = async () => {
+    if (!isMongoReady()) {
+        return null;
+    }
     let profile = await Profile.findOne();
     if (!profile) {
         profile = await Profile.create({});
@@ -13,6 +17,9 @@ const getProfileDoc = async () => {
 const getProfile = async (req, res) => {
     try {
         const profile = await getProfileDoc();
+        if (!profile) {
+            return res.status(200).json({ profile: {} });
+        }
         return res.status(200).json({ profile });
     } catch (err) {
         console.log(err);
@@ -23,6 +30,9 @@ const getProfile = async (req, res) => {
 // PUT /profile  (auth) — supports multipart with heroImage / aboutImage / resume files
 const updateProfile = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const profile = await getProfileDoc();
         const body = { ...req.body };
 

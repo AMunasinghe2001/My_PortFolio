@@ -1,8 +1,12 @@
 const Journey = require("../Models/journeyModel");
+const { isMongoReady } = require("../utils/mongoStatus");
 
 // GET /journey  (public)
 const getAllJourney = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(200).json({ journey: [] });
+        }
         const journey = await Journey.find().sort({ order: 1, createdAt: 1 });
         return res.status(200).json({ journey });
     } catch (err) {
@@ -14,6 +18,9 @@ const getAllJourney = async (req, res) => {
 // POST /journey  (auth) — optional logo file
 const addJourney = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const data = { ...req.body };
         if (req.file) data.logo = req.file.path; // Cloudinary URL
         const item = new Journey(data);
@@ -28,6 +35,9 @@ const addJourney = async (req, res) => {
 // PUT /journey/:id  (auth) — optional new logo
 const updateJourney = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const data = { ...req.body };
         if (req.file) data.logo = req.file.path;
         const item = await Journey.findByIdAndUpdate(req.params.id, data, {
@@ -52,6 +62,9 @@ const reorderJourney = async (req, res) => {
         return res.status(400).json({ message: "ids must be an array" });
     }
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         await Promise.all(
             ids.map((id, index) => Journey.findByIdAndUpdate(id, { order: index }))
         );
@@ -65,6 +78,9 @@ const reorderJourney = async (req, res) => {
 // DELETE /journey/:id  (auth)
 const deleteJourney = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const item = await Journey.findByIdAndDelete(req.params.id);
         if (!item) {
             return res.status(404).json({ message: "Journey item not found" });

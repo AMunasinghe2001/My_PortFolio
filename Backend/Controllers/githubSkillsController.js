@@ -12,7 +12,7 @@
 //                    limit to 5000/hr AND unlocks private repos + database
 //                    detection. Strongly recommended.
 
-const USERNAME = process.env.GITHUB_USERNAME || "AMunasinghe2001";
+const USERNAME = "AMunasinghe2001";
 const TOKEN = process.env.GITHUB_TOKEN || "";
 const TTL_MS = 6 * 60 * 60 * 1000; // refresh at most every 6 hours
 const MAX_SKILLS = 10;

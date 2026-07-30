@@ -1,8 +1,12 @@
 const Service = require("../Models/serviceModel");
+const { isMongoReady } = require("../utils/mongoStatus");
 
 // GET /services  (public)
 const getAllServices = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(200).json({ services: [] });
+        }
         const services = await Service.find().sort({ order: 1, createdAt: 1 });
         return res.status(200).json({ services });
     } catch (err) {
@@ -14,6 +18,9 @@ const getAllServices = async (req, res) => {
 // POST /services  (auth)
 const addService = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const service = new Service(req.body);
         await service.save();
         return res.status(201).json({ service });
@@ -26,6 +33,9 @@ const addService = async (req, res) => {
 // PUT /services/:id  (auth)
 const updateService = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const service = await Service.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true,
@@ -43,6 +53,9 @@ const updateService = async (req, res) => {
 // DELETE /services/:id  (auth)
 const deleteService = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const service = await Service.findByIdAndDelete(req.params.id);
         if (!service) {
             return res.status(404).json({ message: "Service not found" });

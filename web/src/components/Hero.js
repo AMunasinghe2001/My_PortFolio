@@ -35,6 +35,8 @@ const buildResumeHref = (url) => {
   return href;
 };
 
+const isCloudinaryUrl = (url) => typeof url === "string" && url.includes("res.cloudinary.com");
+
 export default function Hero() {
   // Seed from cache so a reload shows the correct hero image immediately
   // rather than flashing the bundled fallback first.
@@ -107,6 +109,7 @@ export default function Hero() {
                 priority
                 sizes="(max-width: 900px) 78vw, 460px"
                 className={styles.portraitImg}
+                unoptimized={isCloudinaryUrl(profile.heroImage)}
               />
             ) : (
               <Image

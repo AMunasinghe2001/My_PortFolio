@@ -1,8 +1,12 @@
 const Project = require("../Models/projectModel");
+const { isMongoReady } = require("../utils/mongoStatus");
 
 // GET /projects  (public)
 const getAllProjects = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(200).json({ projects: [] });
+        }
         const projects = await Project.find().sort({ order: 1, createdAt: 1 });
         return res.status(200).json({ projects });
     } catch (err) {
@@ -16,6 +20,9 @@ const addProject = async (req, res) => {
     const { title, technology, url, liveUrl, description, order } = req.body;
     const image = req.file ? req.file.path : undefined; // Cloudinary URL
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const project = new Project({ title, technology, url, liveUrl, description, image, order });
         await project.save();
         return res.status(201).json({ project });
@@ -28,6 +35,9 @@ const addProject = async (req, res) => {
 // GET /projects/:id  (public)
 const getProjectById = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(404).json({ message: "Project not found" });
+        }
         const project = await Project.findById(req.params.id);
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
@@ -44,6 +54,9 @@ const updateProject = async (req, res) => {
     const { title, technology, url, liveUrl, description, order } = req.body;
     const image = req.file ? req.file.path : null; // Cloudinary URL
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const project = await Project.findById(req.params.id);
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
@@ -66,6 +79,9 @@ const updateProject = async (req, res) => {
 // DELETE /projects/:id  (auth)
 const deleteProject = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const project = await Project.findByIdAndDelete(req.params.id);
         if (!project) {
             return res.status(404).json({ message: "Unable to delete project" });

@@ -89,6 +89,11 @@ components.
 
 - Public sections fetch their own data on the client and each ships a hardcoded
   fallback, so the page is never empty if the API is unreachable.
+- The Skills section is only fully live when the backend has `GITHUB_TOKEN`
+  set. Without it, GitHub returns the public-only subset of the repo graph.
+- If the backend GitHub route is empty, the Skills section now falls back to a
+  direct public GitHub fetch in the browser, so the technical bars still show
+  real repo-derived data instead of only the static fallback set.
 - The profile response is cached in `localStorage` and de-duplicated across
   Hero/About/Contact/Footer, so a reload renders the right content immediately.
   Saving in the admin Profile editor clears that cache.

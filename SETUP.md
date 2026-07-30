@@ -37,6 +37,7 @@ The public site reads everything from the API. If the API is empty/unreachable, 
 | **Cloudinary** cloud name / API key / API secret | Free account at https://cloudinary.com → Dashboard |
 | **Admin username / password** | You choose. Set in `Backend/.env`. |
 | **JWT secret** | Already generated in `Backend/.env`. |
+| **GitHub token** | Required for the richer Skills section. Set `GITHUB_TOKEN` in Vercel so `/github-skills` can read the full repo set instead of only public repos. |
 
 Open `Backend/.env` and fill in the three Cloudinary values (and change `ADMIN_PASSWORD` if you like):
 
@@ -89,6 +90,7 @@ Set these **Environment Variables** in Vercel → Project → Settings:
 ```
 MONGO_URI, JWT_SECRET, ADMIN_USERNAME, ADMIN_PASSWORD,
 CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET,
+GITHUB_USERNAME, GITHUB_TOKEN,
 CLIENT_ORIGIN = https://anushanga-munasinghe.vercel.app
 ```
 Then redeploy. (Run `npm run seed:admin` / `npm run seed` once locally against the same MONGO_URI — they write to the same database.)

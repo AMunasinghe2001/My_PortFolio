@@ -1,8 +1,12 @@
 const Skill = require("../Models/skillModel");
+const { isMongoReady } = require("../utils/mongoStatus");
 
 // GET /skills  (public)
 const getAllSkills = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(200).json({ skills: [] });
+        }
         const skills = await Skill.find().sort({ category: 1, order: 1, createdAt: 1 });
         return res.status(200).json({ skills });
     } catch (err) {
@@ -14,6 +18,9 @@ const getAllSkills = async (req, res) => {
 // POST /skills  (auth)
 const addSkill = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const skill = new Skill(req.body);
         await skill.save();
         return res.status(201).json({ skill });
@@ -26,6 +33,9 @@ const addSkill = async (req, res) => {
 // PUT /skills/:id  (auth)
 const updateSkill = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const skill = await Skill.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true,
@@ -43,6 +53,9 @@ const updateSkill = async (req, res) => {
 // DELETE /skills/:id  (auth)
 const deleteSkill = async (req, res) => {
     try {
+        if (!isMongoReady()) {
+            return res.status(503).json({ message: "MongoDB is unavailable" });
+        }
         const skill = await Skill.findByIdAndDelete(req.params.id);
         if (!skill) {
             return res.status(404).json({ message: "Skill not found" });
