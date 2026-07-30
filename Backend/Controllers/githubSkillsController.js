@@ -3,7 +3,8 @@
 //
 //  - Technical Skills  → languages reported by GitHub across the repos.
 //  - Databases         → detected from each repo's dependency manifest
-//                        (package.json / pubspec.yaml). Needs a token.
+//                        (package.json / pubspec.yaml). Auth helps, but
+//                        public repos still work without a token.
 //
 // Config (optional .env):
 //   GITHUB_USERNAME  GitHub handle to read (default below)
@@ -49,21 +50,50 @@ const DB_PACKAGE_MAP = [
 // In-memory cache (persists while the serverless instance stays warm).
 let cache = { at: 0, data: { skills: [], databases: [] } };
 
-const ghHeaders = () => {
+const ghHeaders = (useAuth = true) => {
     const h = {
         Accept: "application/vnd.github+json",
         "User-Agent": "portfolio-app",
     };
-    if (TOKEN) h.Authorization = `Bearer ${TOKEN}`;
+    if (useAuth && TOKEN) h.Authorization = `Bearer ${TOKEN}`;
     return h;
 };
 
+const fetchRepos = async () => {
+    const endpoints = TOKEN
+        ? [
+              "https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner&sort=updated",
+              `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`,
+          ]
+        : [`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`];
+
+    let lastError = null;
+    for (const url of endpoints) {
+        try {
+            const res = await fetch(url, { headers: ghHeaders(url.includes("/user/repos")) });
+            if (!res.ok) {
+                lastError = new Error(`GitHub repos request failed (${res.status})`);
+                continue;
+            }
+            const repos = await res.json();
+            return {
+                repos: Array.isArray(repos) ? repos : [],
+                authenticated: url.includes("/user/repos"),
+            };
+        } catch (err) {
+            lastError = err;
+        }
+    }
+
+    throw lastError || new Error("GitHub repos request failed");
+};
+
 // Read a file from a repo (returns its text, or null if missing).
-const fetchManifest = async (fullName, path) => {
+const fetchManifest = async (fullName, path, useAuth = true) => {
     try {
         const res = await fetch(
             `https://api.github.com/repos/${fullName}/contents/${path}`,
-            { headers: ghHeaders() }
+            { headers: ghHeaders(useAuth) }
         );
         if (!res.ok) return null;
         const json = await res.json();
@@ -75,7 +105,7 @@ const fetchManifest = async (fullName, path) => {
 };
 
 // Detect databases from each repo's package.json / pubspec.yaml dependencies.
-const detectDatabases = async (repos) => {
+const detectDatabases = async (repos, useAuth = true) => {
     const counts = {};
     await Promise.all(
         repos.map(async (repo) => {
@@ -85,7 +115,7 @@ const detectDatabases = async (repos) => {
             // exactly to avoid false hits on short names like "pg".
             const depKeys = new Set();
             const pkgs = await Promise.all(
-                PKG_PATHS.map((p) => fetchManifest(repo.full_name, p))
+                PKG_PATHS.map((p) => fetchManifest(repo.full_name, p, useAuth))
             );
             for (const pkg of pkgs) {
                 if (!pkg) continue;
@@ -104,7 +134,7 @@ const detectDatabases = async (repos) => {
 
             // pubspec.yaml (Flutter/Dart) — substring match is fine here.
             const pubs = await Promise.all(
-                PUB_PATHS.map((p) => fetchManifest(repo.full_name, p))
+                PUB_PATHS.map((p) => fetchManifest(repo.full_name, p, useAuth))
             );
             const pubText = pubs.filter(Boolean).join("\n").toLowerCase();
 
@@ -120,13 +150,13 @@ const detectDatabases = async (repos) => {
 
     const entries = Object.entries(counts);
     if (!entries.length) return [];
-    const maxCount = Math.max(...entries.map(([, c]) => c));
+    const repoTotal = repos.length || 1;
     return entries
         .sort((a, b) => b[1] - a[1])
         .slice(0, 8)
         .map(([title, count]) => ({
             title,
-            percentage: Math.max(65, Math.round(Math.sqrt(count / maxCount) * 100)),
+            percentage: Math.max(1, Math.round((count / repoTotal) * 100)),
             category: "database",
         }));
 };
@@ -134,12 +164,7 @@ const detectDatabases = async (repos) => {
 const buildData = async () => {
     // 1) List repositories. With a token we read the authenticated user's OWN
     //    repos (incl. PRIVATE); without one, only public repos for USERNAME.
-    const reposUrl = TOKEN
-        ? "https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner&sort=updated"
-        : `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
-    const reposRes = await fetch(reposUrl, { headers: ghHeaders() });
-    if (!reposRes.ok) throw new Error(`GitHub repos request failed (${reposRes.status})`);
-    const repos = await reposRes.json();
+    const { repos, authenticated } = await fetchRepos();
 
     // Skip forks — they would count other people's code as our skills.
     const sources = Array.isArray(repos) ? repos.filter((r) => !r.fork) : [];
@@ -149,7 +174,7 @@ const buildData = async () => {
     await Promise.all(
         sources.map(async (repo) => {
             try {
-                const res = await fetch(repo.languages_url, { headers: ghHeaders() });
+                const res = await fetch(repo.languages_url, { headers: ghHeaders(authenticated) });
                 if (!res.ok) return;
                 const langs = await res.json();
                 for (const [lang, bytes] of Object.entries(langs)) {
@@ -166,27 +191,26 @@ const buildData = async () => {
     let skills = [];
     if (entries.length) {
         const grandTotal = entries.reduce((s, [, b]) => s + b, 0);
-        const maxBytes = Math.max(...entries.map(([, b]) => b));
-        // most-used language = 100%; sqrt curve lifts smaller ones; drop < 1%.
+        // Show each language as its share of total GitHub bytes so the UI reads
+        // as a direct GitHub-derived percentage instead of a transformed score.
         skills = entries
             .filter(([, b]) => b / grandTotal >= 0.01)
             .sort((a, b) => b[1] - a[1])
             .slice(0, MAX_SKILLS)
             .map(([title, bytes]) => ({
                 title,
-                percentage: Math.max(5, Math.round(Math.sqrt(bytes / maxBytes) * 100)),
+                percentage: Math.max(1, Math.round((bytes / grandTotal) * 100)),
                 category: "technical",
             }));
     }
 
-    // 3) Databases — only with a token (needs many extra Contents API calls).
+    // 3) Databases — use Contents API when possible; auth improves coverage
+    //    and rate limits, but public repos still work without it.
     let databases = [];
-    if (TOKEN) {
-        try {
-            databases = await detectDatabases(sources);
-        } catch {
-            databases = [];
-        }
+    try {
+        databases = await detectDatabases(sources, authenticated);
+    } catch {
+        databases = [];
     }
 
     return { skills, databases };
