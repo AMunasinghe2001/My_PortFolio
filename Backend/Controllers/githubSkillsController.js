@@ -69,16 +69,27 @@ const fetchRepos = async () => {
 
     let lastError = null;
     for (const url of endpoints) {
+        const isAuthed = url.includes("/user/repos");
         try {
-            const res = await fetch(url, { headers: ghHeaders(url.includes("/user/repos")) });
+            const res = await fetch(url, { headers: ghHeaders(isAuthed) });
             if (!res.ok) {
                 lastError = new Error(`GitHub repos request failed (${res.status})`);
+                // A rejected token silently downgrades the section to public
+                // repos only — the languages and databases that live in private
+                // repos just vanish, with no other symptom. Say so loudly.
+                if (isAuthed && (res.status === 401 || res.status === 403)) {
+                    console.warn(
+                        `[github-skills] GITHUB_TOKEN rejected (${res.status}). Falling back to PUBLIC repos only,\n` +
+                        "                so languages/databases in private repos will be missing.\n" +
+                        "                Generate a new token (scope: repo) at https://github.com/settings/tokens"
+                    );
+                }
                 continue;
             }
             const repos = await res.json();
             return {
                 repos: Array.isArray(repos) ? repos : [],
-                authenticated: url.includes("/user/repos"),
+                authenticated: isAuthed,
             };
         } catch (err) {
             lastError = err;
@@ -150,13 +161,17 @@ const detectDatabases = async (repos, useAuth = true) => {
 
     const entries = Object.entries(counts);
     if (!entries.length) return [];
-    const repoTotal = repos.length || 1;
+    // Scale against the most-used database, not the repo count: dividing by
+    // the total number of repos made every bar tiny (a database used in 2 of
+    // 8 repos read 25%), which understates real experience. Relative scaling
+    // makes the primary database 100% and the rest proportional to it.
+    const maxCount = Math.max(...entries.map(([, c]) => c));
     return entries
         .sort((a, b) => b[1] - a[1])
         .slice(0, 8)
         .map(([title, count]) => ({
             title,
-            percentage: Math.max(1, Math.round((count / repoTotal) * 100)),
+            percentage: Math.max(1, Math.round((count / maxCount) * 100)),
             category: "database",
         }));
 };
@@ -191,15 +206,20 @@ const buildData = async () => {
     let skills = [];
     if (entries.length) {
         const grandTotal = entries.reduce((s, [, b]) => s + b, 0);
+        const maxBytes = Math.max(...entries.map(([, b]) => b));
         // Show each language as its share of total GitHub bytes so the UI reads
         // as a direct GitHub-derived percentage instead of a transformed score.
+        // Drop anything under 1% of all code, then scale against the largest
+        // language so the most-used one reads 100% and the rest are relative
+        // to it. Share-of-total would cap the top bar at ~50% and make every
+        // skill look weak once several languages are in play.
         skills = entries
             .filter(([, b]) => b / grandTotal >= 0.01)
             .sort((a, b) => b[1] - a[1])
             .slice(0, MAX_SKILLS)
             .map(([title, bytes]) => ({
                 title,
-                percentage: Math.max(1, Math.round((bytes / grandTotal) * 100)),
+                percentage: Math.max(1, Math.round((bytes / maxBytes) * 100)),
                 category: "technical",
             }));
     }
@@ -213,7 +233,10 @@ const buildData = async () => {
         databases = [];
     }
 
-    return { skills, databases };
+    // `authenticated` tells the caller whether private repos were included.
+    // When false with a token configured, the token was rejected and the data
+    // is only a public-repo subset.
+    return { skills, databases, authenticated };
 };
 
 // GET /github-skills  (public)
