@@ -257,6 +257,7 @@ p {
 .glass-hover {
   transition:
     transform 0.5s var(--ease),
+    opacity 0.5s var(--ease),
     background 0.5s var(--ease),
     border-color 0.5s var(--ease),
     box-shadow 0.5s var(--ease);
@@ -544,7 +545,8 @@ p {
 .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease) !important;
+  will-change: opacity, transform;
 }
 
 .reveal.is-visible {

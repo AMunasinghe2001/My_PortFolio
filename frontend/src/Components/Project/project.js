@@ -132,15 +132,17 @@ function Project() {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
+                    const idx = Array.from(cards).indexOf(entry.target);
                     if (entry.isIntersecting) {
-                        const idx = Array.from(cards).indexOf(entry.target);
-                        entry.target.style.transitionDelay = `${Math.min(idx, 8) * 80}ms`;
+                        entry.target.style.transitionDelay = `${(idx % 3) * 80}ms`;
                         entry.target.classList.add('in-view');
-                        observer.unobserve(entry.target);
+                    } else {
+                        entry.target.style.transitionDelay = '0ms';
+                        entry.target.classList.remove('in-view');
                     }
                 });
             },
-            { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+            { threshold: 0.12, rootMargin: '0px 0px -50px 0px' }
         );
 
         cards.forEach((c) => observer.observe(c));
