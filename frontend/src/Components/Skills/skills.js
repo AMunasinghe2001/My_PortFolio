@@ -4,13 +4,14 @@ import api from "../../api/axios";
 import "./skills.css";
 
 const fallbackTechnical = [
-  { title: "FIGMA", percentage: 97 },
-  { title: "HTML 5", percentage: 96 },
-  { title: "CSS", percentage: 96 },
-  { title: "JavaScript", percentage: 72 },
-  { title: "React JS", percentage: 89 },
-  { title: "PHP", percentage: 83 },
-  { title: "MySQL", percentage: 71 },
+  { title: "Dart", percentage: 100 },
+  { title: "TypeScript", percentage: 33 },
+  { title: "JavaScript", percentage: 25 },
+  { title: "Python", percentage: 20 },
+  { title: "Java", percentage: 29 },
+  { title: "PHP", percentage: 21 },
+  { title: "CSS", percentage: 16 },
+  { title: "C++", percentage: 13 },
 ];
 
 const fallbackProfessional = [
@@ -21,10 +22,10 @@ const fallbackProfessional = [
 ];
 
 const fallbackDatabase = [
-  { title: "MongoDB", percentage: 90 },
-  { title: "MySQL", percentage: 85 },
-  { title: "Supabase", percentage: 82 },
-  { title: "Firebase", percentage: 78 },
+  { title: "PostgreSQL", percentage: 100 },
+  { title: "MongoDB", percentage: 100 },
+  { title: "Firebase", percentage: 50 },
+  { title: "Supabase", percentage: 50 },
 ];
 
 const fallbackTools = [
@@ -50,10 +51,31 @@ const Skills = () => {
       .then((res) => {
         const data = res.data || {};
         if (Array.isArray(data.skills) && data.skills.length) {
-          setTechnicalSkills(data.skills);
+          const hasDart = data.skills.some((s) => s.title.toLowerCase() === "dart");
+          if (data.authenticated || hasDart) {
+            setTechnicalSkills(data.skills);
+          } else {
+            // Merge so private skills like Dart are retained
+            setTechnicalSkills([
+              ...data.skills,
+              ...fallbackTechnical.filter(
+                (f) => !data.skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
+              ),
+            ]);
+          }
         }
         if (Array.isArray(data.databases) && data.databases.length) {
-          setDatabaseSkills(data.databases);
+          const hasPg = data.databases.some((d) => d.title.toLowerCase() === "postgresql");
+          if (data.authenticated || hasPg) {
+            setDatabaseSkills(data.databases);
+          } else {
+            setDatabaseSkills([
+              ...data.databases,
+              ...fallbackDatabase.filter(
+                (f) => !data.databases.some((d) => d.title.toLowerCase() === f.title.toLowerCase())
+              ),
+            ]);
+          }
         }
       })
       .catch((error) => console.error("GitHub skills fetch failed", error));

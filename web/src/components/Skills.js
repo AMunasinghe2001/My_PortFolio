@@ -7,18 +7,20 @@ import styles from "./Skills.module.css";
 
 const FALLBACK_TECHNICAL = [
   { title: "Dart", percentage: 100 },
-  { title: "Python", percentage: 55 },
-  { title: "Java", percentage: 29 },
+  { title: "TypeScript", percentage: 33 },
   { title: "JavaScript", percentage: 25 },
+  { title: "Python", percentage: 20 },
+  { title: "Java", percentage: 29 },
   { title: "PHP", percentage: 21 },
   { title: "CSS", percentage: 16 },
   { title: "C++", percentage: 13 },
 ];
 
 const FALLBACK_DATABASE = [
+  { title: "PostgreSQL", percentage: 100 },
   { title: "MongoDB", percentage: 100 },
-  { title: "Supabase", percentage: 100 },
-  { title: "PostgreSQL", percentage: 71 },
+  { title: "Firebase", percentage: 50 },
+  { title: "Supabase", percentage: 50 },
 ];
 
 const FALLBACK_TOOLS = [
@@ -36,10 +38,19 @@ const FALLBACK_PROFESSIONAL = [
   { title: "Creativity", percentage: 95 },
 ];
 
-const GITHUB_USERNAME = "AMunasinghe2001";
-const GITHUB_HEADERS = {
-  Accept: "application/vnd.github+json",
-  "User-Agent": "portfolio-web",
+const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "AMunasinghe2001";
+
+const getClientGhHeaders = () => {
+  const token = (process.env.NEXT_PUBLIC_GITHUB_TOKEN || "").trim();
+  const headers = {
+    Accept: "application/vnd.github+json",
+    "User-Agent": "portfolio-web",
+  };
+  if (token) {
+    const cleanToken = token.replace(/^(Bearer|token)\s+/i, "").trim();
+    headers.Authorization = `Bearer ${cleanToken}`;
+  }
+  return headers;
 };
 
 export default function Skills() {
@@ -52,47 +63,103 @@ export default function Skills() {
     // Technical Skills + Database Management are generated automatically from
     // GitHub; Tools + Professional come from the admin-managed DB.
     const loadGithubSkills = async () => {
+      let resolved = false;
+
+      // 1. Try internal Next.js API route (/api/github-skills)
       try {
-        const res = await api.get("/github-skills");
-        const data = res.data || {};
-        const hasSkills = Array.isArray(data.skills) && data.skills.length > 0;
-        const hasDatabases = Array.isArray(data.databases) && data.databases.length > 0;
-
-        if (hasSkills) setTechnical(data.skills);
-        if (hasDatabases) setDatabases(data.databases);
-
-        if (!hasSkills) {
-          await loadPublicGithubSkills();
+        const nextRes = await fetch("/api/github-skills");
+        if (nextRes.ok) {
+          const nextData = await nextRes.json();
+          if (Array.isArray(nextData.skills) && nextData.skills.length > 0) {
+            setTechnical(nextData.skills);
+            if (Array.isArray(nextData.databases) && nextData.databases.length > 0) {
+              setDatabases(nextData.databases);
+            }
+            if (nextData.authenticated) {
+              resolved = true;
+            }
+          }
         }
       } catch (err) {
-        console.error("GitHub skills fetch failed", err);
-        await loadPublicGithubSkills();
+        // Next.js route fallback
+      }
+
+      // 2. Try external Express backend (/github-skills) if not already authenticated
+      if (!resolved) {
+        try {
+          const res = await api.get("/github-skills");
+          const data = res.data || {};
+          const hasSkills = Array.isArray(data.skills) && data.skills.length > 0;
+          const hasDatabases = Array.isArray(data.databases) && data.databases.length > 0;
+
+          if (hasSkills) {
+            // Check if private skills like Dart exist in the returned list
+            const hasDart = data.skills.some((s) => s.title.toLowerCase() === "dart");
+
+            if (data.authenticated || hasDart) {
+              setTechnical(data.skills);
+              if (hasDatabases) setDatabases(data.databases);
+              resolved = true;
+            } else {
+              // Backend only returned public repos (unauthenticated)
+              // Merge so private skills (Dart, PostgreSQL) from verified fallback are not wiped out
+              const mergedTech = [
+                ...data.skills,
+                ...FALLBACK_TECHNICAL.filter(
+                  (f) => !data.skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
+                ),
+              ];
+              setTechnical(mergedTech);
+
+              if (hasDatabases) {
+                const mergedDb = [
+                  ...data.databases,
+                  ...FALLBACK_DATABASE.filter(
+                    (f) => !data.databases.some((d) => d.title.toLowerCase() === f.title.toLowerCase())
+                  ),
+                ];
+                setDatabases(mergedDb);
+              }
+            }
+          }
+        } catch (err) {
+          console.error("GitHub skills fetch failed", err);
+        }
+      }
+
+      // 3. If still needed, try direct GitHub API call with client token if available
+      if (!resolved) {
+        await loadDirectGithubSkills();
       }
     };
 
-    const loadPublicGithubSkills = async () => {
+    const loadDirectGithubSkills = async () => {
       try {
-        const reposRes = await fetch(
-          `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`,
-          { headers: GITHUB_HEADERS }
-        );
+        const token = (process.env.NEXT_PUBLIC_GITHUB_TOKEN || "").trim();
+        const headers = getClientGhHeaders();
+        const url = token
+          ? `https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner&sort=updated`
+          : `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`;
+
+        const reposRes = await fetch(url, { headers });
         if (!reposRes.ok) return;
 
-        const repos = (await reposRes.json()).filter((repo) => !repo.fork);
+        const rawRepos = await reposRes.json();
+        const repos = Array.isArray(rawRepos) ? rawRepos.filter((repo) => !repo.fork) : [];
         if (!repos.length) return;
 
         const totals = {};
         await Promise.all(
           repos.map(async (repo) => {
             try {
-              const res = await fetch(repo.languages_url, { headers: GITHUB_HEADERS });
+              const res = await fetch(repo.languages_url, { headers });
               if (!res.ok) return;
               const langs = await res.json();
               for (const [lang, bytes] of Object.entries(langs)) {
                 totals[lang] = (totals[lang] || 0) + bytes;
               }
             } catch {
-              /* ignore a single repo that fails */
+              /* ignore single repo failure */
             }
           })
         );
@@ -101,19 +168,31 @@ export default function Skills() {
         if (!entries.length) return;
 
         const grandTotal = entries.reduce((sum, [, bytes]) => sum + bytes, 0);
+        const maxBytes = Math.max(...entries.map(([, bytes]) => bytes));
         const skills = entries
-          .filter(([, bytes]) => bytes / grandTotal >= 0.01)
+          .filter(([, bytes]) => bytes / grandTotal >= 0.005)
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 10)
+          .slice(0, 12)
           .map(([title, bytes]) => ({
             title,
-            percentage: Math.max(1, Math.round((bytes / grandTotal) * 100)),
+            percentage: Math.max(1, Math.round((bytes / maxBytes) * 100)),
             category: "technical",
           }));
 
-        if (skills.length) setTechnical(skills);
+        if (skills.length) {
+          setTechnical((prev) => {
+            const hasDart = skills.some((s) => s.title.toLowerCase() === "dart");
+            if (hasDart) return skills;
+            return [
+              ...skills,
+              ...FALLBACK_TECHNICAL.filter(
+                (f) => !skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
+              ),
+            ];
+          });
+        }
       } catch (err) {
-        console.error("Public GitHub skills fetch failed", err);
+        console.error("Direct GitHub skills fetch failed", err);
       }
     };
 
