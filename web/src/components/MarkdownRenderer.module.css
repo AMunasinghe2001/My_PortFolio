@@ -197,6 +197,23 @@
   text-align: center;
 }
 
+/* After rehype plugin converts align → text-align style, center any lone images inside */
+.markdown p[style*="text-align:center"],
+.markdown p[style*="text-align: center"],
+.markdown div[style*="text-align:center"],
+.markdown div[style*="text-align: center"] {
+  text-align: center;
+}
+
+.markdown p[style*="text-align:center"] > img:only-child,
+.markdown p[style*="text-align: center"] > img:only-child,
+.markdown div[style*="text-align:center"] > img:only-child,
+.markdown div[style*="text-align: center"] > img:only-child {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Task list checkboxes (GFM) */
 .markdown li > input[type="checkbox"] {
   margin-right: 0.5em;
