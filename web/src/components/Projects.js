@@ -180,7 +180,7 @@ export default function Projects() {
     const fetchReadme = async () => {
       // 1. Try Next.js internal API route (/api/github-projects/readme?repo=...)
       try {
-        const nextRes = await fetch(`/api/github-projects/readme?repo=${encodeURIComponent(repoSlug)}`);
+        const nextRes = await fetch(`/api/github-projects/readme?repo=${encodeURIComponent(repoSlug)}&t=${Date.now()}`, { cache: "no-store" });
         if (nextRes.ok) {
           const data = await nextRes.json();
           if (data && data.content && isMounted) {
@@ -195,7 +195,7 @@ export default function Projects() {
 
       // 2. Try external backend (/github-projects/readme?repo=...)
       try {
-        const res = await api.get(`/github-projects/readme?repo=${encodeURIComponent(repoSlug)}`);
+        const res = await api.get(`/github-projects/readme?repo=${encodeURIComponent(repoSlug)}&t=${Date.now()}`);
         if (res.data?.content && isMounted) {
           setReadmeContent(res.data.content);
           setReadmeLoading(false);

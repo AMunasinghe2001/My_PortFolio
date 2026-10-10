@@ -1,10 +1,10 @@
-// Dynamically fetches all repositories (public and private with GITHUB_TOKEN)
+﻿// Dynamically fetches all repositories (public and private with GITHUB_TOKEN)
 // and their README.md files from GitHub.
 //
 // Every new repository added to GitHub automatically appears in the portfolio.
 
 const TTL_PROJECTS_MS = 15 * 60 * 1000; // refresh project list every 15 minutes
-const TTL_README_MS = 60 * 60 * 1000;   // cache README for 1 hour
+const TTL_README_MS = 10 * 1000;        // short 10-second cache
 
 // Known custom image covers for existing portfolio projects
 const KNOWN_IMAGES = {
@@ -224,7 +224,8 @@ const getGithubProjectReadme = async (req, res) => {
 
     // Check cache
     const cached = readmeCache.get(fullName);
-    if (cached && now - cached.at < TTL_README_MS) {
+    const forceFresh = Boolean(req.query.t || req.query.refresh);
+    if (!forceFresh && cached && now - cached.at < TTL_README_MS) {
         return res.status(200).json({ content: cached.content, cached: true });
     }
 

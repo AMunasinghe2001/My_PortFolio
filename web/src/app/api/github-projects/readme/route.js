@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Next.js Route Handler for fetching a repository's README.md content from GitHub API
 // Supports private repositories via GITHUB_TOKEN.
 
@@ -52,7 +55,7 @@ export async function GET(request) {
 
   try {
     const url = `https://api.github.com/repos/${fullName}/readme`;
-    const res = await fetch(url, { headers, next: { revalidate: 3600 } });
+    const res = await fetch(url, { headers, cache: "no-store" });
 
     if (!res.ok) {
       if (res.status === 404) {
