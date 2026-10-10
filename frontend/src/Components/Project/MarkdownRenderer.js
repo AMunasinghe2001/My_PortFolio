@@ -15,8 +15,6 @@ function resolveImage(src, repoFullName, branch) {
   if (src.startsWith("data:")) return src;
   if (!repoFullName) return src;
 
-  // GitHub-hosted images (raw / user-content / assets) → proxy them too so
-  // private-repo asset URLs still render.
   const isGithubAsset =
     /^https?:\/\/(raw\.githubusercontent\.com|github\.com\/.+\/raw\/|user-images\.githubusercontent\.com|private-user-images\.githubusercontent\.com)/i.test(
       src
@@ -27,7 +25,6 @@ function resolveImage(src, repoFullName, branch) {
   let path = src;
 
   if (isGithubAsset) {
-    // Extract repo/ref/path from a GitHub raw URL when possible, else pass-through
     const rawMatch = src.match(
       /^https?:\/\/raw\.githubusercontent\.com\/([^/]+\/[^/]+)\/([^/]+)\/(.+)$/i
     );
@@ -36,8 +33,6 @@ function resolveImage(src, repoFullName, branch) {
       ref = rawMatch[2];
       path = rawMatch[3];
     } else {
-      // Non-raw GitHub asset — just forward via proxy using current repo/branch would be wrong,
-      // so return the original URL (public user-images are already accessible).
       return src;
     }
   } else if (isAbsoluteUrl(src)) {
@@ -56,6 +51,27 @@ function resolveImage(src, repoFullName, branch) {
 function resolveLink(href, repoFullName, branch) {
   if (!href || isAbsoluteUrl(href) || !repoFullName) return href;
   return `https://github.com/${repoFullName}/blob/${branch}/${href.replace(/^\.?\//, "")}`;
+}
+
+// Rehype plugin: walk the HAST tree and convert legacy HTML `align` attributes
+// (align="center" / "right" / "left") into inline `style="text-align:X"`, so
+// GitHub-style `<p align="center">` or `<div align="center">` actually center.
+function rehypeAlignToStyle() {
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return;
+    if (node.type === "element" && node.properties && node.properties.align) {
+      const align = String(node.properties.align).toLowerCase();
+      if (["left", "center", "right", "justify"].includes(align)) {
+        const existing = node.properties.style ? `${node.properties.style};` : "";
+        node.properties.style = `${existing}text-align:${align}`;
+        delete node.properties.align;
+      }
+    }
+    if (Array.isArray(node.children)) {
+      node.children.forEach(walk);
+    }
+  };
+  return (tree) => walk(tree);
 }
 
 export default function MarkdownRenderer({ content, repoFullName, branch = "main" }) {
@@ -95,7 +111,7 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
     <div className="mr-container">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
+        rehypePlugins={[rehypeRaw, rehypeAlignToStyle]}
         components={components}
       >
         {content}

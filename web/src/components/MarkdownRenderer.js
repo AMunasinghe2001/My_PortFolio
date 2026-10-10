@@ -41,6 +41,26 @@ function resolveLink(href, repoFullName, branch) {
   return `https://github.com/${repoFullName}/blob/${branch}/${href.replace(/^\.?\//, "")}`;
 }
 
+// Convert legacy HTML `align` attribute → inline `text-align` style so
+// GitHub-style `<p align="center">` / `<div align="center">` actually center.
+function rehypeAlignToStyle() {
+  const walk = (node) => {
+    if (!node || typeof node !== "object") return;
+    if (node.type === "element" && node.properties && node.properties.align) {
+      const align = String(node.properties.align).toLowerCase();
+      if (["left", "center", "right", "justify"].includes(align)) {
+        const existing = node.properties.style ? `${node.properties.style};` : "";
+        node.properties.style = `${existing}text-align:${align}`;
+        delete node.properties.align;
+      }
+    }
+    if (Array.isArray(node.children)) {
+      node.children.forEach(walk);
+    }
+  };
+  return (tree) => walk(tree);
+}
+
 export default function MarkdownRenderer({ content, repoFullName, branch = "main" }) {
   const components = useMemo(
     () => ({
@@ -78,7 +98,7 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
     <div className={styles.markdown}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
+        rehypePlugins={[rehypeRaw, rehypeAlignToStyle]}
         components={components}
       >
         {content}
