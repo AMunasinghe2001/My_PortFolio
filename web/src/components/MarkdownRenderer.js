@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -62,6 +62,8 @@ function rehypeAlignToStyle() {
 }
 
 export default function MarkdownRenderer({ content, repoFullName, branch = "main" }) {
+  const rootRef = useRef(null);
+
   const components = useMemo(
     () => ({
       a: ({ node, children, href, ...props }) => (
@@ -92,10 +94,36 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
     [repoFullName, branch]
   );
 
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const root = rootRef.current;
+
+    const centered = root.querySelectorAll(
+      'p[style*="text-align"], div[style*="text-align"], p[align], div[align]'
+    );
+    centered.forEach((el) => el.classList.add(styles.centerWrap));
+
+    const firstMeaningful = Array.from(root.children).find(
+      (c) => c.tagName === "P" || c.tagName === "DIV"
+    );
+    if (firstMeaningful) {
+      const kids = Array.from(firstMeaningful.childNodes).filter(
+        (n) => !(n.nodeType === 3 && !n.textContent.trim())
+      );
+      const onlyImage =
+        kids.length === 1 &&
+        (kids[0].tagName === "IMG" ||
+          (kids[0].tagName === "A" &&
+            kids[0].children.length === 1 &&
+            kids[0].children[0].tagName === "IMG"));
+      if (onlyImage) firstMeaningful.classList.add(styles.centerWrap);
+    }
+  }, [content, repoFullName, branch]);
+
   if (!content) return null;
 
   return (
-    <div className={styles.markdown}>
+    <div className={styles.markdown} ref={rootRef}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeAlignToStyle]}

@@ -170,6 +170,22 @@
   margin-right: auto;
 }
 
+/* Runtime-tagged centered wrappers (works no matter how markdown wrapped the img) */
+.mr-container .mr-center-wrap {
+  text-align: center !important;
+}
+
+.mr-container .mr-center-wrap img,
+.mr-container .mr-center-wrap .mr-inline-img {
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.mr-container .mr-center-wrap a {
+  display: inline-block;
+}
+
 .mr-container .mr-table-wrapper {
   overflow-x: auto;
   margin: 1.2em 0;

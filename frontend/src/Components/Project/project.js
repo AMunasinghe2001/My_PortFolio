@@ -115,6 +115,29 @@ function Project() {
             });
     }, [selected]);
 
+    // Reveal cards on scroll via IntersectionObserver
+    useEffect(() => {
+        const cards = document.querySelectorAll('.project-card');
+        if (!cards.length) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const idx = Array.from(cards).indexOf(entry.target);
+                        entry.target.style.transitionDelay = `${Math.min(idx, 8) * 80}ms`;
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.15, rootMargin: '0px 0px -50px 0px' }
+        );
+
+        cards.forEach((c) => observer.observe(c));
+        return () => observer.disconnect();
+    }, [projects]);
+
     // While popup is open: lock page scroll and close on Escape
     useEffect(() => {
         if (!selected) return;

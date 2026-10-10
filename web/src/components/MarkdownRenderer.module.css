@@ -214,6 +214,21 @@
   margin-right: auto;
 }
 
+.centerWrap {
+  text-align: center !important;
+}
+
+.centerWrap img,
+.centerWrap .inlineImg {
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.centerWrap a {
+  display: inline-block;
+}
+
 /* Task list checkboxes (GFM) */
 .markdown li > input[type="checkbox"] {
   margin-right: 0.5em;

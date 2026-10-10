@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -53,9 +53,6 @@ function resolveLink(href, repoFullName, branch) {
   return `https://github.com/${repoFullName}/blob/${branch}/${href.replace(/^\.?\//, "")}`;
 }
 
-// Rehype plugin: walk the HAST tree and convert legacy HTML `align` attributes
-// (align="center" / "right" / "left") into inline `style="text-align:X"`, so
-// GitHub-style `<p align="center">` or `<div align="center">` actually center.
 function rehypeAlignToStyle() {
   const walk = (node) => {
     if (!node || typeof node !== "object") return;
@@ -75,6 +72,8 @@ function rehypeAlignToStyle() {
 }
 
 export default function MarkdownRenderer({ content, repoFullName, branch = "main" }) {
+  const rootRef = useRef(null);
+
   const components = useMemo(
     () => ({
       a: ({ node, children, href, ...props }) => (
@@ -105,10 +104,47 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
     [repoFullName, branch]
   );
 
+  // After render, promote <p>/<div> wrapping a single <img> or anchored <img> to
+  // a centered block when the paragraph itself is centered OR when it is the
+  // first image at the top of the README (common logo pattern).
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const root = rootRef.current;
+
+    // 1. Any paragraph whose inline style contains text-align:center → its lone
+    //    image becomes a block-level centered image.
+    const centered = root.querySelectorAll(
+      'p[style*="text-align"], div[style*="text-align"], p[align], div[align]'
+    );
+    centered.forEach((el) => {
+      el.classList.add("mr-center-wrap");
+    });
+
+    // 2. Heuristic: if the very first child paragraph contains only an image
+    //    (and maybe a link wrapping it), treat it as a logo and center it.
+    const firstMeaningful = Array.from(root.children).find(
+      (c) => c.tagName === "P" || c.tagName === "DIV"
+    );
+    if (firstMeaningful) {
+      const kids = Array.from(firstMeaningful.childNodes).filter(
+        (n) => !(n.nodeType === 3 && !n.textContent.trim())
+      );
+      const onlyImage =
+        kids.length === 1 &&
+        (kids[0].tagName === "IMG" ||
+          (kids[0].tagName === "A" &&
+            kids[0].children.length === 1 &&
+            kids[0].children[0].tagName === "IMG"));
+      if (onlyImage) {
+        firstMeaningful.classList.add("mr-center-wrap");
+      }
+    }
+  }, [content, repoFullName, branch]);
+
   if (!content) return null;
 
   return (
-    <div className="mr-container">
+    <div className="mr-container" ref={rootRef}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeAlignToStyle]}

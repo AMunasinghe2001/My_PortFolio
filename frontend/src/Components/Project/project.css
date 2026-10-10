@@ -59,7 +59,14 @@
     text-align: center;
     margin: 20px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    transition: transform 0.5s, box-shadow 0.5s, background-image 0.5s;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: transform 0.7s ease, opacity 0.7s ease, box-shadow 0.5s, background-image 0.5s;
+  }
+
+  .project-card.in-view {
+    opacity: 1;
+    transform: translateY(0);
     cursor: pointer;
     position: relative; /* Ensures absolute positioning works */
     overflow: hidden; /* Ensures content doesn't overflow */
