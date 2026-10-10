@@ -4,14 +4,24 @@ const { isMongoReady } = require("../utils/mongoStatus");
 // GET /projects  (public)
 const getAllProjects = async (req, res) => {
     try {
-        if (!isMongoReady()) {
-            return res.status(200).json({ projects: [] });
+        let projects = [];
+        if (isMongoReady()) {
+            projects = await Project.find().sort({ order: 1, createdAt: 1 });
         }
-        const projects = await Project.find().sort({ order: 1, createdAt: 1 });
+        if (!projects || projects.length === 0) {
+            // If database has no manually seeded projects, automatically serve dynamic GitHub projects!
+            const { getGithubProjects } = require("./githubProjectsController");
+            return getGithubProjects(req, res);
+        }
         return res.status(200).json({ projects });
     } catch (err) {
         console.log(err);
-        return res.status(500).json({ message: "Unable to fetch projects" });
+        try {
+            const { getGithubProjects } = require("./githubProjectsController");
+            return getGithubProjects(req, res);
+        } catch {
+            return res.status(500).json({ message: "Unable to fetch projects" });
+        }
     }
 };
 
