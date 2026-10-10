@@ -36,62 +36,107 @@ const fallbackTools = [
   { title: "XAMPP", percentage: 80 },
 ];
 
+const SkillsSkeleton = ({ count = 4 }) => (
+  <div>
+    {Array.from({ length: count }).map((_, i) => (
+      <div key={i} className="skills-skeleton-item">
+        <div className="skills-skeleton-head">
+          <div className="skills-skeleton-title" style={{ width: `${35 + (i % 3) * 15}%` }} />
+          <div className="skills-skeleton-pct" />
+        </div>
+        <div className="skills-skeleton-track" />
+      </div>
+    ))}
+  </div>
+);
+
 const Skills = () => {
-  const [technicalSkills, setTechnicalSkills] = useState(fallbackTechnical);
-  const [databaseSkills, setDatabaseSkills] = useState(fallbackDatabase);
-  const [toolsSkills, setToolsSkills] = useState(fallbackTools);
-  const [professionalSkills, setProfessionalSkills] = useState(fallbackProfessional);
+  const [loading, setLoading] = useState(true);
+  const [technicalSkills, setTechnicalSkills] = useState([]);
+  const [databaseSkills, setDatabaseSkills] = useState([]);
+  const [toolsSkills, setToolsSkills] = useState([]);
+  const [professionalSkills, setProfessionalSkills] = useState([]);
 
   useEffect(() => {
-    // Technical Skills + Database Management are generated automatically from
-    // GitHub (falling back to the hardcoded defaults above). Tools +
-    // Professional skills come from the admin-managed DB.
-    api
-      .get("/github-skills")
-      .then((res) => {
-        const data = res.data || {};
-        if (Array.isArray(data.skills) && data.skills.length) {
-          const hasDart = data.skills.some((s) => s.title.toLowerCase() === "dart");
-          if (data.authenticated || hasDart) {
-            setTechnicalSkills(data.skills);
-          } else {
-            // Merge so private skills like Dart are retained
-            setTechnicalSkills([
-              ...data.skills,
-              ...fallbackTechnical.filter(
-                (f) => !data.skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
-              ),
-            ]);
-          }
-        }
-        if (Array.isArray(data.databases) && data.databases.length) {
-          const hasPg = data.databases.some((d) => d.title.toLowerCase() === "postgresql");
-          if (data.authenticated || hasPg) {
-            setDatabaseSkills(data.databases);
-          } else {
-            setDatabaseSkills([
-              ...data.databases,
-              ...fallbackDatabase.filter(
-                (f) => !data.databases.some((d) => d.title.toLowerCase() === f.title.toLowerCase())
-              ),
-            ]);
-          }
-        }
-      })
-      .catch((error) => console.error("GitHub skills fetch failed", error));
+    let isMounted = true;
 
-    api
-      .get("/skills")
-      .then((res) => {
-        const skills = res.data && res.data.skills;
-        if (Array.isArray(skills) && skills.length) {
-          const tools = skills.filter((s) => s.category === "tool");
-          if (tools.length) setToolsSkills(tools);
-          const prof = skills.filter((s) => s.category === "professional");
-          if (prof.length) setProfessionalSkills(prof);
+    const loadData = async () => {
+      try {
+        const [ghRes, skillsRes] = await Promise.allSettled([
+          api.get("/github-skills"),
+          api.get("/skills"),
+        ]);
+
+        if (!isMounted) return;
+
+        // GitHub Skills
+        if (ghRes.status === "fulfilled" && ghRes.value?.data) {
+          const data = ghRes.value.data;
+          if (Array.isArray(data.skills) && data.skills.length) {
+            const hasDart = data.skills.some((s) => s.title.toLowerCase() === "dart");
+            if (data.authenticated || hasDart) {
+              setTechnicalSkills(data.skills);
+            } else {
+              setTechnicalSkills([
+                ...data.skills,
+                ...fallbackTechnical.filter(
+                  (f) => !data.skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
+                ),
+              ]);
+            }
+          } else {
+            setTechnicalSkills(fallbackTechnical);
+          }
+
+          if (Array.isArray(data.databases) && data.databases.length) {
+            const hasPg = data.databases.some((d) => d.title.toLowerCase() === "postgresql");
+            if (data.authenticated || hasPg) {
+              setDatabaseSkills(data.databases);
+            } else {
+              setDatabaseSkills([
+                ...data.databases,
+                ...fallbackDatabase.filter(
+                  (f) => !data.databases.some((d) => d.title.toLowerCase() === f.title.toLowerCase())
+                ),
+              ]);
+            }
+          } else {
+            setDatabaseSkills(fallbackDatabase);
+          }
+        } else {
+          setTechnicalSkills(fallbackTechnical);
+          setDatabaseSkills(fallbackDatabase);
         }
-      })
-      .catch((error) => console.error("Skills fetch failed", error));
+
+        // Admin-managed Skills
+        if (skillsRes.status === "fulfilled" && skillsRes.value?.data?.skills) {
+          const skills = skillsRes.value.data.skills;
+          const tools = skills.filter((s) => s.category === "tool");
+          const prof = skills.filter((s) => s.category === "professional");
+          setToolsSkills(tools.length ? tools : fallbackTools);
+          setProfessionalSkills(prof.length ? prof : fallbackProfessional);
+        } else {
+          setToolsSkills(fallbackTools);
+          setProfessionalSkills(fallbackProfessional);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        setTechnicalSkills(fallbackTechnical);
+        setDatabaseSkills(fallbackDatabase);
+        setToolsSkills(fallbackTools);
+        setProfessionalSkills(fallbackProfessional);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -103,43 +148,59 @@ const Skills = () => {
       <div className="skills">
         <div className="technical-skills ">
           <h2 className="skill animated-text">Technical Skills</h2>
-          {technicalSkills.map((skill, index) => (
-            <Skill
-              key={skill._id || index}
-              title={skill.title}
-              percentage={skill.percentage}
-            />
-          ))}
+          {loading ? (
+            <SkillsSkeleton count={4} />
+          ) : (
+            technicalSkills.map((skill, index) => (
+              <Skill
+                key={skill._id || index}
+                title={skill.title}
+                percentage={skill.percentage}
+              />
+            ))
+          )}
         </div>
         <div className="database-skills">
           <h2 className="skill animated-text">Database Management</h2>
-          {databaseSkills.map((skill, index) => (
-            <Skill
-              key={skill._id || index}
-              title={skill.title}
-              percentage={skill.percentage}
-            />
-          ))}
+          {loading ? (
+            <SkillsSkeleton count={3} />
+          ) : (
+            databaseSkills.map((skill, index) => (
+              <Skill
+                key={skill._id || index}
+                title={skill.title}
+                percentage={skill.percentage}
+              />
+            ))
+          )}
         </div>
         <div className="tools-skills">
           <h2 className="skill animated-text">Tools</h2>
-          {toolsSkills.map((skill, index) => (
-            <Skill
-              key={skill._id || index}
-              title={skill.title}
-              percentage={skill.percentage}
-            />
-          ))}
+          {loading ? (
+            <SkillsSkeleton count={4} />
+          ) : (
+            toolsSkills.map((skill, index) => (
+              <Skill
+                key={skill._id || index}
+                title={skill.title}
+                percentage={skill.percentage}
+              />
+            ))
+          )}
         </div>
         <div className="professional-skills">
           <h2 className="skill animated-text">Professional Skills</h2>
-          {professionalSkills.map((skill, index) => (
-            <Skill
-              key={skill._id || index}
-              title={skill.title}
-              percentage={skill.percentage}
-            />
-          ))}
+          {loading ? (
+            <SkillsSkeleton count={4} />
+          ) : (
+            professionalSkills.map((skill, index) => (
+              <Skill
+                key={skill._id || index}
+                title={skill.title}
+                percentage={skill.percentage}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

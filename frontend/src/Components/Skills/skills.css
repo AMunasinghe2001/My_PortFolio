@@ -67,3 +67,51 @@
     margin-top: 50px; /* Adjust top margin for better spacing */
   }
 }
+
+.skills-skeleton-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.skills-skeleton-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.skills-skeleton-title {
+  height: 14px;
+  width: 40%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.06) 100%);
+  background-size: 200% 100%;
+  animation: skillsShimmer 1.8s infinite ease-in-out;
+}
+
+.skills-skeleton-pct {
+  height: 12px;
+  width: 15%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.06) 100%);
+  background-size: 200% 100%;
+  animation: skillsShimmer 1.8s infinite ease-in-out;
+}
+
+.skills-skeleton-track {
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.06) 100%);
+  background-size: 200% 100%;
+  animation: skillsShimmer 1.8s infinite ease-in-out;
+}
+
+@keyframes skillsShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+

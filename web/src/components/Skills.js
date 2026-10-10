@@ -54,86 +54,17 @@ const getClientGhHeaders = () => {
 };
 
 export default function Skills() {
-  const [technical, setTechnical] = useState(FALLBACK_TECHNICAL);
-  const [databases, setDatabases] = useState(FALLBACK_DATABASE);
-  const [tools, setTools] = useState(FALLBACK_TOOLS);
-  const [professional, setProfessional] = useState(FALLBACK_PROFESSIONAL);
+  const [loading, setLoading] = useState(true);
+  const [technical, setTechnical] = useState([]);
+  const [databases, setDatabases] = useState([]);
+  const [tools, setTools] = useState([]);
+  const [professional, setProfessional] = useState([]);
 
   useEffect(() => {
-    // Technical Skills + Database Management are generated automatically from
-    // GitHub; Tools + Professional come from the admin-managed DB.
-    const loadGithubSkills = async () => {
-      let resolved = false;
+    let isMounted = true;
 
-      // 1. Try internal Next.js API route (/api/github-skills)
-      try {
-        const nextRes = await fetch("/api/github-skills");
-        if (nextRes.ok) {
-          const nextData = await nextRes.json();
-          if (Array.isArray(nextData.skills) && nextData.skills.length > 0) {
-            setTechnical(nextData.skills);
-            if (Array.isArray(nextData.databases) && nextData.databases.length > 0) {
-              setDatabases(nextData.databases);
-            }
-            if (nextData.authenticated) {
-              resolved = true;
-            }
-          }
-        }
-      } catch (err) {
-        // Next.js route fallback
-      }
-
-      // 2. Try external Express backend (/github-skills) if not already authenticated
-      if (!resolved) {
-        try {
-          const res = await api.get("/github-skills");
-          const data = res.data || {};
-          const hasSkills = Array.isArray(data.skills) && data.skills.length > 0;
-          const hasDatabases = Array.isArray(data.databases) && data.databases.length > 0;
-
-          if (hasSkills) {
-            // Check if private skills like Dart exist in the returned list
-            const hasDart = data.skills.some((s) => s.title.toLowerCase() === "dart");
-
-            if (data.authenticated || hasDart) {
-              setTechnical(data.skills);
-              if (hasDatabases) setDatabases(data.databases);
-              resolved = true;
-            } else {
-              // Backend only returned public repos (unauthenticated)
-              // Merge so private skills (Dart, PostgreSQL) from verified fallback are not wiped out
-              const mergedTech = [
-                ...data.skills,
-                ...FALLBACK_TECHNICAL.filter(
-                  (f) => !data.skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
-                ),
-              ];
-              setTechnical(mergedTech);
-
-              if (hasDatabases) {
-                const mergedDb = [
-                  ...data.databases,
-                  ...FALLBACK_DATABASE.filter(
-                    (f) => !data.databases.some((d) => d.title.toLowerCase() === f.title.toLowerCase())
-                  ),
-                ];
-                setDatabases(mergedDb);
-              }
-            }
-          }
-        } catch (err) {
-          console.error("GitHub skills fetch failed", err);
-        }
-      }
-
-      // 3. If still needed, try direct GitHub API call with client token if available
-      if (!resolved) {
-        await loadDirectGithubSkills();
-      }
-    };
-
-    const loadDirectGithubSkills = async () => {
+    // Helper for direct GitHub client fallback
+    const fetchDirectGithub = async () => {
       try {
         const token = (process.env.NEXT_PUBLIC_GITHUB_TOKEN || "").trim();
         const headers = getClientGhHeaders();
@@ -142,11 +73,11 @@ export default function Skills() {
           : `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`;
 
         const reposRes = await fetch(url, { headers });
-        if (!reposRes.ok) return;
+        if (!reposRes.ok) return null;
 
         const rawRepos = await reposRes.json();
         const repos = Array.isArray(rawRepos) ? rawRepos.filter((repo) => !repo.fork) : [];
-        if (!repos.length) return;
+        if (!repos.length) return null;
 
         const totals = {};
         await Promise.all(
@@ -165,7 +96,7 @@ export default function Skills() {
         );
 
         const entries = Object.entries(totals);
-        if (!entries.length) return;
+        if (!entries.length) return null;
 
         const grandTotal = entries.reduce((sum, [, bytes]) => sum + bytes, 0);
         const maxBytes = Math.max(...entries.map(([, bytes]) => bytes));
@@ -179,41 +110,133 @@ export default function Skills() {
             category: "technical",
           }));
 
-        if (skills.length) {
-          setTechnical((prev) => {
-            const hasDart = skills.some((s) => s.title.toLowerCase() === "dart");
-            if (hasDart) return skills;
-            return [
-              ...skills,
-              ...FALLBACK_TECHNICAL.filter(
-                (f) => !skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
-              ),
-            ];
-          });
-        }
-      } catch (err) {
-        console.error("Direct GitHub skills fetch failed", err);
+        return { skills, databases: FALLBACK_DATABASE };
+      } catch {
+        return null;
       }
     };
 
-    loadGithubSkills();
+    // 1. Fetch GitHub skills (from internal Next.js API, external Express backend, or direct client)
+    const fetchGithubData = async () => {
+      // Try internal Next.js API route (/api/github-skills)
+      try {
+        const nextRes = await fetch("/api/github-skills");
+        if (nextRes.ok) {
+          const nextData = await nextRes.json();
+          if (Array.isArray(nextData.skills) && nextData.skills.length > 0) {
+            return {
+              skills: nextData.skills,
+              databases: Array.isArray(nextData.databases) && nextData.databases.length > 0
+                ? nextData.databases
+                : FALLBACK_DATABASE,
+            };
+          }
+        }
+      } catch {
+        /* try backend next */
+      }
 
-    api
-      .get("/skills")
-      .then((res) => {
+      // Try external Express backend (/github-skills)
+      try {
+        const res = await api.get("/github-skills");
+        const data = res.data || {};
+        if (Array.isArray(data.skills) && data.skills.length > 0) {
+          const hasDart = data.skills.some((s) => s.title.toLowerCase() === "dart");
+          let finalSkills = data.skills;
+          let finalDatabases = Array.isArray(data.databases) && data.databases.length > 0
+            ? data.databases
+            : FALLBACK_DATABASE;
+
+          if (!data.authenticated && !hasDart) {
+            finalSkills = [
+              ...data.skills,
+              ...FALLBACK_TECHNICAL.filter(
+                (f) => !data.skills.some((s) => s.title.toLowerCase() === f.title.toLowerCase())
+              ),
+            ];
+            finalDatabases = [
+              ...finalDatabases,
+              ...FALLBACK_DATABASE.filter(
+                (f) => !finalDatabases.some((d) => d.title.toLowerCase() === f.title.toLowerCase())
+              ),
+            ];
+          }
+
+          return {
+            skills: finalSkills,
+            databases: finalDatabases,
+          };
+        }
+      } catch {
+        /* try direct GitHub next */
+      }
+
+      // Try direct GitHub API call
+      const directData = await fetchDirectGithub();
+      if (directData && directData.skills?.length > 0) {
+        return directData;
+      }
+
+      // Fallback only if all sources failed
+      return {
+        skills: FALLBACK_TECHNICAL,
+        databases: FALLBACK_DATABASE,
+      };
+    };
+
+    // 2. Fetch admin-managed skills (Tools & Professional)
+    const fetchAdminSkills = async () => {
+      try {
+        const res = await api.get("/skills");
         const skills = res.data?.skills;
-        if (!Array.isArray(skills)) return;
-        const t = skills.filter((s) => s.category === "tool");
-        if (t.length) setTools(t);
-        const p = skills.filter((s) => s.category === "professional");
-        if (p.length) setProfessional(p);
-      })
-      .catch((err) => {
-        console.error("Skills fetch failed", err);
-      });
+        if (Array.isArray(skills) && skills.length > 0) {
+          const t = skills.filter((s) => s.category === "tool");
+          const p = skills.filter((s) => s.category === "professional");
+          return {
+            tools: t.length ? t : FALLBACK_TOOLS,
+            professional: p.length ? p : FALLBACK_PROFESSIONAL,
+          };
+        }
+      } catch {
+        /* fallback */
+      }
+      return {
+        tools: FALLBACK_TOOLS,
+        professional: FALLBACK_PROFESSIONAL,
+      };
+    };
+
+    // Execute concurrently and populate state cleanly with no premature/wrong numbers
+    const loadAll = async () => {
+      try {
+        const [gh, admin] = await Promise.all([fetchGithubData(), fetchAdminSkills()]);
+        if (!isMounted) return;
+
+        setTechnical(gh.skills);
+        setDatabases(gh.databases);
+        setTools(admin.tools);
+        setProfessional(admin.professional);
+      } catch (err) {
+        if (!isMounted) return;
+        setTechnical(FALLBACK_TECHNICAL);
+        setDatabases(FALLBACK_DATABASE);
+        setTools(FALLBACK_TOOLS);
+        setProfessional(FALLBACK_PROFESSIONAL);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAll();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  useReveal([technical, databases, tools, professional]);
+  useReveal([technical, databases, tools, professional, loading]);
 
   const groups = [
     { label: "Technical Skills", items: technical },
@@ -232,8 +255,7 @@ export default function Skills() {
         </h2>
         <p className="section-sub reveal">
           Technical skills and database experience are powered by GitHub data,
-          with a polished fallback that keeps the section consistent if the API
-          is unavailable.
+          with verified repository analytics and smooth real-time visualization.
         </p>
 
         <div className={styles.grid}>
@@ -244,20 +266,44 @@ export default function Skills() {
               style={{ transitionDelay: `${i * 0.08}s` }}
             >
               <h3 className={styles.cardTitle}>{group.label}</h3>
-              <div className={styles.bars}>
-                {group.items.map((skill, j) => (
-                  <SkillBar
-                    key={skill._id || `${skill.title}-${j}`}
-                    title={skill.title}
-                    percentage={skill.percentage}
-                  />
-                ))}
-              </div>
+              {loading ? (
+                <SkillSkeleton count={4} />
+              ) : (
+                <div className={`${styles.bars} ${styles.fadeIn}`}>
+                  {group.items.map((skill, j) => (
+                    <SkillBar
+                      key={skill._id || `${skill.title}-${j}`}
+                      title={skill.title}
+                      percentage={skill.percentage}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+/* Shimmer Skeleton Placeholder shown while real API data is being loaded */
+function SkillSkeleton({ count = 4 }) {
+  return (
+    <div className={styles.bars}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className={styles.skeletonItem}>
+          <div className={styles.skeletonHead}>
+            <div
+              className={styles.skeletonTitle}
+              style={{ width: `${35 + (i % 3) * 15}%` }}
+            />
+            <div className={styles.skeletonPct} />
+          </div>
+          <div className={styles.skeletonTrack} />
+        </div>
+      ))}
+    </div>
   );
 }
 
