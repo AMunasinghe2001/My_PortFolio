@@ -251,7 +251,79 @@ const getGithubProjectReadme = async (req, res) => {
     }
 };
 
+// GET /github-projects/image?repo=<owner>/<repo>&path=<relative/path>&ref=<branch>
+// Proxies an image (or any binary asset) from GitHub so private-repo assets
+// become viewable in the browser using the server's token.
+const getGithubProjectImage = async (req, res) => {
+    const rawRepo = req.query.repo;
+    const rawPath = req.query.path;
+    const ref = (req.query.ref || "").toString().trim() || null;
+
+    if (!rawRepo || !rawPath) {
+        return res.status(400).json({ message: "repo and path parameters are required" });
+    }
+
+    const username = getGitHubUsername();
+    const fullName = rawRepo.includes("/") ? rawRepo : `${username}/${rawRepo}`;
+    const cleanPath = rawPath.toString().replace(/^\.?\/+/, "");
+
+    try {
+        const url = `https://api.github.com/repos/${fullName}/contents/${encodeURI(cleanPath)}${ref ? `?ref=${encodeURIComponent(ref)}` : ""}`;
+        const metaRes = await fetch(url, {
+            headers: ghHeaders(true, "application/vnd.github+json"),
+        });
+
+        if (!metaRes.ok) {
+            return res.status(metaRes.status).json({ message: `GitHub contents fetch failed (${metaRes.status})` });
+        }
+
+        const meta = await metaRes.json();
+
+        // Prefer download_url (works for public and signed-for-private LFS/CDN assets)
+        if (meta.download_url) {
+            const binRes = await fetch(meta.download_url, { headers: ghHeaders(true) });
+            if (!binRes.ok) {
+                return res.status(binRes.status).json({ message: "Asset download failed" });
+            }
+            const contentType = binRes.headers.get("content-type") || guessContentType(cleanPath);
+            const buffer = Buffer.from(await binRes.arrayBuffer());
+            res.setHeader("Content-Type", contentType);
+            res.setHeader("Cache-Control", "public, max-age=3600");
+            return res.status(200).end(buffer);
+        }
+
+        // Fallback: base64 content inline (small files)
+        if (meta.content && meta.encoding === "base64") {
+            const buffer = Buffer.from(meta.content, "base64");
+            res.setHeader("Content-Type", guessContentType(cleanPath));
+            res.setHeader("Cache-Control", "public, max-age=3600");
+            return res.status(200).end(buffer);
+        }
+
+        return res.status(404).json({ message: "Asset not found" });
+    } catch (err) {
+        console.error(`image proxy error for ${fullName}/${cleanPath}:`, err.message);
+        return res.status(500).json({ message: "Failed to retrieve asset", error: err.message });
+    }
+};
+
+function guessContentType(path) {
+    const ext = path.split(".").pop().toLowerCase();
+    const map = {
+        svg: "image/svg+xml",
+        png: "image/png",
+        jpg: "image/jpeg",
+        jpeg: "image/jpeg",
+        gif: "image/gif",
+        webp: "image/webp",
+        ico: "image/x-icon",
+        bmp: "image/bmp",
+    };
+    return map[ext] || "application/octet-stream";
+}
+
 module.exports = {
     getGithubProjects,
     getGithubProjectReadme,
+    getGithubProjectImage,
 };

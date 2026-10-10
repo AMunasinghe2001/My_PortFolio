@@ -9,11 +9,36 @@ import styles from "./MarkdownRenderer.module.css";
 const isAbsoluteUrl = (src) =>
   /^(https?:)?\/\//i.test(src) || src.startsWith("data:") || src.startsWith("#");
 
-function resolveUrl(src, repoFullName, branch) {
-  if (!src || isAbsoluteUrl(src)) return src;
+function resolveImage(src, repoFullName, branch) {
+  if (!src) return src;
+  if (src.startsWith("data:")) return src;
   if (!repoFullName) return src;
-  const clean = src.replace(/^\.?\//, "");
-  return `https://raw.githubusercontent.com/${repoFullName}/${branch}/${clean}`;
+
+  let repo = repoFullName;
+  let ref = branch;
+  let path = src;
+
+  const rawMatch = src.match(
+    /^https?:\/\/raw\.githubusercontent\.com\/([^/]+\/[^/]+)\/([^/]+)\/(.+)$/i
+  );
+  if (rawMatch) {
+    repo = rawMatch[1];
+    ref = rawMatch[2];
+    path = rawMatch[3];
+  } else if (isAbsoluteUrl(src)) {
+    return src;
+  } else {
+    path = src.replace(/^\.?\//, "");
+  }
+
+  const qs = new URLSearchParams({ repo, path });
+  if (ref) qs.set("ref", ref);
+  return `/api/github-projects/image?${qs.toString()}`;
+}
+
+function resolveLink(href, repoFullName, branch) {
+  if (!href || isAbsoluteUrl(href) || !repoFullName) return href;
+  return `https://github.com/${repoFullName}/blob/${branch}/${href.replace(/^\.?\//, "")}`;
 }
 
 export default function MarkdownRenderer({ content, repoFullName, branch = "main" }) {
@@ -22,9 +47,7 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
       a: ({ node, children, href, ...props }) => (
         <a
           {...props}
-          href={href && !isAbsoluteUrl(href) && repoFullName
-            ? `https://github.com/${repoFullName}/blob/${branch}/${href.replace(/^\.?\//, "")}`
-            : href}
+          href={resolveLink(href, repoFullName, branch)}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -34,7 +57,7 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
       img: ({ node, src, ...props }) => (
         <img
           {...props}
-          src={resolveUrl(src, repoFullName, branch)}
+          src={resolveImage(src, repoFullName, branch)}
           loading="lazy"
           className={styles.inlineImg}
           alt={props.alt || ""}
