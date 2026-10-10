@@ -135,8 +135,11 @@
 .mr-container .mr-inline-img {
   max-width: 100%;
   height: auto;
-  border-radius: 6px;
+  border-radius: 4px;
   margin: 0.5em 0;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
   vertical-align: middle;
 }
 
@@ -145,7 +148,10 @@
 .mr-container p .mr-inline-img {
   display: inline-block;
   margin: 2px 3px;
+  border: none !important;
   border-radius: 4px;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* When a paragraph/div is centered (via align="center" → text-align:center),
@@ -168,11 +174,15 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Runtime-tagged centered wrappers (works no matter how markdown wrapped the img) */
 .mr-container .mr-center-wrap {
   text-align: center !important;
+  margin: 1.2em 0 !important;
 }
 
 .mr-container .mr-center-wrap img,
@@ -180,10 +190,26 @@
   display: block;
   margin-left: auto !important;
   margin-right: auto !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .mr-container .mr-center-wrap a {
   display: inline-block;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Ensure logos, emblems, SVGs and shields never get borders or backgrounds */
+.mr-container img[src*=".svg"],
+.mr-container img[src*="shields.io"],
+.mr-container img[src*="badge"],
+.mr-container img[alt*="logo" i],
+.mr-container img[alt*="emblem" i] {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .mr-container .mr-table-wrapper {

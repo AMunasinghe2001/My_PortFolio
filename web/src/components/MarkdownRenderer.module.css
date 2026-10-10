@@ -131,9 +131,12 @@
 .markdown img {
   max-width: 100%;
   height: auto;
-  border-radius: var(--radius-sm);
-  margin: 1em 0;
-  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  margin: 0.8em 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  vertical-align: middle;
 }
 
 .markdown table {
@@ -178,7 +181,9 @@
 .inlineImg {
   max-width: 100%;
   height: auto;
-  border-radius: 6px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
   vertical-align: middle;
 }
 
@@ -187,8 +192,10 @@
 .markdown p .inlineImg {
   display: inline-block;
   margin: 2px 3px;
-  border: none;
+  border: none !important;
   border-radius: 4px;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Center-align support for GitHub <p align="center"> and <div align="center"> */
@@ -212,10 +219,14 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .centerWrap {
   text-align: center !important;
+  margin: 1.2em 0 !important;
 }
 
 .centerWrap img,
@@ -223,10 +234,26 @@
   display: block;
   margin-left: auto !important;
   margin-right: auto !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .centerWrap a {
   display: inline-block;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Ensure logos, emblems, SVGs and shields never get borders or backgrounds */
+.markdown img[src*=".svg"],
+.markdown img[src*="shields.io"],
+.markdown img[src*="badge"],
+.markdown img[alt*="logo" i],
+.markdown img[alt*="emblem" i] {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Task list checkboxes (GFM) */

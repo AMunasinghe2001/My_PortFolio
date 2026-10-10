@@ -175,32 +175,60 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: rgba(2, 18, 20, 0.78);
-    backdrop-filter: blur(4px);
-    animation: projModalFade 0.2s ease;
+    background: rgba(2, 18, 20, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    animation: projModalFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .project-modal-overlay.closing {
+    animation: projModalFadeOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    pointer-events: none;
   }
   @keyframes projModalFade {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+  @keyframes projModalFadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
 
   .project-modal {
     position: relative;
     width: 100%;
-    max-width: 620px;
+    max-width: 820px;
+    height: min(88vh, 760px);
     max-height: 90vh;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     background: #053236;
     color: #e8f6f6;
     border: 1px solid #0a5b61;
     border-radius: 16px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65), 0 0 35px rgba(10, 208, 220, 0.2);
     text-align: left;
-    animation: projModalPop 0.25s ease;
+    animation: projModalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
+  }
+  .project-modal.closing {
+    animation: projModalPopOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
   }
   @keyframes projModalPop {
-    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    from { opacity: 0; transform: translateY(26px) scale(0.96); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes projModalPopOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(18px) scale(0.97); }
+  }
+
+  .readme-fade-wrap {
+    animation: projReadmeFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes projReadmeFade {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .project-modal-close {

@@ -86,8 +86,17 @@ export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
+  const [closing, setClosing] = useState(false);
   const [readmeContent, setReadmeContent] = useState(null);
   const [readmeLoading, setReadmeLoading] = useState(false);
+
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setSelected(null);
+      setClosing(false);
+    }, 240);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -212,7 +221,7 @@ export default function Projects() {
   // While modal is open: lock page scroll and close on Escape
   useEffect(() => {
     if (!selected) return;
-    const onKey = (e) => e.key === "Escape" && setSelected(null);
+    const onKey = (e) => e.key === "Escape" && handleClose();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
@@ -309,9 +318,12 @@ export default function Projects() {
       </div>
 
       {selected && (
-        <div className={styles.overlay} onClick={() => setSelected(null)}>
+        <div
+          className={`${styles.overlay} ${closing ? styles.overlayClosing : ""}`}
+          onClick={handleClose}
+        >
           <div
-            className={`glass-strong ${styles.modal}`}
+            className={`glass-strong ${styles.modal} ${closing ? styles.modalClosing : ""}`}
             role="dialog"
             aria-modal="true"
             aria-label={selected.title}
@@ -320,7 +332,7 @@ export default function Projects() {
             <button
               type="button"
               className={styles.close}
-              onClick={() => setSelected(null)}
+              onClick={handleClose}
               aria-label="Close"
             >
               <FaTimes />
@@ -359,12 +371,14 @@ export default function Projects() {
                   <div className={styles.skeletonLine} style={{ width: "60%" }} />
                 </div>
               ) : readmeContent ? (
-                <MarkdownRenderer
-                  content={readmeContent}
-                  repoFullName={selected.repoName || (selected.rawName ? `AMunasinghe2001/${selected.rawName}` : undefined)}
-                />
+                <div className={styles.readmeContainer}>
+                  <MarkdownRenderer
+                    content={readmeContent}
+                    repoFullName={selected.repoName || (selected.rawName ? `AMunasinghe2001/${selected.rawName}` : undefined)}
+                  />
+                </div>
               ) : (
-                <div>
+                <div className={styles.readmeContainer}>
                   <p className={styles.desc} style={{ fontSize: "1.05rem", color: "var(--text)" }}>
                     {selected.description || "No description provided for this repository."}
                   </p>

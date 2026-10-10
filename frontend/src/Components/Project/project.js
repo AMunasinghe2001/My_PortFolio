@@ -52,8 +52,17 @@ const isDisplayable = (src) => typeof src === "string" && /^(https?:|\/|data:)/.
 function Project() {
     const [projects, setProjects] = useState(fallbackProjects);
     const [selected, setSelected] = useState(null);
+    const [closing, setClosing] = useState(false);
     const [readme, setReadme] = useState(null);
     const [readmeLoading, setReadmeLoading] = useState(false);
+
+    const handleClose = () => {
+        setClosing(true);
+        setTimeout(() => {
+            setSelected(null);
+            setClosing(false);
+        }, 240);
+    };
 
     useEffect(() => {
         // Try fetching live GitHub projects first
@@ -141,7 +150,7 @@ function Project() {
     // While popup is open: lock page scroll and close on Escape
     useEffect(() => {
         if (!selected) return;
-        const onKey = (e) => { if (e.key === 'Escape') setSelected(null); };
+        const onKey = (e) => { if (e.key === 'Escape') handleClose(); };
         document.addEventListener('keydown', onKey);
         document.body.style.overflow = 'hidden';
         return () => {
@@ -228,12 +237,11 @@ function Project() {
 
             {selected && (
                 <div
-                    className="project-modal-overlay"
-                    onClick={() => setSelected(null)}
+                    className={`project-modal-overlay ${closing ? 'closing' : ''}`}
+                    onClick={handleClose}
                 >
                     <div
-                        className="project-modal"
-                        style={{ maxWidth: 780, maxHeight: '88vh' }}
+                        className={`project-modal ${closing ? 'closing' : ''}`}
                         role="dialog"
                         aria-modal="true"
                         aria-label={selected.title}
@@ -242,7 +250,7 @@ function Project() {
                         <button
                             type="button"
                             className="project-modal-close"
-                            onClick={() => setSelected(null)}
+                            onClick={handleClose}
                             aria-label="Close"
                         >
                             <FaTimes />
@@ -283,16 +291,18 @@ function Project() {
                                     Loading README.md from GitHub...
                                 </p>
                             ) : readme ? (
-                                <div style={{ maxHeight: '48vh', overflowY: 'auto', paddingRight: 8, marginBottom: 20 }}>
+                                <div className="readme-fade-wrap" style={{ flex: 1, overflowY: 'auto', paddingRight: 8, marginBottom: 20 }}>
                                     <MarkdownRenderer
                                         content={readme}
                                         repoFullName={selected.repoName || (selected.rawName ? `AMunasinghe2001/${selected.rawName}` : undefined)}
                                     />
                                 </div>
                             ) : (
-                                <p className="project-modal-desc">
-                                    {selected.description || "No description added yet."}
-                                </p>
+                                <div className="readme-fade-wrap">
+                                    <p className="project-modal-desc">
+                                        {selected.description || "No description added yet."}
+                                    </p>
+                                </div>
                             )}
 
                             <div className="project-modal-actions">

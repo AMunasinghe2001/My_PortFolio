@@ -76,15 +76,27 @@ export default function MarkdownRenderer({ content, repoFullName, branch = "main
           {children}
         </a>
       ),
-      img: ({ node, src, ...props }) => (
-        <img
-          {...props}
-          src={resolveImage(src, repoFullName, branch)}
-          loading="lazy"
-          className={styles.inlineImg}
-          alt={props.alt || ""}
-        />
-      ),
+      img: ({ node, src, ...props }) => {
+        const customStyle = {};
+        if (props.width) {
+          const w = isNaN(props.width) ? props.width : `${props.width}px`;
+          customStyle.width = w;
+          customStyle.maxWidth = w;
+        }
+        if (props.height && !isNaN(props.height)) {
+          customStyle.height = `${props.height}px`;
+        }
+        return (
+          <img
+            {...props}
+            src={resolveImage(src, repoFullName, branch)}
+            loading="lazy"
+            style={{ ...customStyle, ...(props.style || {}) }}
+            className={styles.inlineImg}
+            alt={props.alt || ""}
+          />
+        );
+      },
       table: ({ node, ...props }) => (
         <div className={styles.tableWrapper}>
           <table {...props} className={styles.table} />
