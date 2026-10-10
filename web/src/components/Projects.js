@@ -83,8 +83,8 @@ const isDisplayable = (src) =>
   typeof src === "string" && /^(https?:|\/|data:)/.test(src);
 
 export default function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState(FALLBACK);
+  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(null);
   const [closing, setClosing] = useState(false);
   const [readmeContent, setReadmeContent] = useState(null);
