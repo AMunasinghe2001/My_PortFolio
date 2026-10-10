@@ -261,7 +261,10 @@ function Project() {
                                 </p>
                             ) : readme ? (
                                 <div style={{ maxHeight: '48vh', overflowY: 'auto', paddingRight: 8, marginBottom: 20 }}>
-                                    <MarkdownRenderer content={readme} />
+                                    <MarkdownRenderer
+                                        content={readme}
+                                        repoFullName={selected.repoName || (selected.rawName ? `AMunasinghe2001/${selected.rawName}` : undefined)}
+                                    />
                                 </div>
                             ) : (
                                 <p className="project-modal-desc">

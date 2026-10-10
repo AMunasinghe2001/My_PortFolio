@@ -359,7 +359,10 @@ export default function Projects() {
                   <div className={styles.skeletonLine} style={{ width: "60%" }} />
                 </div>
               ) : readmeContent ? (
-                <MarkdownRenderer content={readmeContent} />
+                <MarkdownRenderer
+                  content={readmeContent}
+                  repoFullName={selected.repoName || (selected.rawName ? `AMunasinghe2001/${selected.rawName}` : undefined)}
+                />
               ) : (
                 <div>
                   <p className={styles.desc} style={{ fontSize: "1.05rem", color: "var(--text)" }}>
