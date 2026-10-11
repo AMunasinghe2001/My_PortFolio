@@ -130,6 +130,66 @@ const sanitizeProjectsList = (list) => {
     });
 };
 
+
+// Merges Admin Panel (MongoDB) custom titles, descriptions, and uploaded images with GitHub projects
+const mergeWithAdminProjects = (githubList, adminList) => {
+  const gh = Array.isArray(githubList) ? [...githubList] : [];
+  const admin = Array.isArray(adminList) ? [...adminList] : [];
+
+  const merged = gh.map((project) => {
+    const repoUrl = (project.url || "").toLowerCase();
+    const rawLower = (project.rawName || "").toLowerCase();
+    const titleLower = (project.title || "").toLowerCase();
+
+    const adminMatch = admin.find((ap) => {
+      if (ap.url && ap.url.toLowerCase() === repoUrl) return true;
+      if (ap.rawName && ap.rawName.toLowerCase() === rawLower) return true;
+      if (ap.title && ap.title.toLowerCase() === titleLower) return true;
+      return false;
+    });
+
+    if (adminMatch) {
+      return {
+        ...project,
+        title: adminMatch.title || project.title,
+        description: adminMatch.description || project.description,
+        technology: adminMatch.technology || project.technology,
+        image: adminMatch.image || project.image,
+        liveUrl: adminMatch.liveUrl || project.liveUrl,
+      };
+    }
+    return project;
+  });
+
+  // Include standalone Admin Panel projects (e.g. Pet Care App or manual entries)
+  for (const ap of admin) {
+    const exists = merged.some(
+      (m) =>
+        (ap.url && m.url && ap.url.toLowerCase() === m.url.toLowerCase()) ||
+        (ap.title && m.title && ap.title.toLowerCase() === m.title.toLowerCase())
+    );
+    if (!exists && ap.title) {
+      merged.push({
+        _id: ap._id || String(Math.random()),
+        id: ap._id || String(Math.random()),
+        title: ap.title,
+        repoName: ap.url ? ap.url.replace(/^https?:\/\/github\.com\//i, "") : "",
+        rawName: ap.title,
+        isCollaborator: false,
+        description: ap.description || "Project developed by Anushanga Munasinghe.",
+        technology: ap.technology || "Software Development",
+        url: ap.url || "",
+        liveUrl: ap.liveUrl || "",
+        isPrivate: false,
+        image: ap.image || null,
+        updatedAt: ap.updatedAt || ap.createdAt || new Date().toISOString(),
+      });
+    }
+  }
+
+  return merged;
+};
+
 export default function Projects() {
   const [projects, setProjects] = useState(FALLBACK);
   const [loading, setLoading] = useState(false);
@@ -150,51 +210,35 @@ export default function Projects() {
     let isMounted = true;
 
     const loadProjects = async () => {
-      // 1. Try Next.js internal API route (/api/github-projects)
+      let ghList = [];
+      let adminList = [];
+
+      // 1. Fetch live GitHub projects (includes personal + group/collaborator repos)
       try {
         const nextRes = await fetch(`/api/github-projects?t=${Date.now()}`, { cache: "no-store" });
         if (nextRes.ok) {
           const nextData = await nextRes.json();
-          if (Array.isArray(nextData.projects) && nextData.projects.length > 0) {
-            if (isMounted) {
-              setProjects(sanitizeProjectsList(nextData.projects));
-              setLoading(false);
-            }
-            return;
+          if (Array.isArray(nextData.projects)) {
+            ghList = nextData.projects;
           }
         }
-      } catch {
-        /* try backend next */
-      }
+      } catch {}
 
-      // 2. Try external Express backend (/github-projects)
+      // 2. Fetch Admin Panel projects from database to apply live admin edits
       try {
-        const res = await api.get("/github-projects");
-        const data = res.data?.projects;
-        if (Array.isArray(data) && data.length > 0) {
-          if (isMounted) {
-            setProjects(sanitizeProjectsList(data));
-            setLoading(false);
-          }
+        const adminRes = await api.get(`/projects?t=${Date.now()}`);
+        if (Array.isArray(adminRes.data?.projects)) {
+          adminList = adminRes.data.projects;
+        }
+      } catch {}
+
+      if (ghList.length > 0 || adminList.length > 0) {
+        const combined = mergeWithAdminProjects(ghList, adminList);
+        if (isMounted && combined.length > 0) {
+          setProjects(sanitizeProjectsList(combined));
+          setLoading(false);
           return;
         }
-      } catch {
-        /* try legacy database next */
-      }
-
-      // 3. Try legacy MongoDB projects (/projects)
-      try {
-        const res = await api.get("/projects");
-        const data = res.data?.projects;
-        if (Array.isArray(data) && data.length > 0) {
-          if (isMounted) {
-            setProjects(data);
-            setLoading(false);
-          }
-          return;
-        }
-      } catch {
-        /* fallback */
       }
 
       // 4. Default verified fallback
@@ -322,6 +366,11 @@ export default function Projects() {
                   aria-label={`View details for ${project.title}`}
                 >
                   <div className={styles.badges}>
+                    {project.isCollaborator && (
+                      <span className={styles.badge} style={{ background: "rgba(20, 184, 166, 0.25)", color: "#2dd4bf", borderColor: "rgba(45, 212, 191, 0.4)", marginRight: 6 }}>
+                        Group Project
+                      </span>
+                    )}
                     {project.isPrivate ? (
                       <span className={`${styles.badge} ${styles.badgePrivate}`}>
                         <FaLock style={{ marginRight: 4 }} /> Private

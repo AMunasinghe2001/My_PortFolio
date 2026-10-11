@@ -119,7 +119,7 @@ const getGithubProjects = async (req, res) => {
         const endpoints = token
             ? [
                   {
-                      url: "https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner&sort=updated",
+                      url: "https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner,collaborator,organization_member&sort=updated",
                       authed: true,
                   },
                   {
