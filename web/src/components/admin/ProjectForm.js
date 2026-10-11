@@ -50,7 +50,12 @@ export default function ProjectForm({
 
     try {
       if (isEdit) {
-        await api.put(`/projects/${projectId}`, fd);
+        try {
+          await api.put(`/projects/${projectId}`, fd);
+        } catch (putErr) {
+          // If PUT failed (e.g. ID is a GitHub node_id not yet saved in MongoDB), create/upsert it via POST
+          await api.post("/projects", fd);
+        }
       } else {
         await api.post("/projects", fd);
       }
