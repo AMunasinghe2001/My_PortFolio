@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Next.js Route Handler for fetching GitHub repositories (including private with GITHUB_TOKEN)
 // Any new repository created on GitHub will automatically appear here.
 
@@ -10,6 +13,34 @@ const KNOWN_IMAGES = {
   "rukshan-furniture": "/img/projects/itp.jpg",
   "share_me-app": "/img/projects/PAF.png",
   itpm_project: "/img/projects/ITPM.png",
+};
+
+// Custom metadata overrides so cards display rich, accurate titles and descriptions matching their README
+const PROJECT_OVERRIDES = {
+  "desktop-learn_control_panel": {
+    title: "SLCHRD LMS v2.0",
+    description:
+      "An Enterprise Desktop Learning Management System engineered for Sri Lanka Customs to manage officer training programs, academic curricula, resource persons, training costs, and reporting.",
+    technology: "Java Swing | FlatLaf | MySQL 8.x | Apache PDFBox",
+  },
+  "customs_yard_management_system": {
+    title: "Customs Yard Management System",
+    description:
+      "An Enterprise Windows Desktop Platform for Seizure Report (SR) Operations, Multi-Yard Warehouse Inventory, Accrued Storage Charges, and Security Workflows.",
+    technology: "Dart | Python | PLpgSQL",
+  },
+  "librarymanagementsystem_sl_customs": {
+    title: "Customs Library Management System",
+    description:
+      "A comprehensive Library Management System engineered for Sri Lanka Customs to streamline book indexing, patron registrations, and borrowing workflows.",
+    technology: "Python | MySQL | PyQt | Inno Setup",
+  },
+  "librarymanagementsystem_ambalantota_ps": {
+    title: "Library Management System (Ambalantota PS)",
+    description:
+      "A desktop-based Library Management System built with Electron.js and PostgreSQL for Ambalantota Pradeshiya Sabha.",
+    technology: "JavaScript | Electron | PostgreSQL",
+  },
 };
 
 const formatTitle = (name) => {
@@ -94,7 +125,7 @@ export async function GET() {
 
     for (const { url, authed } of endpoints) {
       try {
-        const res = await fetch(url, { headers: ghHeaders(authed), next: { revalidate: 900 } });
+        const res = await fetch(url, { headers: ghHeaders(authed), cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
@@ -110,8 +141,18 @@ export async function GET() {
 
     const filtered = rawRepos.filter((repo) => {
       if (repo.fork) return false;
-      if (repo.name.toLowerCase() === username.toLowerCase()) return false;
-      if (repo.name.toLowerCase() === "desktop-tutorial") return false;
+      const lower = repo.name.toLowerCase();
+      if (lower === username.toLowerCase()) return false;
+      if (lower === "desktop-tutorial") return false;
+      // Filter out deleted/obsolete repos
+      if (
+        lower === "slchrd_lms.2.0" ||
+        lower === "slchrd-lms.2.0" ||
+        lower === "slchrd_lms" ||
+        lower.replace(/[-_.]/g, "") === "slchrdlms20"
+      ) {
+        return false;
+      }
       return true;
     });
 
@@ -121,7 +162,7 @@ export async function GET() {
         try {
           const langRes = await fetch(repo.languages_url, {
             headers: ghHeaders(true),
-            next: { revalidate: 3600 },
+            cache: "no-store",
           });
           if (langRes.ok) {
             const langs = await langRes.json();
@@ -138,19 +179,26 @@ export async function GET() {
           techList = [repo.language];
         }
 
-        const technology = techList.length > 0 ? techList.join(" | ") : "Software Development";
         const lowerName = repo.name.toLowerCase();
+        const override = PROJECT_OVERRIDES[lowerName];
+
+        const title = override?.title || formatTitle(repo.name);
+        const description =
+          override?.description ||
+          repo.description ||
+          `A ${techList[0] || "software"} project developed by Anushanga Munasinghe.`;
+        const technology =
+          override?.technology ||
+          (techList.length > 0 ? techList.join(" | ") : "Software Development");
         const matchedImage = KNOWN_IMAGES[lowerName] || null;
 
         return {
           _id: repo.node_id || String(repo.id),
           id: repo.id,
-          title: formatTitle(repo.name),
+          title,
           repoName: repo.full_name,
           rawName: repo.name,
-          description:
-            repo.description ||
-            `A ${techList[0] || "software"} project developed by Anushanga Munasinghe.`,
+          description,
           technology,
           techList,
           url: repo.html_url,

@@ -3,7 +3,7 @@
 //
 // Every new repository added to GitHub automatically appears in the portfolio.
 
-const TTL_PROJECTS_MS = 15 * 60 * 1000; // refresh project list every 15 minutes
+const TTL_PROJECTS_MS = 10 * 1000; // refresh project list every 15 minutes
 const TTL_README_MS = 10 * 1000;        // short 10-second cache
 
 // Known custom image covers for existing portfolio projects
@@ -19,6 +19,29 @@ const KNOWN_IMAGES = {
 };
 
 // Formats repository slugs like "Customs_Yard_Management_System" into clean readable titles
+const PROJECT_OVERRIDES = {
+    "desktop-learn_control_panel": {
+        title: "SLCHRD LMS v2.0",
+        description: "An Enterprise Desktop Learning Management System engineered for Sri Lanka Customs to manage officer training programs, academic curricula, resource persons, training costs, and reporting.",
+        technology: "Java Swing | FlatLaf | MySQL 8.x | Apache PDFBox",
+    },
+    "customs_yard_management_system": {
+        title: "Customs Yard Management System",
+        description: "An Enterprise Windows Desktop Platform for Seizure Report (SR) Operations, Multi-Yard Warehouse Inventory, Accrued Storage Charges, and Security Workflows.",
+        technology: "Dart | Python | PLpgSQL",
+    },
+    "librarymanagementsystem_sl_customs": {
+        title: "Customs Library Management System",
+        description: "A comprehensive Library Management System engineered for Sri Lanka Customs to streamline book indexing, patron registrations, and borrowing workflows.",
+        technology: "Python | MySQL | PyQt | Inno Setup",
+    },
+    "librarymanagementsystem_ambalantota_ps": {
+        title: "Library Management System (Ambalantota PS)",
+        description: "A desktop-based Library Management System built with Electron.js and PostgreSQL for Ambalantota Pradeshiya Sabha.",
+        technology: "JavaScript | Electron | PostgreSQL",
+    },
+};
+
 const formatTitle = (name) => {
     if (!name) return "";
     return name
@@ -134,7 +157,9 @@ const getGithubProjects = async (req, res) => {
         const filtered = rawRepos.filter((repo) => {
             if (repo.fork) return false;
             if (repo.name.toLowerCase() === username.toLowerCase()) return false;
-            if (repo.name.toLowerCase() === "desktop-tutorial") return false; // skip initial git test
+            if (repo.name.toLowerCase() === "desktop-tutorial") return false;
+            const lower = repo.name.toLowerCase();
+            if (lower === "slchrd_lms.2.0" || lower === "slchrd-lms.2.0" || lower === "slchrd_lms" || lower.replace(/[-_.]/g, "") === "slchrdlms20") return false; // skip initial git test
             return true;
         });
 
@@ -162,17 +187,19 @@ const getGithubProjects = async (req, res) => {
                 const technology = techList.length > 0 ? techList.join(" | ") : "Software Development";
                 const lowerName = repo.name.toLowerCase();
                 const matchedImage = KNOWN_IMAGES[lowerName] || null;
+                const override = (typeof PROJECT_OVERRIDES !== "undefined" && PROJECT_OVERRIDES[lowerName]) || null;
+                const title = override?.title || formatTitle(repo.name);
+                const description = override?.description || repo.description || `A ${techList[0] || "software"} project developed by Anushanga Munasinghe.`;
+                const finalTech = override?.technology || technology;
 
                 return {
                     _id: repo.node_id || String(repo.id),
                     id: repo.id,
-                    title: formatTitle(repo.name),
+                    title,
                     repoName: repo.full_name,
                     rawName: repo.name,
-                    description:
-                        repo.description ||
-                        `A ${techList[0] || "software"} project developed by Anushanga Munasinghe.`,
-                    technology,
+                    description,
+                    technology: finalTech,
                     techList,
                     url: repo.html_url,
                     liveUrl: repo.homepage || "",

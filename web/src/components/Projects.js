@@ -82,6 +82,54 @@ const FALLBACK = [
 const isDisplayable = (src) =>
   typeof src === "string" && /^(https?:|\/|data:)/.test(src);
 
+const CLIENT_OVERRIDES = {
+  "desktop-learn_control_panel": {
+    title: "SLCHRD LMS v2.0",
+    description: "An Enterprise Desktop Learning Management System engineered for Sri Lanka Customs to manage officer training programs, academic curricula, resource persons, training costs, and reporting.",
+    technology: "Java Swing | FlatLaf | MySQL 8.x | Apache PDFBox",
+  },
+  "customs_yard_management_system": {
+    title: "Customs Yard Management System",
+    description: "An Enterprise Windows Desktop Platform for Seizure Report (SR) Operations, Multi-Yard Warehouse Inventory, Accrued Storage Charges, and Security Workflows.",
+    technology: "Dart | Python | PLpgSQL",
+  },
+  "librarymanagementsystem_sl_customs": {
+    title: "Customs Library Management System",
+    description: "A comprehensive Library Management System engineered for Sri Lanka Customs to streamline book indexing, patron registrations, and borrowing workflows.",
+    technology: "Python | MySQL | PyQt | Inno Setup",
+  },
+  "librarymanagementsystem_ambalantota_ps": {
+    title: "Library Management System (Ambalantota PS)",
+    description: "A desktop-based Library Management System built with Electron.js and PostgreSQL for Ambalantota Pradeshiya Sabha.",
+    technology: "JavaScript | Electron | PostgreSQL",
+  },
+};
+
+const sanitizeProjectsList = (list) => {
+  if (!Array.isArray(list)) return [];
+  return list
+    .filter((p) => {
+      const lower = (p.rawName || p.title || "").toLowerCase().replace(/[-_\s.]+/g, "");
+      if (lower.includes("slchrdlms20") || lower === "slchrdlms" || lower === "lms20") {
+        return false;
+      }
+      return true;
+    })
+    .map((p) => {
+      const lowerRaw = (p.rawName || "").toLowerCase();
+      const override = CLIENT_OVERRIDES[lowerRaw];
+      if (override) {
+        return {
+          ...p,
+          title: override.title || p.title,
+          description: override.description || p.description,
+          technology: override.technology || p.technology,
+        };
+      }
+      return p;
+    });
+};
+
 export default function Projects() {
   const [projects, setProjects] = useState(FALLBACK);
   const [loading, setLoading] = useState(false);
@@ -104,12 +152,12 @@ export default function Projects() {
     const loadProjects = async () => {
       // 1. Try Next.js internal API route (/api/github-projects)
       try {
-        const nextRes = await fetch("/api/github-projects");
+        const nextRes = await fetch(`/api/github-projects?t=${Date.now()}`, { cache: "no-store" });
         if (nextRes.ok) {
           const nextData = await nextRes.json();
           if (Array.isArray(nextData.projects) && nextData.projects.length > 0) {
             if (isMounted) {
-              setProjects(nextData.projects);
+              setProjects(sanitizeProjectsList(nextData.projects));
               setLoading(false);
             }
             return;
@@ -125,7 +173,7 @@ export default function Projects() {
         const data = res.data?.projects;
         if (Array.isArray(data) && data.length > 0) {
           if (isMounted) {
-            setProjects(data);
+            setProjects(sanitizeProjectsList(data));
             setLoading(false);
           }
           return;
