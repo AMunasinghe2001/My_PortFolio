@@ -32,6 +32,9 @@ const buildResumeHref = (url) => {
     if (!/\.pdf(\?|$)/i.test(u)) u += ".pdf";
     return u;
   }
+  if (href.startsWith("/Anushanga Munasinghe CV.pdf")) {
+    return "/Anushanga Munasinghe CV.pdf?v=20261013";
+  }
   return href;
 };
 

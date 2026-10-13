@@ -50,6 +50,9 @@ function Home() {
       if (!/\.pdf(\?|$)/i.test(u)) u += ".pdf";
       return u;
     }
+    if (url && url.startsWith("/Anushanga Munasinghe CV.pdf")) {
+      return "/Anushanga Munasinghe CV.pdf?v=20261013";
+    }
     return url;
   })();
 
