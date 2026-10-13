@@ -23,7 +23,7 @@ export const fetchProfile = () => {
       .get("/profile")
       .then((res) => {
         const p = res.data?.profile;
-        if (p && typeof window !== "undefined") {
+        if (p && (p.heroImage || p.aboutImage || p.name) && typeof window !== "undefined") {
           try {
             localStorage.setItem(CACHE_KEY, JSON.stringify(p));
           } catch {

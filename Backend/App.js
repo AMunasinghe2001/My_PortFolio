@@ -43,6 +43,20 @@ app.use(
 
 app.use(express.json());
 
+const { isMongoReady } = require("./utils/mongoStatus");
+
+// Ensure DB is ready for requests (especially critical on serverless cold starts)
+app.use(async (req, res, next) => {
+    if (!isMongoReady()) {
+        try {
+            await connectDB();
+        } catch (err) {
+            // Handlers will report status if unavailable
+        }
+    }
+    next();
+});
+
 // ---- Routes ----
 app.get("/", (req, res) => res.json({ status: "ok", message: "Portfolio API" }));
 app.use("/auth", authRoutes);

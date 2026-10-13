@@ -1,10 +1,15 @@
 const Profile = require("../Models/profileModel");
+const connectDB = require("../config/db");
 const { isMongoReady } = require("../utils/mongoStatus");
 
 // There is only ever one profile document. Create an empty one on first read.
 const getProfileDoc = async () => {
     if (!isMongoReady()) {
-        return null;
+        try {
+            await connectDB();
+        } catch (err) {
+            return null;
+        }
     }
     let profile = await Profile.findOne();
     if (!profile) {
